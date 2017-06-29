@@ -1,0 +1,3 @@
+<strong>Projeto Jarbas</strong> - Aplicação mobile para controle financeiro<br><br>
+
+Desenvolvido utilizando a arquitetura-cliente servidor, sendo o cliente baseado na framework Ionic e o servidor baseado na framework ASP.NET Core com banco de dados PostgreSQL. Esse projeto está sendo desenvolvido como um Trabalho de Conclusão de Curso, no curso de Análise e Desenvolvimento de Sistemas, na Fatec São Caetano do Sul
