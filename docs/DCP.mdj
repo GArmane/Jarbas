@@ -1,0 +1,1227 @@
+{
+	"_type": "Project",
+	"_id": "AAAAAAFF+h6SjaM2Hec=",
+	"name": "Untitled",
+	"ownedElements": [
+		{
+			"_type": "UMLModel",
+			"_id": "AAAAAAFF+qBWK6M3Z8Y=",
+			"_parent": {
+				"$ref": "AAAAAAFF+h6SjaM2Hec="
+			},
+			"name": "Model",
+			"ownedElements": [
+				{
+					"_type": "UMLClassDiagram",
+					"_id": "AAAAAAFdoFdhWrHf6Lo=",
+					"_parent": {
+						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
+					},
+					"name": "Diagrama de Classe",
+					"visible": true,
+					"defaultDiagram": false
+				},
+				{
+					"_type": "UMLPackage",
+					"_id": "AAAAAAFdoFfJC7HlhMY=",
+					"_parent": {
+						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
+					},
+					"name": "Models",
+					"ownedElements": [
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFmKbrH2ZAA=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Usuario",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoF6aSbIs/Vc=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFmKbrH2ZAA="
+									},
+									"name": "Nome",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoF7R5LIxBgQ=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFmKbrH2ZAA="
+									},
+									"name": "Email",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoF7dM7I0urM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFmKbrH2ZAA="
+									},
+									"name": "Senha",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFoIzXc1duI=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "ContaContabil",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoGZ9o7JH/bo=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoIzXc1duI="
+									},
+									"name": "Nome",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoGaUOrJLwgM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoIzXc1duI="
+									},
+									"name": "Valor",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoGa6YrJPEn8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoIzXc1duI="
+									},
+									"name": "Moeda",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFoMbXc2maM=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Objetivo",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHjsxbJsGp4=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"name": "Valor",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHkHFXdBMOI=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"name": "DataInicial",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "DateTime",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHkLLXdCQq8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"name": "ObjetivoConta",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "List<ObjetivoConta>",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHkO5ndDTis=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"name": "Descricao",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHnrFHdE2bs=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"name": "HistoricoObjetivo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "List<HistoricoObjetivo>",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFoO9Xc3XZI=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "HistoricoObjetivo",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHuRN7KS3j4=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoO9Xc3XZI="
+									},
+									"name": "DataFinal",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "DateTime",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHuZ3bKVXO0=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoO9Xc3XZI="
+									},
+									"name": "ValorFinal",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHuh77KYxoE=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoO9Xc3XZI="
+									},
+									"name": "Objetivo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFoRTXc45BU=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Movimentacao",
+							"ownedElements": [
+								{
+									"_type": "UMLEnumeration",
+									"_id": "AAAAAAFdoJG20LM2aIE=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "TipoMovimentacao",
+									"visibility": "public",
+									"isAbstract": false,
+									"isFinalSpecialization": false,
+									"isLeaf": false
+								},
+								{
+									"_type": "UMLEnumeration",
+									"_id": "AAAAAAFdoJOy2rNHPjI=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "EscalaTempo",
+									"visibility": "public",
+									"isAbstract": false,
+									"isFinalSpecialization": false,
+									"isLeaf": false
+								}
+							],
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJA2LLMRRK8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "Valor",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJBCIndRzE8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "Moeda",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJBQEXdSObI=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "TipoMovimentacao",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoJG20LM2aIE="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJBcbndTtKo=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "Conta",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFoIzXc1duI="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJBk1HdUdrU=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "ContaDestino",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFoIzXc1duI="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJBs4XdVLl8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "Descricao",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJB20HdW3vE=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "GrupoContas",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "GrupoMovimentacoes",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJCDqHdXqF0=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "QtdTempo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "DateTime",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJCMiHdYQgM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "EscalaTempo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoJOy2rNHPjI="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJCUiHdZ/k8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "Usuario",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFmKbrH2ZAA="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJCcmndanzY=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFoRTXc45BU="
+									},
+									"name": "Data",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "DateTime",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFpNtHc6Ha8=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Investimento",
+							"ownedElements": [
+								{
+									"_type": "UMLEnumeration",
+									"_id": "AAAAAAFdoIYu5bLZTD4=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "EscalaTempo",
+									"visibility": "public",
+									"isAbstract": false,
+									"isFinalSpecialization": false,
+									"isLeaf": false
+								}
+							],
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIQwbrK0pvk=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "TipoInvestimento",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoIG9IrKhiHc="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIQ8j3dFSIM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "ValorInvestido",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIRetndGVs4=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "ValorAtual",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIRjfndHfzU=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "Moeda",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIRn9ndI5/U=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "Tempo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "DateTime",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIRrzndJ4dU=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "EscalaTempo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoIYu5bLZTD4="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIRvzndKwUo=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFpNtHc6Ha8="
+									},
+									"name": "DataInicio",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "DateTime",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoFz6MXc7gXs=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Configuracoes",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIvAqbLg4as=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFz6MXc7gXs="
+									},
+									"name": "Idioma",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIvXR7Lj6vU=",
+									"_parent": {
+										"$ref": "AAAAAAFdoFz6MXc7gXs="
+									},
+									"name": "Usuario",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFmKbrH2ZAA="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoF0TUHc8Mxc=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Perfil",
+							"ownedElements": [
+								{
+									"_type": "UMLEnumeration",
+									"_id": "AAAAAAFdoIzAcrL7r1M=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "FaixaEtaria",
+									"visibility": "public",
+									"isAbstract": false,
+									"isFinalSpecialization": false,
+									"isLeaf": false
+								},
+								{
+									"_type": "UMLEnumeration",
+									"_id": "AAAAAAFdoI1SMrMCcRU=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "Profissao",
+									"visibility": "public",
+									"isAbstract": false,
+									"isFinalSpecialization": false,
+									"isLeaf": false
+								},
+								{
+									"_type": "UMLEnumeration",
+									"_id": "AAAAAAFdoI4XPLMLxM8=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "EscalaTempo",
+									"visibility": "public",
+									"isAbstract": false,
+									"isFinalSpecialization": false,
+									"isLeaf": false
+								}
+							],
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIxxPbLpa3c=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "FaixaEtaria",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoIzAcrL7r1M="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIx5jXdM6BI=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "Profissao",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIyDRXdNoEM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "Moeda",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIyG9XdOMgc=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "Valor",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIyKrHdPrqg=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "EscalaTempo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIyPHndQ4QM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF0TUHc8Mxc="
+									},
+									"name": "RendaFixa",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "bool",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoF3k+7IozgY=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "Moeda",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoGQgqLI7D8s=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"name": "Simbolo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoGQn/LI+Wdg=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"name": "Nome",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoGQvCrJBJgE=",
+									"_parent": {
+										"$ref": "AAAAAAFdoF3k+7IozgY="
+									},
+									"name": "CotacaoComercial",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoHLlILJZ3FQ=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "ObjetivoConta",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHMtUbJdFUM=",
+									"_parent": {
+										"$ref": "AAAAAAFdoHLlILJZ3FQ="
+									},
+									"name": "Objetivo",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFoMbXc2maM="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHOIPLJhUv0=",
+									"_parent": {
+										"$ref": "AAAAAAFdoHLlILJZ3FQ="
+									},
+									"name": "IConta",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "IConta",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoHPJU7Jl7Oo=",
+									"_parent": {
+										"$ref": "AAAAAAFdoHLlILJZ3FQ="
+									},
+									"name": "Porcentagem",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoIG9IrKhiHc=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "TipoInvestimento",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIIJHrKqx0I=",
+									"_parent": {
+										"$ref": "AAAAAAFdoIG9IrKhiHc="
+									},
+									"name": "Nome",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoIInt7KuT+k=",
+									"_parent": {
+										"$ref": "AAAAAAFdoIG9IrKhiHc="
+									},
+									"name": "Taxa",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "double",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFdoJSQJ7NQSb4=",
+							"_parent": {
+								"$ref": "AAAAAAFdoFfJC7HlhMY="
+							},
+							"name": "GrupoMovimentacoes",
+							"visibility": "public",
+							"attributes": [
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdoJS5eLNUluY=",
+									"_parent": {
+										"$ref": "AAAAAAFdoJSQJ7NQSb4="
+									},
+									"name": "Nome",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								}
+							],
+							"isAbstract": false,
+							"isFinalSpecialization": false,
+							"isLeaf": false,
+							"isActive": false
+						}
+					],
+					"visibility": "public"
+				},
+				{
+					"_type": "UMLPackage",
+					"_id": "AAAAAAFdoFgUGLHu9jo=",
+					"_parent": {
+						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
+					},
+					"name": "Controllers",
+					"visibility": "public"
+				},
+				{
+					"_type": "UMLPackage",
+					"_id": "AAAAAAFdoFg4wbHyHyA=",
+					"_parent": {
+						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
+					},
+					"name": "Views",
+					"visibility": "public"
+				}
+			],
+			"visibility": "public"
+		}
+	]
+}
