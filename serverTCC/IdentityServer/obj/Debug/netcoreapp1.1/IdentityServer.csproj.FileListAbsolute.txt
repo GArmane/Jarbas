@@ -1,0 +1,6 @@
+D:\Projetos Git\JarbasTCC\serverTCC\IdentityServer\bin\Debug\netcoreapp1.1\IdentityServer.deps.json
+D:\Projetos Git\JarbasTCC\serverTCC\IdentityServer\bin\Debug\netcoreapp1.1\IdentityServer.runtimeconfig.json
+D:\Projetos Git\JarbasTCC\serverTCC\IdentityServer\bin\Debug\netcoreapp1.1\IdentityServer.runtimeconfig.dev.json
+D:\Projetos Git\JarbasTCC\serverTCC\IdentityServer\bin\Debug\netcoreapp1.1\IdentityServer.dll
+D:\Projetos Git\JarbasTCC\serverTCC\IdentityServer\obj\Debug\netcoreapp1.1\IdentityServer.csprojResolveAssemblyReference.cache
+D:\Projetos Git\JarbasTCC\serverTCC\IdentityServer\obj\Debug\netcoreapp1.1\IdentityServer.AssemblyInfo.cs
