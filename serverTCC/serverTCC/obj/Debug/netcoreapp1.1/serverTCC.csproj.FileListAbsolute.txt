@@ -4,3 +4,6 @@ D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.
 D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.dll
 D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.csprojResolveAssemblyReference.cache
 D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.AssemblyInfo.cs
+D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.pdb
+D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.dll
+D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.pdb

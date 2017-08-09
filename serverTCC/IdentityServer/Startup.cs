@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer.Utils;
 
+
 namespace IdentityServer
 {
     public class Startup
@@ -19,7 +20,7 @@ namespace IdentityServer
 
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();

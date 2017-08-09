@@ -1,4 +1,6 @@
-﻿namespace serverTCC.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace serverTCC.Models
 {
     public class ObjetivoConta
     {
@@ -8,6 +10,7 @@
         public int? InvestimentoId { get; set; }
         public int? ContaContabilId { get; set; }
         public Objetivo Objetivo { get; set; }
+        [NotMapped]
         public IConta IConta { get; set; }
     }
 }
