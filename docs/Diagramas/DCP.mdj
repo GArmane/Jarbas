@@ -1927,6 +1927,44 @@
 									"isDerived": false,
 									"aggregation": "none",
 									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdyMBuHUgg5HQ=",
+									"_parent": {
+										"$ref": "AAAAAAFdoJSQJ7NQSb4="
+									},
+									"name": "UsuarioId",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "string",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
+								},
+								{
+									"_type": "UMLAttribute",
+									"_id": "AAAAAAFdyMCqPEgnibY=",
+									"_parent": {
+										"$ref": "AAAAAAFdoJSQJ7NQSb4="
+									},
+									"name": "Usuario",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": {
+										"$ref": "AAAAAAFdoFmKbrH2ZAA="
+									},
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"isDerived": false,
+									"aggregation": "none",
+									"isID": false
 								}
 							],
 							"isAbstract": false,
