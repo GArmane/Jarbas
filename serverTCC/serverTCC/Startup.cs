@@ -37,11 +37,12 @@ namespace serverTCC
                 //Regra de email
                 opts.User.RequireUniqueEmail = true;
 
-                //Regras para as senhas
+                //Regras para as senhas (DEFINIR QUAIS SÃO)
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireUppercase = false;
                 opts.Password.RequireLowercase = false;
                 opts.Password.RequiredLength = 1;
+                opts.Password.RequireDigit = false;
             })
             .AddEntityFrameworkStores<JarbasContext>();
 

@@ -7,30 +7,55 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Usuarios")]
+    //[Authorize]
     public class UsuariosController : Controller
     {
-        private readonly JarbasContext _context;
+        private UserManager<Usuario> userManager;
+        private IUserValidator<Usuario> userValidator;
+        private IPasswordValidator<Usuario> passwordValidator;
+        private IPasswordHasher<Usuario> passwordHasher;
 
-        public UsuariosController(JarbasContext context)
+        public UsuariosController(UserManager<Usuario> usrMgr, IUserValidator<Usuario> usrValid,
+            IPasswordValidator<Usuario> passValid, IPasswordHasher<Usuario> passHasher)
         {
-            _context = context;
+            userManager = usrMgr;
+            userValidator = usrValid;
+            passwordValidator = passValid;
+            passwordHasher = passHasher;
         }
 
-        // GET: api/Usuarios
-        [HttpGet]
-        public IEnumerable<Usuario> GetUsuario()
-        {
-            return _context.Usuario;
-        }
-
-        // GET: api/Usuarios/5
+        /// <summary>
+        /// Busca o usuário por sua ID
+        /// GET api/Usuarios/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUsuario([FromRoute] string id)
+        public async Task<IActionResult> GetById([FromRoute]string id)
+        {
+            Usuario usuario = await userManager.FindByIdAsync(id);
+
+            if(usuario != null)
+            {
+                return Ok(usuario);
+            }
+            else
+            {
+                ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+            }
+        }
+
+        /*// GET: api/Usuarios/5
+        [HttpGet("email/{email}")]
+        public async Task<IActionResult> GetUsuario([FromRoute] string email)
         {
             if (!ModelState.IsValid)
             {
@@ -81,22 +106,65 @@ namespace serverTCC.Controllers
 
             return NoContent();
         }
+        */
 
-        // POST: api/Usuarios
+        /// <summary>
+        /// Cria um novo usuário
+        /// POST: api/Usuarios
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> PostUsuario([FromBody] Usuario usuario)
+        public async Task<IActionResult> Create([FromBody] UsuarioModel model)
         {
-            if (!ModelState.IsValid)
+            Usuario usuario = await userManager.FindByEmailAsync(model.Email);
+
+            if(usuario == null)
             {
-                return BadRequest(ModelState);
+                usuario = new Usuario
+                {
+                    Nome = model.Nome,
+                    Email = model.Email,
+                    UserName = model.Email
+                };
+
+                //valida a senha (De acordo com regras definidas no startup)
+                IdentityResult validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
+
+                if (!validPass.Succeeded)
+                {
+                    ModelState.AddModelError("Senha", "Senha invalida");
+                }
+
+                //se a validação foi bem sucedida, cadastra o usuário
+                if(validPass.Succeeded)
+                {
+                    //tenta criar o usuário
+                    IdentityResult result = await userManager.CreateAsync(usuario, model.Senha);
+
+                    //verifica se o usuário foi criado
+                    if (result.Succeeded)
+                    {
+                        return CreatedAtAction("Create", usuario);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Usuario", "Usuário não pôde ser criado");
+                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                    }
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
             }
-
-            _context.Usuario.Add(usuario);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUsuario", new { id = usuario.Id }, usuario);
+            else
+            {
+                ModelState.AddModelError("Email", "Email já foi cadastrado");
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+            }
         }
-
+        /*
         // DELETE: api/Usuarios/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario([FromRoute] string id)
@@ -121,6 +189,6 @@ namespace serverTCC.Controllers
         private bool UsuarioExists(string id)
         {
             return _context.Usuario.Any(e => e.Id == id);
-        }
+        }*/
     }
 }

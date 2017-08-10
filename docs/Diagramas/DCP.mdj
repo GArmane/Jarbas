@@ -377,7 +377,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+Create(usuario: UsuarioModel): Task<IActionResult>",
+											"text": "+Create(model: UsuarioModel): Task<IActionResult>",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -3036,7 +3036,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFdqknSCH1HMi0="
 											},
-											"name": "usuario",
+											"name": "model",
 											"visibility": "public",
 											"isStatic": false,
 											"isLeaf": false,
