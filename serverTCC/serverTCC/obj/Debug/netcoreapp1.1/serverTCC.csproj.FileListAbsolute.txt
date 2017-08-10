@@ -1,9 +1,0 @@
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.deps.json
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.runtimeconfig.json
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.runtimeconfig.dev.json
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.dll
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.csprojResolveAssemblyReference.cache
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.AssemblyInfo.cs
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\bin\Debug\netcoreapp1.1\serverTCC.pdb
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.dll
-D:\Projetos Git\JarbasTCC\serverTCC\serverTCC\obj\Debug\netcoreapp1.1\serverTCC.pdb
