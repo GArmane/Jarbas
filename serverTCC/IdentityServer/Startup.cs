@@ -9,7 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer.Utils;
-
+using IdentityServer.Data;
+using IdentityServer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer
 {
@@ -33,11 +35,18 @@ namespace IdentityServer
             // Add framework services.
             services.AddMvc();
 
-            services.AddIdentityServer()
+            /*services.AddIdentityServer()
                 .AddSigningCredential(new X509Certificate2("cert.pfx"))
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients());
-                //.AddExtensionGrantValidator<GoogleGrantValidator>();
+                .AddInMemoryClients(Config.GetClients())
+                .AddAspNetIdentity<Usuario>();*/
+            //.AddExtensionGrantValidator<GoogleGrantValidator>();
+
+            //Cfg Entity Framework + PostgreSQL
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<IdentityContext>(
+                    options => options.UseNpgsql(
+                        Configuration.GetConnectionString("JarbasBD")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

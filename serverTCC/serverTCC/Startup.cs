@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using serverTCC.Data;
+using serverTCC.Models;
 
 namespace serverTCC
 {
     public class Startup
     {
-        IConfigurationRoot Configuration;
+        public IConfigurationRoot Configuration;
 
         public Startup(IHostingEnvironment env)
         {
@@ -29,6 +31,21 @@ namespace serverTCC
             // Add framework services.
             services.AddMvc();
 
+            //Configuração do Identity
+            services.AddIdentity<Usuario, IdentityRole>(opts =>
+            {
+                //Regra de email
+                opts.User.RequireUniqueEmail = true;
+
+                //Regras para as senhas
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequiredLength = 1;
+            })
+            .AddEntityFrameworkStores<JarbasContext>();
+
+
             //Cfg Entity Framework + PostgreSQL
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<JarbasContext>(
@@ -46,14 +63,14 @@ namespace serverTCC
                 .AllowAnyOrigin()
             );
 
-            //para realizar a autenticação
+            /*//para realizar a autenticação
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
                 Authority = "http://localhost:5000",
                 RequireHttpsMetadata = false,
 
                 ApiName = "jarbasApi"
-            });
+            });*/
 
             app.UseMvcWithDefaultRoute();
         }
