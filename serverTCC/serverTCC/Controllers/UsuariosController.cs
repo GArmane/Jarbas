@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using serverTCC.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using serverTCC.Data;
-using serverTCC.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 
 namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Usuarios")]
-    //[Authorize]
+    [Authorize]
     public class UsuariosController : Controller
     {
         private UserManager<Usuario> userManager;

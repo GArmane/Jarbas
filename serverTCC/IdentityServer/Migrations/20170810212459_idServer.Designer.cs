@@ -8,7 +8,7 @@ using IdentityServer.Data;
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20170809234335_idServer")]
+    [Migration("20170810212459_idServer")]
     partial class idServer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,7 +46,7 @@ namespace IdentityServer.Migrations
 
                     b.Property<string>("PasswordHash");
 
-                    b.Property<int>("PerfilId");
+                    b.Property<int?>("PerfilId");
 
                     b.Property<string>("PhoneNumber");
 

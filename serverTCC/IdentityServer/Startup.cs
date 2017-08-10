@@ -12,6 +12,8 @@ using IdentityServer.Utils;
 using IdentityServer.Data;
 using IdentityServer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer
 {
@@ -35,12 +37,16 @@ namespace IdentityServer
             // Add framework services.
             services.AddMvc();
 
-            /*services.AddIdentityServer()
-                .AddSigningCredential(new X509Certificate2("cert.pfx"))
+            services.AddIdentityServer()
+                //.AddSigningCredential(new X509Certificate2("cert.pfx"))
+                .AddTemporarySigningCredential()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<Usuario>();*/
+                .AddAspNetIdentity<Usuario>();
             //.AddExtensionGrantValidator<GoogleGrantValidator>();
+
+            services.AddIdentity<Usuario, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>();
 
             //Cfg Entity Framework + PostgreSQL
             services.AddEntityFrameworkNpgsql()
@@ -55,6 +61,7 @@ namespace IdentityServer
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseIdentity();
             app.UseIdentityServer();
 
             app.UseMvcWithDefaultRoute();

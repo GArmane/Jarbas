@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using IdentityServer.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
 
 namespace IdentityServer.Data
 {

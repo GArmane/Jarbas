@@ -64,14 +64,14 @@ namespace serverTCC
                 .AllowAnyOrigin()
             );
 
-            /*//para realizar a autenticação
+            //para realizar a autenticação
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
                 Authority = "http://localhost:5000",
                 RequireHttpsMetadata = false,
 
                 ApiName = "jarbasApi"
-            });*/
+            });
 
             app.UseMvcWithDefaultRoute();
         }

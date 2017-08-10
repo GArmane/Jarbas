@@ -45,7 +45,7 @@ namespace IdentityServer.Migrations
 
                     b.Property<string>("PasswordHash");
 
-                    b.Property<int>("PerfilId");
+                    b.Property<int?>("PerfilId");
 
                     b.Property<string>("PhoneNumber");
 
