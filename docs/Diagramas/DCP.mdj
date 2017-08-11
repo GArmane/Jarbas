@@ -1,7 +1,7 @@
 {
 	"_type": "Project",
 	"_id": "AAAAAAFF+h6SjaM2Hec=",
-	"name": "Untitled",
+	"name": "JarbasTCC - Diagrama de Classes de Projeto",
 	"ownedElements": [
 		{
 			"_type": "UMLModel",
@@ -539,7 +539,7 @@
 									"containerExtending": false,
 									"left": 24,
 									"top": 193,
-									"width": 1013.2470703125,
+									"width": 1014,
 									"height": 113,
 									"autoResize": false
 								},
@@ -1360,24 +1360,6 @@
 								},
 								{
 									"_type": "UMLAttribute",
-									"_id": "AAAAAAFdqtyZWIaFWp4=",
-									"_parent": {
-										"$ref": "AAAAAAFdoFoRTXc45BU="
-									},
-									"name": "Categoria",
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "string",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"isDerived": false,
-									"aggregation": "none",
-									"isID": false
-								},
-								{
-									"_type": "UMLAttribute",
 									"_id": "AAAAAAFdoJCDqHdXqF0=",
 									"_parent": {
 										"$ref": "AAAAAAFdoFoRTXc45BU="
@@ -1441,24 +1423,6 @@
 									"isStatic": false,
 									"isLeaf": false,
 									"type": "int",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"isDerived": false,
-									"aggregation": "none",
-									"isID": false
-								},
-								{
-									"_type": "UMLAttribute",
-									"_id": "AAAAAAFdqtgPxYZKuO0=",
-									"_parent": {
-										"$ref": "AAAAAAFdoFoRTXc45BU="
-									},
-									"name": "UsuarioId",
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "string",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -1558,26 +1522,6 @@
 									"isLeaf": false,
 									"type": {
 										"$ref": "AAAAAAFdoF3k+7IozgY="
-									},
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"isDerived": false,
-									"aggregation": "none",
-									"isID": false
-								},
-								{
-									"_type": "UMLAttribute",
-									"_id": "AAAAAAFdoJCUiHdZ/k8=",
-									"_parent": {
-										"$ref": "AAAAAAFdoFoRTXc45BU="
-									},
-									"name": "Usuario",
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": {
-										"$ref": "AAAAAAFdoFmKbrH2ZAA="
 									},
 									"isReadOnly": false,
 									"isOrdered": false,
