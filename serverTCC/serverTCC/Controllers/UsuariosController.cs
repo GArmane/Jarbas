@@ -49,43 +49,31 @@ namespace serverTCC.Controllers
             }
         }
 
-        //TESTE PARA A COMPRESSÃO DE DADOS
-        /*[HttpGet]
-        public IEnumerable<string> Get()
+        /// <summary>
+        /// Busca o usuário por seu Email
+        /// GET api/Usuarios/Email/EMAIL
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpGet("Email/{email}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByEmail([FromRoute]string email)
         {
-            List<string> data = new List<string>();
-            for (int i = 1; i <= 100; i++)
+            Usuario usuario = await userManager.FindByEmailAsync(email);
+
+            if (usuario != null)
             {
-                data.Add("ID :" + i.ToString());
-                data.Add("Name :" + i.ToString());
-                data.Add("Address :" + i.ToString());
-                data.Add("Email :" + i.ToString());
-                data.Add("Telephone :" + i.ToString());
+                return Ok(usuario);
             }
-            return data;
-        }*/
-
-
-        /*// GET: api/Usuarios/5
-        [HttpGet("email/{email}")]
-        public async Task<IActionResult> GetUsuario([FromRoute] string email)
-        {
-            if (!ModelState.IsValid)
+            else
             {
-                return BadRequest(ModelState);
+                ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                return NotFound(ModelState.Values.SelectMany(v => v.Errors));
             }
-
-            var usuario = await _context.Usuario.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(usuario);
         }
 
-        // PUT: api/Usuarios/5
+
+        /*// PUT: api/Usuarios/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario([FromRoute] string id, [FromBody] Usuario usuario)
         {
