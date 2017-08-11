@@ -1,0 +1,152 @@
+/*
+To customize the look and feel of Ionic, you can override the variables
+in ionic's _variables.scss file.
+
+For example, you might change some of the default colors:
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+*/
+
+$dark: #3f4041;
+
+.logo {
+		
+	display: block;
+  	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+	height: auto;
+}
+
+.tam{
+	height: 70px;
+	width: auto;
+}
+
+.custom{
+  background-color: #30e3ca !important;
+  color: #40514E !important;
+  border: none;
+  border-color:   darken( #11999E, 10% );
+  h1{
+    color: #40514E;
+  }
+
+  button{
+  	color: #40514E !important;
+  }
+}
+
+.padrao{
+		
+	background-color: #f3F6F6 !important;
+  	color: #40514E;
+  	border-color:   darken( #11999E, 10% );
+  	.item{
+  		background-color: transparent;
+  	}
+  	h1,h3,h4,h5{
+    	     color: #40514E;
+  	}
+  	.cor{
+  		background-color: #11999E !important;
+  		color: white;
+  	}
+  	a{
+  		border: 1px solid;
+  		border-color:   darken( #11999E, 10% ) !important;
+  	}
+
+}
+
+
+.gohorse {
+  background-color: #f3f6f6 !important;
+  color: #40514E;
+  .item {
+    background-color: transparent !important;
+    border: none;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color:   darken( #11999E, 10% );    
+
+    color: #000000;
+    max-height: none;
+
+    &:last-child {
+      border-bottom: 1px solid;
+      border-color:   darken( #11999E, 10% );
+    }
+    &.current{ background-color:darken( $dark, 10% )   !important;
+       border-top: 1px solid #464646 !important;
+    border-bottom: 2px solid #333333 !important;
+      p,h3{opacity: .7;}
+            }
+  }
+  h2,
+  h3,
+  p,
+  a{
+    color: #40514E;
+  }
+}
+.dark-head {
+  text-decoration: none;
+}
+
+.test{
+	border: none !important;
+}
+
+.tama{
+	height: 100px;
+	width: auto;
+}
+
+.centro{
+	
+	display: block;
+  	margin-left: auto;
+	margin-right: auto;
+}
+
+.col.borda {
+	
+	border: 1px solid;
+	border-color:   darken( #11999E, 10% );
+	padding: 20px;
+}
+
+.col.bord {
+	
+ 	border: 1px solid;
+	border-color:   darken( #11999E, 10% );
+}
+
+div.link {
+	position: relative;
+	top: 12px;
+	right: 5px;
+}
+
+a.text-right{
+	text-align: right;
+}
+
+
+
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+
