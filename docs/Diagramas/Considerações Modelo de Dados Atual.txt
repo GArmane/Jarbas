@@ -1,0 +1,26 @@
+Considerações Banco de Dados
+
+- Movimentação tem uma referência ao usuário, entretanto tem também referência
+á uma Conta Contabil. Por esta, é possível achar o usuário com uma FK.
+Sugestão: retirar FK de usuário em Movimentação.
+
+- Tabela Moeda se repete em Perfil e ContaContabil. Retirar redundancia?
+
+- ObjetivoConta tem cara de tabela associativa, drop na ID como PK?
+
+- Objetivo tem relação desnecessária com Usuario.
+
+- Na verdade quase todas tabelas tem relação com usuario...extremamente errado.
+
+- Investimento tem relação com moeda. Repetição novamente, pois moeda já tem
+entrada em ContaContabil.
+
+Movimentação está gigante, com uma coluna que teria em sua maioria, entradas
+nulas.
+Sugestão: refatorar essa tabela. Talvez especializar Movimentação e criar
+outra tabela para transferências.
+
+Sugestão no geral: repensar no modelo de dados. Movimentação ta tendo um papel
+central mas deveria ficar de lado e ContaContabil ser o objeto principal da
+aplicação. A parte de Objetivos esta no caminho certo, só refinar como guardar
+um investimento e como armazenar os históricos.
