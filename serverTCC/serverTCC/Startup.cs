@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ namespace serverTCC
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCompression();
             services.AddCors();
 
             // Add framework services.
@@ -58,11 +60,16 @@ namespace serverTCC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(LogLevel.Information);
+            loggerFactory.AddDebug();
+
             app.UseCors(builder =>
                 builder.AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
             );
+
+            app.UseResponseCompression();
 
             //para realizar a autenticação
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
@@ -72,6 +79,7 @@ namespace serverTCC
 
                 ApiName = "jarbasApi"
             });
+            
 
             app.UseMvcWithDefaultRoute();
         }

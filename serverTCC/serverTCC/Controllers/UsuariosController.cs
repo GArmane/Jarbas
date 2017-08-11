@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using serverTCC.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +48,23 @@ namespace serverTCC.Controllers
                 return NotFound(ModelState.Values.SelectMany(v => v.Errors));
             }
         }
+
+        //TESTE PARA A COMPRESSÃO DE DADOS
+        /*[HttpGet]
+        public IEnumerable<string> Get()
+        {
+            List<string> data = new List<string>();
+            for (int i = 1; i <= 100; i++)
+            {
+                data.Add("ID :" + i.ToString());
+                data.Add("Name :" + i.ToString());
+                data.Add("Address :" + i.ToString());
+                data.Add("Email :" + i.ToString());
+                data.Add("Telephone :" + i.ToString());
+            }
+            return data;
+        }*/
+
 
         /*// GET: api/Usuarios/5
         [HttpGet("email/{email}")]
