@@ -28,6 +28,63 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
+        /// Cria um novo usuário
+        /// POST api/Usuarios
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] UsuarioModel model)
+        {
+            Usuario usuario = await userManager.FindByEmailAsync(model.Email);
+
+            if (usuario == null)
+            {
+                usuario = new Usuario
+                {
+                    Nome = model.Nome,
+                    Email = model.Email,
+                    UserName = model.Email
+                };
+
+                //valida a senha (De acordo com regras definidas no startup)
+                IdentityResult validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
+
+                if (!validPass.Succeeded)
+                {
+                    ModelState.AddModelError("Senha", "Senha invalida");
+                }
+
+                //se a validação foi bem sucedida, cadastra o usuário
+                if (validPass.Succeeded)
+                {
+                    //tenta criar o usuário
+                    IdentityResult result = await userManager.CreateAsync(usuario, model.Senha);
+
+                    //verifica se o usuário foi criado
+                    if (result.Succeeded)
+                    {
+                        return CreatedAtAction("Create", usuario);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Usuario", "Usuário não pôde ser criado");
+                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                    }
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("Email", "Email já foi cadastrado");
+                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+            }
+        }
+
+        /// <summary>
         /// Busca o usuário por sua ID
         /// GET api/Usuarios/ID
         /// </summary>
@@ -56,7 +113,6 @@ namespace serverTCC.Controllers
         /// <param name="email"></param>
         /// <returns></returns>
         [HttpGet("Email/{email}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetByEmail([FromRoute]string email)
         {
             Usuario usuario = await userManager.FindByEmailAsync(email);
@@ -72,99 +128,102 @@ namespace serverTCC.Controllers
             }
         }
 
-
-        /*// PUT: api/Usuarios/5
+        /// <summary>
+        /// Edita um usuário existente
+        /// PUT api/Usuarios/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario([FromRoute] string id, [FromBody] Usuario usuario)
+        [AllowAnonymous]
+        public async Task<IActionResult> EditUser([FromRoute] string id, [FromBody] UsuarioModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //variavel para indicar que o email não foi alterado
+            bool email = false;
+            //variavel para indicar que a senha não foi alterada
+            bool pass = false;
+            //variavel para efetuar validação de email
+            IdentityResult validEmail = new IdentityResult();
+            //variavel para efetuar validação de senha
+            IdentityResult validPass = new IdentityResult();
 
-            if (id != usuario.Id)
-            {
-                return BadRequest();
-            }
+            Usuario usuario = await userManager.FindByIdAsync(id);     
 
-            _context.Entry(usuario).State = EntityState.Modified;
-
-            try
+            if (usuario != null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UsuarioExists(id))
+                //verifica se o email não foi alterado
+                if ((!usuario.Email.Equals(model.Email)) && (!string.IsNullOrEmpty(model.Email)))
                 {
-                    return NotFound();
+                    //validar email do usuario
+                    usuario.Email = model.Email;
+                    usuario.UserName = model.Email;
+                    validEmail = await userValidator.ValidateAsync(userManager, usuario);
+
+                    if (!validEmail.Succeeded)
+                    {
+                        ModelState.AddModelError("Email", "E-mail já cadastrado");
+                    }
                 }
                 else
                 {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-        */
-
-        /// <summary>
-        /// Cria um novo usuário
-        /// POST: api/Usuarios
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UsuarioModel model)
-        {
-            Usuario usuario = await userManager.FindByEmailAsync(model.Email);
-
-            if(usuario == null)
-            {
-                usuario = new Usuario
-                {
-                    Nome = model.Nome,
-                    Email = model.Email,
-                    UserName = model.Email
-                };
-
-                //valida a senha (De acordo com regras definidas no startup)
-                IdentityResult validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
-
-                if (!validPass.Succeeded)
-                {
-                    ModelState.AddModelError("Senha", "Senha invalida");
+                    email = true;
                 }
 
-                //se a validação foi bem sucedida, cadastra o usuário
-                if(validPass.Succeeded)
+                //validar senha(se foi passada)
+                if (!string.IsNullOrEmpty(model.Senha))
                 {
-                    //tenta criar o usuário
-                    IdentityResult result = await userManager.CreateAsync(usuario, model.Senha);
+                    validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
 
-                    //verifica se o usuário foi criado
-                    if (result.Succeeded)
+                    if (validPass.Succeeded)
                     {
-                        return CreatedAtAction("Create", usuario);
+                        usuario.PasswordHash = passwordHasher.HashPassword(usuario, model.Senha);
                     }
                     else
                     {
-                        ModelState.AddModelError("Usuario", "Usuário não pôde ser criado");
-                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                        ModelState.AddModelError("Senha", "Senha invalida");
                     }
                 }
                 else
                 {
-                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                    pass = true;
                 }
+
+                if ((validEmail.Succeeded || email) && (validPass.Succeeded || pass))
+                {
+                    usuario.Nome = model.Nome;
+
+                    IdentityResult result = await userManager.UpdateAsync(usuario);
+
+                    if (result.Succeeded)
+                    {
+                        return Ok(usuario);
+                    }
+                }
+
+                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
             }
             else
             {
-                ModelState.AddModelError("Email", "Email já foi cadastrado");
-                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                return NotFound(ModelState.Values.SelectMany(v => v.Errors));
             }
         }
+
+        /// <summary>
+        /// Edita/Adiciona um perfil de um usuário existente
+        /// PUT api/Usuarios/Perfil/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="perfil"></param>
+        /// <returns></returns>
+        [HttpPut("Perfil/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditPerfil([FromRoute] string id, [FromBody] Perfil perfil)
+        {
+            //CONTINUAR
+        }
+        
         /*
         // DELETE: api/Usuarios/5
         [HttpDelete("{id}")]
@@ -185,11 +244,6 @@ namespace serverTCC.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(usuario);
-        }
-
-        private bool UsuarioExists(string id)
-        {
-            return _context.Usuario.Any(e => e.Id == id);
         }*/
     }
 }
