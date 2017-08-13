@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using serverTCC.Data;
 using serverTCC.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +19,16 @@ namespace serverTCC.Controllers
         private IUserValidator<Usuario> userValidator;
         private IPasswordValidator<Usuario> passwordValidator;
         private IPasswordHasher<Usuario> passwordHasher;
+        private JarbasContext context;
 
         public UsuariosController(UserManager<Usuario> usrMgr, IUserValidator<Usuario> usrValid,
-            IPasswordValidator<Usuario> passValid, IPasswordHasher<Usuario> passHasher)
+            IPasswordValidator<Usuario> passValid, IPasswordHasher<Usuario> passHasher, JarbasContext ctx)
         {
             userManager = usrMgr;
             userValidator = usrValid;
             passwordValidator = passValid;
             passwordHasher = passHasher;
+            context = ctx;
         }
 
         /// <summary>
@@ -93,7 +97,10 @@ namespace serverTCC.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute]string id)
         {
-            Usuario usuario = await userManager.FindByIdAsync(id);
+            Usuario usuario = await context.Usuario
+                .Include(u => u.Perfil)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id.Equals(id));
 
             if(usuario != null)
             {
@@ -115,7 +122,10 @@ namespace serverTCC.Controllers
         [HttpGet("Email/{email}")]
         public async Task<IActionResult> GetByEmail([FromRoute]string email)
         {
-            Usuario usuario = await userManager.FindByEmailAsync(email);
+            Usuario usuario = await context.Usuario
+                .Include(u => u.Perfil)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email.Equals(email));
 
             if (usuario != null)
             {
@@ -136,7 +146,6 @@ namespace serverTCC.Controllers
         /// <param name="usuario"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> EditUser([FromRoute] string id, [FromBody] UsuarioModel model)
         {
             //variavel para indicar que o email não foi alterado
@@ -218,32 +227,99 @@ namespace serverTCC.Controllers
         /// <param name="perfil"></param>
         /// <returns></returns>
         [HttpPut("Perfil/{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> EditPerfil([FromRoute] string id, [FromBody] Perfil perfil)
         {
-            //CONTINUAR
+            Usuario usuario = await context.Usuario
+                .Include(u => u.Perfil)
+                .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+            if (usuario != null)
+            {
+                //Caso o usuário não tenha um perfil, é necessário uma instancia, para poder passar os valores
+                if (usuario.Perfil == null)
+                {
+                    usuario.Perfil = new Perfil();
+                }
+
+                //Se passar o objeto inteiro, o entity framework ignora o antigo e cria um novo perfil, com nova ID
+                usuario.Perfil.Valor = perfil.Valor;
+                usuario.Perfil.MoedaId = perfil.MoedaId;
+                usuario.Perfil.RendaFixa = perfil.RendaFixa;
+                usuario.Perfil.Profissao = perfil.Profissao;
+                usuario.Perfil.FaixaEtaria = perfil.FaixaEtaria;
+                usuario.Perfil.EscalaTempo = perfil.EscalaTempo;
+
+
+                context.Usuario.Update(usuario);
+
+                //Retorna as informações corretas da moeda aplicada ao perfil
+                usuario.Perfil.Moeda = await context.Moeda.FirstOrDefaultAsync(m => m.Id.Equals(usuario.Perfil.MoedaId));
+
+                await context.SaveChangesAsync();        
+
+                return Ok(usuario);
+            }
+            else
+            {
+                ModelState.AddModelError("Usuario", "Usuário não encontrado");
+            }
+
+            return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
         }
-        
-        /*
-        // DELETE: api/Usuarios/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario([FromRoute] string id)
+
+        /// <summary>
+        /// Deleta um perfil de um usuário existente
+        /// DELETE api/Usuarios/Perfil/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Perfil/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeletePerfil([FromRoute] string id)
         {
-            if (!ModelState.IsValid)
+            Usuario usuario = await context.Usuario
+                .Include(u => u.Perfil)
+                .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+            if (usuario != null)
             {
-                return BadRequest(ModelState);
+                if(usuario.Perfil != null)
+                {
+                    context.Perfil.Remove(usuario.Perfil);
+
+                    await context.SaveChangesAsync();
+                }
+         
+                return Ok(usuario);
+            }
+            else
+            {
+                ModelState.AddModelError("Usuario", "Usuário não encontrado");
             }
 
-            var usuario = await _context.Usuario.SingleOrDefaultAsync(m => m.Id == id);
-            if (usuario == null)
+            return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+        }
+
+            /*
+            // DELETE: api/Usuarios/5
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> DeleteUser([FromRoute] string id)
             {
-                return NotFound();
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            _context.Usuario.Remove(usuario);
-            await _context.SaveChangesAsync();
+                var usuario = await _context.Usuario.SingleOrDefaultAsync(m => m.Id == id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
 
-            return Ok(usuario);
-        }*/
-    }
+                _context.Usuario.Remove(usuario);
+                await _context.SaveChangesAsync();
+
+                return Ok(usuario);
+            }*/
+        }
 }

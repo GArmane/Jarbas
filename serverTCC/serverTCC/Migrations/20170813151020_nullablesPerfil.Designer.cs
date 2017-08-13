@@ -9,9 +9,10 @@ using serverTCC.Models;
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20170813151020_nullablesPerfil")]
+    partial class nullablesPerfil
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -327,13 +328,13 @@ namespace serverTCC.Migrations
 
                     b.Property<int?>("FaixaEtaria");
 
-                    b.Property<int?>("MoedaId");
+                    b.Property<int>("MoedaId");
 
                     b.Property<int?>("Profissao");
 
                     b.Property<bool>("RendaFixa");
 
-                    b.Property<decimal?>("Valor");
+                    b.Property<decimal>("Valor");
 
                     b.HasKey("Id");
 
@@ -536,7 +537,8 @@ namespace serverTCC.Migrations
                 {
                     b.HasOne("serverTCC.Models.Moeda", "Moeda")
                         .WithMany()
-                        .HasForeignKey("MoedaId");
+                        .HasForeignKey("MoedaId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("serverTCC.Models.Usuario", b =>
