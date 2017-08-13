@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,6 +37,7 @@ namespace serverTCC.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] UsuarioModel model)
         {
             Usuario usuario = await userManager.FindByEmailAsync(model.Email);
@@ -274,7 +274,6 @@ namespace serverTCC.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("Perfil/{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeletePerfil([FromRoute] string id)
         {
             Usuario usuario = await context.Usuario
@@ -295,31 +294,41 @@ namespace serverTCC.Controllers
             else
             {
                 ModelState.AddModelError("Usuario", "Usuário não encontrado");
-            }
-
-            return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+            }            
         }
 
-            /*
-            // DELETE: api/Usuarios/5
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> DeleteUser([FromRoute] string id)
+
+        /// <summary>
+        /// Deleta um usuário existente
+        /// DELETE api/Usuarios/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] string id)
+        {
+            Usuario usuario = await context.Usuario
+                .Include(u => u.Perfil)
+                .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+            if(usuario != null)
             {
-                if (!ModelState.IsValid)
+                if(usuario.Perfil != null)
                 {
-                    return BadRequest(ModelState);
+                    context.Perfil.Remove(usuario.Perfil);
                 }
+                context.Usuario.Remove(usuario);
 
-                var usuario = await _context.Usuario.SingleOrDefaultAsync(m => m.Id == id);
-                if (usuario == null)
-                {
-                    return NotFound();
-                }
+                await context.SaveChangesAsync();
 
-                _context.Usuario.Remove(usuario);
-                await _context.SaveChangesAsync();
-
-                return Ok(usuario);
-            }*/
+                return Ok();
+            }
+            else
+            {
+                ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+            }
         }
+    }
 }
