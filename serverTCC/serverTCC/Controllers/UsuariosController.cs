@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -329,6 +330,18 @@ namespace serverTCC.Controllers
                 ModelState.AddModelError("Usuario", "Usuário não encontrado");
                 return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
             }
+        }
+
+        /// <summary>
+        /// Recupera a senha do usuário
+        /// POST api/Usuarios/Recuperar/EMAIL
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost("Recuperar/{email}")]
+        public async Task<IActionResult> RecuperarSenha([FromRoute] string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }
