@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,51 +41,58 @@ namespace serverTCC.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] UsuarioModel model)
         {
-            Usuario usuario = await userManager.FindByEmailAsync(model.Email);
-
-            if (usuario == null)
+            try
             {
-                usuario = new Usuario
+                Usuario usuario = await userManager.FindByEmailAsync(model.Email);
+
+                if (usuario == null)
                 {
-                    Nome = model.Nome,
-                    Email = model.Email,
-                    UserName = model.Email
-                };
-
-                //valida a senha (De acordo com regras definidas no startup)
-                IdentityResult validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
-
-                if (!validPass.Succeeded)
-                {
-                    ModelState.AddModelError("Senha", "Senha invalida");
-                }
-
-                //se a validação foi bem sucedida, cadastra o usuário
-                if (validPass.Succeeded)
-                {
-                    //tenta criar o usuário
-                    IdentityResult result = await userManager.CreateAsync(usuario, model.Senha);
-
-                    //verifica se o usuário foi criado
-                    if (result.Succeeded)
+                    usuario = new Usuario
                     {
-                        return CreatedAtAction("Create", usuario);
+                        Nome = model.Nome,
+                        Email = model.Email,
+                        UserName = model.Email
+                    };
+
+                    //valida a senha (De acordo com regras definidas no startup)
+                    IdentityResult validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
+
+                    if (!validPass.Succeeded)
+                    {
+                        ModelState.AddModelError("Senha", "Senha invalida");
+                    }
+
+                    //se a validação foi bem sucedida, cadastra o usuário
+                    if (validPass.Succeeded)
+                    {
+                        //tenta criar o usuário
+                        IdentityResult result = await userManager.CreateAsync(usuario, model.Senha);
+
+                        //verifica se o usuário foi criado
+                        if (result.Succeeded)
+                        {
+                            return CreatedAtAction("Create", usuario);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Usuario", "Usuário não pôde ser criado");
+                            return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("Usuario", "Usuário não pôde ser criado");
                         return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
                     }
                 }
                 else
                 {
+                    ModelState.AddModelError("Email", "Email já foi cadastrado");
                     return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Email", "Email já foi cadastrado");
-                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                return BadRequest(e.Message);
             }
         }
 
@@ -97,20 +105,28 @@ namespace serverTCC.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute]string id)
         {
-            Usuario usuario = await context.Usuario
-                .Include(u => u.Perfil)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id.Equals(id));
+            try
+            {
+                Usuario usuario = await context.Usuario
+                    .Include(u => u.Perfil)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id.Equals(id));
 
-            if(usuario != null)
-            {
-                return Ok(usuario);
+                if (usuario != null)
+                {
+                    return Ok(usuario);
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(e.Message);
             }
+
         }
 
         /// <summary>
@@ -122,19 +138,26 @@ namespace serverTCC.Controllers
         [HttpGet("Email/{email}")]
         public async Task<IActionResult> GetByEmail([FromRoute]string email)
         {
-            Usuario usuario = await context.Usuario
-                .Include(u => u.Perfil)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email.Equals(email));
+            try
+            {
+                Usuario usuario = await context.Usuario
+                    .Include(u => u.Perfil)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Email.Equals(email));
 
-            if (usuario != null)
-            {
-                return Ok(usuario);
+                if (usuario != null)
+                {
+                    return Ok(usuario);
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(e.Message);
             }
         }
 
@@ -148,75 +171,83 @@ namespace serverTCC.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditUser([FromRoute] string id, [FromBody] UsuarioModel model)
         {
-            //variavel para indicar que o email não foi alterado
-            bool email = false;
-            //variavel para indicar que a senha não foi alterada
-            bool pass = false;
-            //variavel para efetuar validação de email
-            IdentityResult validEmail = new IdentityResult();
-            //variavel para efetuar validação de senha
-            IdentityResult validPass = new IdentityResult();
-
-            Usuario usuario = await userManager.FindByIdAsync(id);     
-
-            if (usuario != null)
+            try
             {
-                //verifica se o email não foi alterado
-                if ((!usuario.Email.Equals(model.Email)) && (!string.IsNullOrEmpty(model.Email)))
-                {
-                    //validar email do usuario
-                    usuario.Email = model.Email;
-                    usuario.UserName = model.Email;
-                    validEmail = await userValidator.ValidateAsync(userManager, usuario);
+                //variavel para indicar que o email não foi alterado
+                bool email = false;
+                //variavel para indicar que a senha não foi alterada
+                bool pass = false;
+                //variavel para efetuar validação de email
+                IdentityResult validEmail = new IdentityResult();
+                //variavel para efetuar validação de senha
+                IdentityResult validPass = new IdentityResult();
 
-                    if (!validEmail.Succeeded)
+                Usuario usuario = await userManager.FindByIdAsync(id);
+
+                if (usuario != null)
+                {
+                    //verifica se o email não foi alterado
+                    if ((!usuario.Email.Equals(model.Email)) && (!string.IsNullOrEmpty(model.Email)))
                     {
-                        ModelState.AddModelError("Email", "E-mail já cadastrado");
-                    }
-                }
-                else
-                {
-                    email = true;
-                }
+                        //validar email do usuario
+                        usuario.Email = model.Email;
+                        usuario.UserName = model.Email;
+                        validEmail = await userValidator.ValidateAsync(userManager, usuario);
 
-                //validar senha(se foi passada)
-                if (!string.IsNullOrEmpty(model.Senha))
-                {
-                    validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
-
-                    if (validPass.Succeeded)
-                    {
-                        usuario.PasswordHash = passwordHasher.HashPassword(usuario, model.Senha);
+                        if (!validEmail.Succeeded)
+                        {
+                            ModelState.AddModelError("Email", "E-mail já cadastrado");
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("Senha", "Senha invalida");
+                        email = true;
                     }
+
+                    //validar senha(se foi passada)
+                    if (!string.IsNullOrEmpty(model.Senha))
+                    {
+                        validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
+
+                        if (validPass.Succeeded)
+                        {
+                            usuario.PasswordHash = passwordHasher.HashPassword(usuario, model.Senha);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Senha", "Senha invalida");
+                        }
+                    }
+                    else
+                    {
+                        pass = true;
+                    }
+
+                    if ((validEmail.Succeeded || email) && (validPass.Succeeded || pass))
+                    {
+                        usuario.Nome = model.Nome;
+
+                        IdentityResult result = await userManager.UpdateAsync(usuario);
+
+                        if (result.Succeeded)
+                        {
+                            return Ok(usuario);
+                        }
+                    }
+
+                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
                 }
                 else
                 {
-                    pass = true;
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
-
-                if ((validEmail.Succeeded || email) && (validPass.Succeeded || pass))
-                {
-                    usuario.Nome = model.Nome;
-
-                    IdentityResult result = await userManager.UpdateAsync(usuario);
-
-                    if (result.Succeeded)
-                    {
-                        return Ok(usuario);
-                    }
-                }
-
-                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(e.Message);
             }
+
         }
 
         /// <summary>
@@ -229,42 +260,48 @@ namespace serverTCC.Controllers
         [HttpPut("Perfil/{id}")]
         public async Task<IActionResult> EditPerfil([FromRoute] string id, [FromBody] Perfil perfil)
         {
-            Usuario usuario = await context.Usuario
-                .Include(u => u.Perfil)
-                .FirstOrDefaultAsync(u => u.Id.Equals(id));
-
-            if (usuario != null)
+            try
             {
-                //Caso o usuário não tenha um perfil, é necessário uma instancia, para poder passar os valores
-                if (usuario.Perfil == null)
+                Usuario usuario = await context.Usuario
+                    .Include(u => u.Perfil)
+                    .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+                if (usuario != null)
                 {
-                    usuario.Perfil = new Perfil();
+                    //Caso o usuário não tenha um perfil, é necessário uma instancia, para poder passar os valores
+                    if (usuario.Perfil == null)
+                    {
+                        usuario.Perfil = new Perfil();
+                    }
+
+                    //Se passar o objeto inteiro, o entity framework ignora o antigo e cria um novo perfil, com nova ID
+                    usuario.Perfil.Valor = perfil.Valor;
+                    usuario.Perfil.MoedaId = perfil.MoedaId;
+                    usuario.Perfil.RendaFixa = perfil.RendaFixa;
+                    usuario.Perfil.Profissao = perfil.Profissao;
+                    usuario.Perfil.FaixaEtaria = perfil.FaixaEtaria;
+                    usuario.Perfil.EscalaTempo = perfil.EscalaTempo;
+
+                    context.Usuario.Update(usuario);
+
+                    //Retorna as informações corretas da moeda aplicada ao perfil
+                    usuario.Perfil.Moeda = await context.Moeda.FirstOrDefaultAsync(m => m.Id.Equals(usuario.Perfil.MoedaId));
+
+                    await context.SaveChangesAsync();
+
+                    return Ok(usuario);
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
                 }
 
-                //Se passar o objeto inteiro, o entity framework ignora o antigo e cria um novo perfil, com nova ID
-                usuario.Perfil.Valor = perfil.Valor;
-                usuario.Perfil.MoedaId = perfil.MoedaId;
-                usuario.Perfil.RendaFixa = perfil.RendaFixa;
-                usuario.Perfil.Profissao = perfil.Profissao;
-                usuario.Perfil.FaixaEtaria = perfil.FaixaEtaria;
-                usuario.Perfil.EscalaTempo = perfil.EscalaTempo;
-
-
-                context.Usuario.Update(usuario);
-
-                //Retorna as informações corretas da moeda aplicada ao perfil
-                usuario.Perfil.Moeda = await context.Moeda.FirstOrDefaultAsync(m => m.Id.Equals(usuario.Perfil.MoedaId));
-
-                await context.SaveChangesAsync();        
-
-                return Ok(usuario);
+                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                return BadRequest(e.Message);
             }
-
-            return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
         }
 
         /// <summary>
@@ -276,28 +313,34 @@ namespace serverTCC.Controllers
         [HttpDelete("Perfil/{id}")]
         public async Task<IActionResult> DeletePerfil([FromRoute] string id)
         {
-            Usuario usuario = await context.Usuario
-                .Include(u => u.Perfil)
-                .FirstOrDefaultAsync(u => u.Id.Equals(id));
-
-            if (usuario != null)
+            try
             {
-                if(usuario.Perfil != null)
+                Usuario usuario = await context.Usuario
+                    .Include(u => u.Perfil)
+                    .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+                if (usuario != null)
                 {
-                    context.Perfil.Remove(usuario.Perfil);
+                    if (usuario.Perfil != null)
+                    {
+                        context.Perfil.Remove(usuario.Perfil);
 
-                    await context.SaveChangesAsync();
+                        await context.SaveChangesAsync();
+                    }
+
+                    return Ok(usuario);
                 }
-         
-                return Ok(usuario);
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
-            }            
+                return BadRequest(e.Message);
+            }        
         }
-
 
         /// <summary>
         /// Deleta um usuário existente
@@ -308,27 +351,46 @@ namespace serverTCC.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string id)
         {
-            Usuario usuario = await context.Usuario
-                .Include(u => u.Perfil)
-                .FirstOrDefaultAsync(u => u.Id.Equals(id));
-
-            if(usuario != null)
+            try
             {
-                if(usuario.Perfil != null)
+                Usuario usuario = await context.Usuario
+                    .Include(u => u.Perfil)
+                    .FirstOrDefaultAsync(u => u.Id.Equals(id));
+
+                if (usuario != null)
                 {
-                    context.Perfil.Remove(usuario.Perfil);
+                    if (usuario.Perfil != null)
+                    {
+                        context.Perfil.Remove(usuario.Perfil);
+                    }
+                    context.Usuario.Remove(usuario);
+
+                    await context.SaveChangesAsync();
+
+                    return Ok();
                 }
-                context.Usuario.Remove(usuario);
-
-                await context.SaveChangesAsync();
-
-                return Ok();
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                return BadRequest(e.Message);
             }
+        }
+
+        /// <summary>
+        /// Recupera a senha do usuário
+        /// POST api/Usuarios/Recuperar/EMAIL
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost("Recuperar/{email}")]
+        public async Task<IActionResult> RecuperarSenha([FromRoute] string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }
