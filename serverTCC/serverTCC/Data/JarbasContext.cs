@@ -23,6 +23,7 @@ namespace serverTCC.Data
         public DbSet<Perfil> Perfil { get; set; }
         public DbSet<TipoInvestimento> TipoInvestimento { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<RecuperacaoSenha> RecuperacaoSenha { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
