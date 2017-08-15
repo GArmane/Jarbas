@@ -1,19 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/ContasContabeis")]
-    //[Authorize]
+    [Authorize]
     public class ContasContabeisController : Controller
     {
         private readonly JarbasContext context;
@@ -32,122 +30,162 @@ namespace serverTCC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ContaContabil contaContabil)
         {
-            bool usuarioExists = await context.Usuario.AnyAsync(u => u.Id.Equals(contaContabil.UsuarioId));
-
-            if (usuarioExists)
+            try
             {
-                bool contaExists = await context.ContaContabil.AnyAsync(c => c.Nome.Equals(contaContabil.Nome));
+                bool usuarioExists = await context.Usuario.AnyAsync(u => u.Id.Equals(contaContabil.UsuarioId));
 
-                if (!contaExists)
+                if (usuarioExists)
                 {
-                    context.ContaContabil.Add(contaContabil);
+                    bool contaExists = await context.ContaContabil.AnyAsync(c => c.Nome.Equals(contaContabil.Nome));
+
+                    if (!contaExists)
+                    {
+                        context.ContaContabil.Add(contaContabil);
+
+                        await context.SaveChangesAsync();
+
+                        return CreatedAtAction("Create", contaContabil);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Nome", "Esse nome de conta já esta sendo utilizado");
+                        return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não cadastrado no sistema.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Busca todas as contas contabeis do usuário
+        /// GET api/ContasContabeis/Usuario/userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("Usuario/{userId}")]
+        public IActionResult GetUser([FromRoute] string userId)
+        {
+            try
+            {
+                var contas = context.ContaContabil
+                    .Include(c => c.Moeda)
+                    .Where(c => c.UsuarioId.Equals(userId));
+
+                return Ok(contas);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Busca uma conta contabil específica
+        /// GET api/ContasContabeis/id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            try
+            {
+                var contaContabil = await context.ContaContabil
+                    .Include(c => c.Moeda)
+                    .FirstOrDefaultAsync(c => c.Id.Equals(id));
+
+                if (contaContabil != null)
+                {
+                    return Ok(contaContabil);
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Conta contábil não encontrada");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edita uma conta contabil existente
+        /// PUT api/ContasContabeis/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="contaContabil"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ContaContabil contaContabil)
+        {
+            try
+            {
+                var contaAux = await context.ContaContabil.AsNoTracking().FirstOrDefaultAsync(c => c.Id.Equals(id));
+
+                if (contaAux != null)
+                {
+                    contaAux = contaContabil;
+
+                    context.ContaContabil.Update(contaAux);
 
                     await context.SaveChangesAsync();
 
-                    return CreatedAtAction("Create", contaContabil);
+                    return Ok(contaAux);
                 }
                 else
                 {
-                    ModelState.AddModelError("Nome", "Esse nome de conta já esta sendo utilizado");
+                    ModelState.AddModelError("ContaContabil", "Conta contábil não encontrada.");
                     return NotFound(ModelState.Values.SelectMany(e => e.Errors));
-
                 }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Usuario", "Usuário não cadastrado no sistema.");
-                return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                return BadRequest(e.Message);
             }
-
-
-
         }
 
-        // GET: api/ContasContabeis
-        [HttpGet]
-        public IEnumerable<ContaContabil> GetContaContabil()
+        /// <summary>
+        /// Deleta uma conta contabil existente
+        /// DELETE api/ContasContabeis/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            return context.ContaContabil;
-        }
-
-        // GET: api/ContasContabeis/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetContaContabil([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var contaContabil = await context.ContaContabil.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (contaContabil == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(contaContabil);
-        }
-
-        // PUT: api/ContasContabeis/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutContaContabil([FromRoute] int id, [FromBody] ContaContabil contaContabil)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != contaContabil.Id)
-            {
-                return BadRequest();
-            }
-
-            context.Entry(contaContabil).State = EntityState.Modified;
-
             try
             {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContaContabilExists(id))
+                var contaContabil = await context.ContaContabil.FirstOrDefaultAsync(c => c.Id.Equals(id));
+
+                if(contaContabil != null)
                 {
-                    return NotFound();
+                    context.ContaContabil.Remove(contaContabil);
+
+                    await context.SaveChangesAsync();
+
+                    return Ok();
                 }
                 else
                 {
-                    throw;
+                    ModelState.AddModelError("ContaContabil", "Conta contábil não encontrada");
+                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
-
-            return NoContent();
-        }
-
-        // DELETE: api/ContasContabeis/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContaContabil([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
+            catch (Exception e)
             {
-                return BadRequest(ModelState);
+                return BadRequest(e.Message);
             }
-
-            var contaContabil = await context.ContaContabil.SingleOrDefaultAsync(m => m.Id == id);
-            if (contaContabil == null)
-            {
-                return NotFound();
-            }
-
-            context.ContaContabil.Remove(contaContabil);
-            await context.SaveChangesAsync();
-
-            return Ok(contaContabil);
-        }
-
-        private bool ContaContabilExists(int id)
-        {
-            return context.ContaContabil.Any(e => e.Id == id);
         }
     }
 }
