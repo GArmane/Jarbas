@@ -7,6 +7,8 @@ using serverTCC.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
+using serverTCC.Services;
 
 namespace serverTCC.Controllers
 {
@@ -333,7 +335,7 @@ namespace serverTCC.Controllers
                 else
                 {
                     ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
             catch (Exception e)
@@ -372,7 +374,7 @@ namespace serverTCC.Controllers
                 else
                 {
                     ModelState.AddModelError("Usuario", "Usuário não encontrado");
-                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
             catch (Exception e)
@@ -382,13 +384,85 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Recupera a senha do usuário
-        /// POST api/Usuarios/Recuperar/EMAIL
+        /// Envia codigo de recuperação para o usuário
+        /// POST api/Usuarios/Enviar/EMAIL
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [HttpPost("Recuperar/{email}")]
-        public async Task<IActionResult> RecuperarSenha([FromRoute] string email)
+        [HttpPost("Enviar/{email}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EnviarCodigo([FromRoute] string email)
+        {
+            try
+            {
+                Usuario usuario = await context.Usuario.FirstOrDefaultAsync(u => u.Email.Equals(email));
+
+                if (usuario != null)
+                {
+                    EmailService emailService = new EmailService();
+
+                    //criação do codigo
+                    string codigo = new Random().Next(100000, 999999).ToString();
+
+                    string assunto = "Recuperação de senha Jarbas";
+
+                    string mensagem =
+                        $"Olá {usuario.Nome},\n\n" +
+                        $"Este é o seu código para recuperação de senha: {codigo}\n" +
+                        "Se você não solicitou uma recuperação de senha no app Jarbas, ignore este e-mail.\n\n" +
+                        "Atenciosamente,\n" +
+                        "Project Jarbas Team";
+
+                    bool emailEnviado = await emailService.SendEmail(email, mensagem, assunto, usuario.Nome);
+
+                    if (emailEnviado)
+                    {
+                        var recuperacaoSenha = new RecuperacaoSenha
+                        {
+                            UsuarioId = usuario.Id,
+                            Codigo = codigo
+                        };
+
+                        //busca se existe algum codigo antigo, para que o usuário tenha somente um codigo para recuperação de senha
+                        var oldCodigo = await context.RecuperacaoSenha.FirstOrDefaultAsync(r => r.UsuarioId.Equals(usuario.Id));
+                        if(oldCodigo != null)
+                        {
+                            context.RecuperacaoSenha.Remove(oldCodigo);
+                        }
+                        
+                        context.RecuperacaoSenha.Add(recuperacaoSenha);
+                        await context.SaveChangesAsync();
+
+                        return Ok();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "Email não pode ser enviado, tente novamente");
+                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não cadastrado no sistema.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        /// <summary>
+        /// Recupera a senha do usuário
+        /// POST api/Usuarios/EMAIL/CODIGO
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        [HttpPost("{email}/{codigo}")]
+        public async Task<IActionResult> RecuperarSenha([FromRoute] string codigo, [FromRoute] string email)
         {
             throw new NotImplementedException();
         }

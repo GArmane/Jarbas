@@ -49,7 +49,7 @@ namespace serverTCC.Controllers
                     else
                     {
                         ModelState.AddModelError("Nome", "Esse nome de conta já esta sendo utilizado");
-                        return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
 
                     }
                 }
@@ -179,7 +179,7 @@ namespace serverTCC.Controllers
                 else
                 {
                     ModelState.AddModelError("ContaContabil", "Conta contábil não encontrada");
-                    return BadRequest(ModelState.Values.SelectMany(v => v.Errors));
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
             catch (Exception e)

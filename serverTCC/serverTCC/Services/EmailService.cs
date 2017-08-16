@@ -14,13 +14,13 @@ namespace serverTCC.Services
             try
             {
                 string remetente = "projectjarbas@gmail.com";
-                string tituloRemetente = "ProjectJarbas";
+                string tituloRemetente = "Project Jarbas";
 
                 string smtpServer = "smtp.gmail.com";
-                int smtpPorta = 587;
+                int smtpPorta = 465;
 
                 var mimeMessage = new MimeMessage();
-                mimeMessage.From.Add(new MailboxAddress(tituloRemetente, remetente);
+                mimeMessage.From.Add(new MailboxAddress(tituloRemetente, remetente));
                 mimeMessage.To.Add(new MailboxAddress(nome, email));
                 mimeMessage.Subject = assunto;
                 mimeMessage.Body = new TextPart("plain")
