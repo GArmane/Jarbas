@@ -28,7 +28,7 @@ namespace serverTCC.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Ignore<UsuarioModel>();
-            
+            builder.Ignore<RecuperacaoModel>();
             base.OnModelCreating(builder);
         }
     }

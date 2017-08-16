@@ -609,7 +609,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+RecuperarSenha(email: string, codigo: string, novaSenha: string): Task<IActionResult>",
+											"text": "+RecuperarSenha(model: RecuperacaoModel): Task<IActionResult>",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -4819,11 +4819,13 @@
 											"_parent": {
 												"$ref": "AAAAAAFd5/qHRdptg9Q="
 											},
-											"name": "email",
+											"name": "model",
 											"visibility": "public",
 											"isStatic": false,
 											"isLeaf": false,
-											"type": "string",
+											"type": {
+												"$ref": "AAAAAAFd7J/pXeIoaqU="
+											},
 											"isReadOnly": false,
 											"isOrdered": false,
 											"isUnique": false,
@@ -4843,38 +4845,6 @@
 											"isOrdered": false,
 											"isUnique": false,
 											"direction": "return"
-										},
-										{
-											"_type": "UMLParameter",
-											"_id": "AAAAAAFd6H+cRNq+VSo=",
-											"_parent": {
-												"$ref": "AAAAAAFd5/qHRdptg9Q="
-											},
-											"name": "codigo",
-											"visibility": "public",
-											"isStatic": false,
-											"isLeaf": false,
-											"type": "string",
-											"isReadOnly": false,
-											"isOrdered": false,
-											"isUnique": false,
-											"direction": "in"
-										},
-										{
-											"_type": "UMLParameter",
-											"_id": "AAAAAAFd7JoFfeHcC5g=",
-											"_parent": {
-												"$ref": "AAAAAAFd5/qHRdptg9Q="
-											},
-											"name": "novaSenha",
-											"visibility": "public",
-											"isStatic": false,
-											"isLeaf": false,
-											"type": "string",
-											"isReadOnly": false,
-											"isOrdered": false,
-											"isUnique": false,
-											"direction": "in"
 										}
 									],
 									"concurrency": "sequential",

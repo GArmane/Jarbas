@@ -341,7 +341,7 @@ namespace serverTCC.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }        
+            }
         }
 
         /// <summary>
@@ -425,11 +425,11 @@ namespace serverTCC.Controllers
 
                         //busca se existe algum codigo antigo, para que o usuário tenha somente um codigo para recuperação de senha
                         var oldCodigo = await context.RecuperacaoSenha.FirstOrDefaultAsync(r => r.UsuarioId.Equals(usuario.Id));
-                        if(oldCodigo != null)
+                        if (oldCodigo != null)
                         {
                             context.RecuperacaoSenha.Remove(oldCodigo);
                         }
-                        
+
                         context.RecuperacaoSenha.Add(recuperacaoSenha);
                         await context.SaveChangesAsync();
 
@@ -456,15 +456,61 @@ namespace serverTCC.Controllers
 
         /// <summary>
         /// Recupera a senha do usuário
-        /// POST api/Usuarios/EMAIL/CODIGO
+        /// POST api/Usuarios/Recuperar
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="codigo"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost("{email}/{codigo}")]
-        public async Task<IActionResult> RecuperarSenha([FromRoute] string codigo, [FromRoute] string email)
+        [HttpPost("Recuperar")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RecuperarSenha([FromBody] RecuperacaoModel model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var usuario = await context.Usuario.FirstOrDefaultAsync(u => u.Email.Equals(model.Email));
+
+                if (usuario != null)
+                {
+                    var recuperacao = await context.RecuperacaoSenha
+                        .FirstOrDefaultAsync(r => (r.Codigo.Equals(model.Codigo)) && (r.UsuarioId.Equals(usuario.Id)));
+
+                    if ((recuperacao != null))
+                    {
+                        var validPass = await passwordValidator.ValidateAsync(userManager, usuario, model.Senha);
+
+                        if (validPass.Succeeded)
+                        {
+                            usuario.PasswordHash = passwordHasher.HashPassword(usuario, model.Senha);
+
+                            context.Usuario.Update(usuario);
+
+                            context.RecuperacaoSenha.Remove(recuperacao);
+
+                            await context.SaveChangesAsync();
+
+                            return Ok();
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Senha", "Senha invalida");
+                            return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                        }
+                    }
+
+                    ModelState.AddModelError("Codigo", "Código invalido");
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+                else
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
+
     }
+
 }
