@@ -9,12 +9,18 @@
     function loginController(LoginService, $state, api, $ionicPopup, $scope, $rootScope) {
         var vm = this;
 
-        vm.dados = {};
+        vm.dados = {
+            email: '',
+            senha: '',
+            codigoRec: '',
+            novaSenha: '',
+            confirmaSenha: ''
+        };
         
         vm.fazerLogin = fazerLogin;
         vm.recuperarConta = recuperarConta;
-        vm.apiChange = apiChange;
-        vm.tipoChange = tipoChange;
+        vm.loginGoogle = loginGoogle;
+        vm.loginFacebook = loginFacebook;
 
         activate();
 
@@ -25,45 +31,26 @@
         }
 
         function fazerLogin() {
-            LoginService.doLogin(vm.dados.user, vm.dados.pass, function () { $state.go('app.principal'); })
+            LoginService.doLogin(vm.dados.user, vm.dados.pass, loginResult);
         }
 
         function recuperarConta() {
-            $ionicPopup.show({
-                title: 'Recuperar Conta',
-                template: '<label class="item item-input"><input ng-model="vm.dados.user" type="email" placeholder="E-mail"></label>',
-                scope: $scope,
-                buttons: [{
-                    text: 'Cancelar',
-                    type: 'button-default'
-                }, {
-                    text: 'OK',
-                    type: 'button-positive',
-                    onTap: function(e) {
-                        return vm.dados.user;
-                    }
-                }]
-            }).then(function(email) {
-                if(!email) return;
-                if (!api.on()) {
-                    $ionicPopup.alert({
-                        title: 'Falta pouco!',
-                        template: 'Enviamos um e-mail com um link e instruções para que você possa recuperar a sua conta ;)'
-                    });
-                    return;
-                }
-                LoginService.recover(email);
-            });
+            LoginService.recover(email);
         }
 
-        function apiChange() {
-            if (!vm.apiOn)
-                vm.dados = { user: 'asdf@asdf.com', pass: 'asdf' };
-            api.on(vm.apiOn);
+        function loginGoogle() {
+            LoginService.gLogin(loginResult);
         }
 
-        function tipoChange() {
-            $rootScope.participante = vm.part;
+        function loginFacebook(params) {
+            
+        }
+
+        function loginResult(result) {
+            /// TODO: Se for o primeiro acesso, não vai para a tela principal e sim
+            /// para a tela de perfil completar o cadastro
+            if (result)
+                $state.go('app.principal'); /// TODO: principal? acho que não
         }
     }
 })();

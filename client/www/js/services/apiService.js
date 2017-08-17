@@ -7,22 +7,26 @@
 
     apiService.$inject = [];
     function apiService() {
-        this.on = on;
+        this.available = available;
         this.url = url;
+        this.token = token;
 
         var onState = true;
         var strUrl = 'https://localhost:5001/api/';
+        var strToken = 'https://localhost:5001/token/';
         
         ////////////////
 
-        function on(swit) {
-            if (swit == null)
-                return onState;
-            onState = swit;
+        function available(swit) {
+            /// TODO: Consulta se a API está acessível
         }
 
         function url() {
             return strUrl;
+        }
+
+        function token() {
+            return strToken;
         }
     }
 })();

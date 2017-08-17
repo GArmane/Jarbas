@@ -31,28 +31,28 @@ angular.module('starter')
         templateUrl: 'templates/menu.html',
         controller: 'AppCtrl'
     })
-    .state('app.solicitacoes', {
-        url: '/solicitacoes',
-        cache: false,
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/solicitacoes.html',
-                controller: 'listaController',
-                controllerAs: 'vm'
-            }
-        }
-    })
-    .state('app.solicitacoes_part_param', {
-        url: '/solicitacoes_part/:id',
-        cache: false,
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/solicitacoes_part.html',
-                controller: 'solicitacaoController',
-                controllerAs: 'vm'
-            }
-        }
-    })
+    // .state('app.solicitacoes', {
+    //     url: '/solicitacoes',
+    //     cache: false,
+    //     views: {
+    //         'menuContent': {
+    //             templateUrl: 'templates/solicitacoes.html',
+    //             controller: 'listaController',
+    //             controllerAs: 'vm'
+    //         }
+    //     }
+    // })
+    // .state('app.solicitacoes_part_param', {
+    //     url: '/solicitacoes_part/:id',
+    //     cache: false,
+    //     views: {
+    //         'menuContent': {
+    //             templateUrl: 'templates/solicitacoes_part.html',
+    //             controller: 'solicitacaoController',
+    //             controllerAs: 'vm'
+    //         }
+    //     }
+    // })
     .state('login', {
         url: '/login',
         // views: {

@@ -1,0 +1,35 @@
+Tela LOGIN:
+=======================
+vm.dados.email : string - email do usuário para login ou para recuperação de senha
+vm.dados.senha : string - senha do usuário para login
+vm.dados.codigoRec : string - código para recuperação de senha
+vm.dados.novaSenha : string - nova senha no processo de recuperação de senha
+vm.dados.confirmaSenha : string - confirmação da nova senha
+vm.fazerLogin : função - faz login com email e senha
+vm.recuperarConta : função - exibe os popups para recuperação da senha
+vm.loginGoogle : função - exibe a janela de login do google e realiza os procedimentos de login
+vm.loginFacebook : função - não implementado
+
+Tela CADASTRO:
+=======================
+vm.dados.nome : string - Nome do usuário
+vm.dados.email : string - email do cadastro do usuário
+vm.dados.senha : string - senha do cadastro do usuário
+vm.confirmaSenha : string - confirmação da senha
+vm.forcaSenha: int - força da senha digitada, de 1 a 10
+vm.analisaSenha : função - verifica a força da senha digitada. Usar no ng-change do campo senha
+vm.cadastrar : função - realiza o cadastro do usuário. Chame essa função apenas se o cadastro estiver completo
+vm.tooltipSenha : função - exibe o tooltip de ajuda sobre a força da senha. Instruções de como usar em breve
+vm.cadastroGoogle : função - exibe a janela de login do google e realiza os procedimentos de login e cadastro
+vm.cadastroFacebook : função - não implementado
+
+Tela PERFIL (completar cadastro):
+=======================
+vm.dados.MoedaId : int - Id da moeda selecionada no <select>
+vm.dados.Valor : double - valor da renda
+vm.dados.RendaFixa : bool - se a renda é fixa ou variável
+vm.dados.Profissao : int - Id da profissão selecionada no <select>
+vm.dados.FaixaEtaria : int - Id da faixa etária selecionada no <select>
+vm.dados.EscalaTempo : int - Id da escala de tempo da renda selecionada no <select>
+vm.cadastrar : função - realiza o cadastro do perfil do usuário
+vm.tooltipRenda : função - exibe o tooltip de ajuda sobre a o tipo de renda. Instruções de como usar em breve
