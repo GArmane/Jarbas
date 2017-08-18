@@ -16,6 +16,8 @@ namespace serverTCC.Models
 
         public string Descricao { get; set; }
 
+        public bool Arquivar { get; set; }
+
         public IEnumerable<ObjetivoConta> ObjetivosConta { get; set; }
         public IEnumerable<HistoricoObjetivo> HistoricoObjetivo { get; set; }
     }

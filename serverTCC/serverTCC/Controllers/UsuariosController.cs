@@ -37,8 +37,6 @@ namespace serverTCC.Controllers
         /// Cria um novo usuário
         /// POST api/Usuarios
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] UsuarioModel model)
@@ -102,8 +100,6 @@ namespace serverTCC.Controllers
         /// Busca o usuário por sua ID
         /// GET api/Usuarios/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute]string id)
         {
@@ -135,8 +131,6 @@ namespace serverTCC.Controllers
         /// Busca o usuário por seu Email
         /// GET api/Usuarios/Email/EMAIL
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
         [HttpGet("Email/{email}")]
         public async Task<IActionResult> GetByEmail([FromRoute]string email)
         {
@@ -167,9 +161,6 @@ namespace serverTCC.Controllers
         /// Edita um usuário existente
         /// PUT api/Usuarios/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="usuario"></param>
-        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> EditUser([FromRoute] string id, [FromBody] UsuarioModel model)
         {
@@ -256,9 +247,6 @@ namespace serverTCC.Controllers
         /// Edita/Adiciona um perfil de um usuário existente
         /// PUT api/Usuarios/Perfil/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="perfil"></param>
-        /// <returns></returns>
         [HttpPut("Perfil/{id}")]
         public async Task<IActionResult> EditPerfil([FromRoute] string id, [FromBody] Perfil perfil)
         {
@@ -310,8 +298,6 @@ namespace serverTCC.Controllers
         /// Deleta um perfil de um usuário existente
         /// DELETE api/Usuarios/Perfil/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("Perfil/{id}")]
         public async Task<IActionResult> DeletePerfil([FromRoute] string id)
         {
@@ -348,8 +334,6 @@ namespace serverTCC.Controllers
         /// Deleta um usuário existente
         /// DELETE api/Usuarios/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string id)
         {
@@ -387,8 +371,6 @@ namespace serverTCC.Controllers
         /// Envia codigo de recuperação para o usuário
         /// POST api/Usuarios/Enviar/EMAIL
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
         [HttpPost("Enviar/{email}")]
         [AllowAnonymous]
         public async Task<IActionResult> EnviarCodigo([FromRoute] string email)
@@ -458,8 +440,6 @@ namespace serverTCC.Controllers
         /// Recupera a senha do usuário
         /// POST api/Usuarios/Recuperar
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         [HttpPost("Recuperar")]
         [AllowAnonymous]
         public async Task<IActionResult> RecuperarSenha([FromBody] RecuperacaoModel model)

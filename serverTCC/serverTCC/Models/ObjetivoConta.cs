@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace serverTCC.Models
 {
@@ -11,8 +12,9 @@ namespace serverTCC.Models
         public int? ContaContabilId { get; set; }
 
         public int? InvestimentoId { get; set; }
-
+        [JsonIgnore]
         public int ObjetivoId { get; set; }
+        [JsonIgnore]
         public Objetivo Objetivo { get; set; }
         
         public double Porcentagem { get; set; }

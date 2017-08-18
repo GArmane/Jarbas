@@ -25,8 +25,6 @@ namespace serverTCC.Controllers
         /// Cria uma nova conta contabil
         /// POST api/ContasContabeis
         /// </summary>
-        /// <param name="contaContabil"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ContaContabil contaContabil)
         {
@@ -69,8 +67,6 @@ namespace serverTCC.Controllers
         /// Busca todas as contas contabeis do usuário
         /// GET api/ContasContabeis/Usuario/userId
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
         [HttpGet("Usuario/{userId}")]
         public IActionResult GetUser([FromRoute] string userId)
         {
@@ -92,8 +88,6 @@ namespace serverTCC.Controllers
         /// Busca uma conta contabil específica
         /// GET api/ContasContabeis/id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
@@ -123,9 +117,6 @@ namespace serverTCC.Controllers
         /// Edita uma conta contabil existente
         /// PUT api/ContasContabeis/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="contaContabil"></param>
-        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ContaContabil contaContabil)
         {
@@ -159,8 +150,6 @@ namespace serverTCC.Controllers
         /// Deleta uma conta contabil existente
         /// DELETE api/ContasContabeis/ID
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
