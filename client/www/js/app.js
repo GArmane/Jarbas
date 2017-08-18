@@ -31,6 +31,8 @@ angular.module('starter')
         templateUrl: 'templates/menu.html',
         controller: 'AppCtrl'
     })
+
+
     // .state('app.solicitacoes', {
     //     url: '/solicitacoes',
     //     cache: false,
@@ -53,17 +55,43 @@ angular.module('starter')
     //         }
     //     }
     // })
-    .state('login', {
-        url: '/login',
-        // views: {
-        //    'menuContent': {
-        templateUrl: 'templates/login.html',
-        controller: 'loginController',
-        controllerAs: 'vm'
-            //     }
-            // }
-    });
 
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/login');
+     .state('app.search', {
+    url: '/search',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/search.html'
+      }
+    }
+  })
+
+  .state('app.browse', {
+      url: '/browse',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/browse.html'
+        }
+      }
+    })
+    .state('app.playlists', {
+      url: '/playlists',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/playlists.html',
+          controller: 'PlaylistsCtrl'
+        }
+      }
+    })
+
+  .state('app.single', {
+    url: '/playlists/:playlistId',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/playlist.html',
+        controller: 'PlaylistCtrl'
+      }
+    }
+  });
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/app/playlists');
 });
