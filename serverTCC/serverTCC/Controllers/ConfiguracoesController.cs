@@ -12,7 +12,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Configuracoes")]
-    [Authorize]
+    //[Authorize]
     public class ConfiguracoesController : Controller
     {
         private readonly JarbasContext _context;
@@ -135,39 +135,25 @@ namespace serverTCC.Controllers
         /// PUT api/Configuracoes/{id}
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit([FromRoute] string userId, [FromBody] Configuracoes configuracoes)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] Configuracoes configuracoes)
         {
             try
             {
-                var usuarioExists = await _context.Users.AnyAsync(u => u.Id.Equals(userId));
-            
-                if(usuarioExists) 
-                {    
-                    var usuarioConfig = await _context
-                    .Configuracoes
-                    .FirstOrDefaultAsync(cfg => cfg.UsuarioId.Equals(userId));
+                var config = await _context.Configuracoes.FirstOrDefaultAsync(cfg => cfg.Id.Equals(id));
 
-                    if(usuarioConfig != null)
-                    {
-                        usuarioConfig.Idioma = configuracoes.Idioma;
-                        _context.Configuracoes.Update(usuarioConfig);
-
-                        await _context.SaveChangesAsync();
-                        return Ok(usuarioConfig);
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(
-                            "Configurações", "Usuário não possui configurações definidas"
-                        );
-                        return NotFound(ModelState.Values.SelectMany(v => v.Errors));
-                    }
-                }
-                else 
+                if(config != null)
                 {
-                    ModelState.AddModelError(
-                        "Usuario", "Usuário não cadastrado no sistema."
-                    );
+                    config.Idioma = configuracoes.Idioma;
+
+                    _context.Configuracoes.Update(config);
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(config);
+                }
+                else
+                {
+                    ModelState.AddModelError("Configuracoes", "Configurações não encontradas.");
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
