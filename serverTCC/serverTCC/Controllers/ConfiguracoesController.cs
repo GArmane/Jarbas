@@ -12,7 +12,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Configuracoes")]
-    //[Authorize]
+    [Authorize]
     public class ConfiguracoesController : Controller
     {
         private readonly JarbasContext _context;
