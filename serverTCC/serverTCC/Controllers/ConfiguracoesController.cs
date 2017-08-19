@@ -12,41 +12,30 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Configuracoes")]
-    [Authorize]
+    // [Authorize]
     public class ConfiguracoesController : Controller
     {
-        private readonly JarbasContext _context;
+        private readonly JarbasContext context;
 
-        public ConfiguracoesController(JarbasContext context)
+        public ConfiguracoesController(JarbasContext ctx)
         {
-            this._context = context;
+            this.context = ctx;
         }
 
         /// <summary>
-        /// Retorna lista completa de configurações cadastradas.
-        /// Para fins de desenvolvimento apenas.
-        /// GET api/Configuracoes
+        /// Retorna a configuração de usuário.
+        /// GET api/Configuracoes/Usuario/{id}
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Configuracoes> GetAll()
-        {
-            return _context.Configuracoes.ToList();
-        }
-
-        /// <summary>
-        /// Retorna uma configuração específica.
-        /// GET api/Configuracoes/{id}
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int Id)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> Get([FromRoute] string userId)
         {
             try
             {
-                var config = await _context
+                var config = await context
                     .Configuracoes
-                    .FirstOrDefaultAsync(cfg => cfg.Id.Equals(Id));
+                    .FirstOrDefaultAsync(cfg => cfg.UsuarioId.Equals(userId));
 
-                if (config != null)
+                if(config != null)
                 {
                     return Ok(config);
                 }
@@ -63,50 +52,29 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Retorna a configuração de usuário.
-        /// GET api/Configuracoes/Usuario/{id}
-        /// </summary>
-        [HttpGet("Usuario/{userId}")]
-        public async Task<IActionResult> GetUser([FromRoute] string userId)
-        {
-            try
-            {
-                var config = await _context
-                    .Configuracoes
-                    .FirstOrDefaultAsync(cfg => cfg.UsuarioId.Equals(userId));
-
-                return Ok(config);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        /// <summary>
         /// Cria uma nova configuração de usuário.
         /// POST api/Configuracoes
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Configuracoes configuracoes)
+        public async Task<IActionResult> Create([FromBody] Configuracoes config)
         {
             try
             {
-                bool usuarioExists = await _context
+                bool usuarioExists = await context
                     .Users
-                    .AnyAsync(u => u.Id.Equals(configuracoes.UsuarioId));
+                    .AnyAsync(u => u.Id.Equals(config.UsuarioId));
             
                 if (usuarioExists)
                 {
-                    var usuarioHasConfig = await _context
+                    var usuarioHasConfig = await context
                         .Configuracoes
-                        .AnyAsync(cfg => cfg.UsuarioId.Equals(configuracoes.UsuarioId));
+                        .AnyAsync(cfg => cfg.UsuarioId.Equals(config.UsuarioId));
 
                     if(!usuarioHasConfig)
                     {
-                        _context.Configuracoes.Add(configuracoes);
-                        await _context.SaveChangesAsync();
-                        return CreatedAtAction("Create", configuracoes);
+                        context.Configuracoes.Add(config);
+                        await context.SaveChangesAsync();
+                        return CreatedAtAction("Create", config);
                     }
                     else
                     {
@@ -134,22 +102,22 @@ namespace serverTCC.Controllers
         /// Edita uma configuração existente.
         /// PUT api/Configuracoes/{id}
         /// </summary>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] Configuracoes configuracoes)
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> Edit([FromRoute] string userId, [FromBody] Configuracoes config)
         {
             try
             {
-                var config = await _context.Configuracoes.FirstOrDefaultAsync(cfg => cfg.Id.Equals(id));
+                var configBD = await context.Configuracoes.FirstOrDefaultAsync(cfg => cfg.UsuarioId.Equals(userId));
 
                 if(config != null)
                 {
-                    config.Idioma = configuracoes.Idioma;
+                    configBD.Idioma = config.Idioma;
 
-                    _context.Configuracoes.Update(config);
+                    context.Configuracoes.Update(configBD);
 
-                    await _context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
-                    return Ok(config);
+                    return Ok(configBD);
                 }
                 else
                 {
@@ -167,17 +135,17 @@ namespace serverTCC.Controllers
         /// Deleta uma configuração existente.
         /// DELETE api/Configuracoes/{id}
         /// </summary>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Delete([FromRoute] string userId)
         {
             try
             {
-                var configuracoes = await _context.Configuracoes.FirstOrDefaultAsync(cfg => cfg.Id.Equals(id));
+                var configBD = await context.Configuracoes.FirstOrDefaultAsync(cfg => cfg.UsuarioId.Equals(userId));
 
-                if(configuracoes != null) 
+                if(configBD != null)
                 {
-                    _context.Configuracoes.Remove(configuracoes);
-                    await _context.SaveChangesAsync();
+                    context.Configuracoes.Remove(configBD);
+                    await context.SaveChangesAsync();
                     return Ok();
                 }
                 else
@@ -188,7 +156,7 @@ namespace serverTCC.Controllers
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 return BadRequest(e.Message);
             }
