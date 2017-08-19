@@ -12,7 +12,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Configuracoes")]
-    // [Authorize]
+    [Authorize]
     public class ConfiguracoesController : Controller
     {
         private readonly JarbasContext context;
@@ -23,8 +23,8 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Retorna a configuração de usuário.
-        /// GET api/Configuracoes/Usuario/{id}
+        /// Retorna as configurações de usuário.
+        /// GET api/Configuracoes/{userId}
         /// </summary>
         [HttpGet("{userId}")]
         public async Task<IActionResult> Get([FromRoute] string userId)
@@ -99,8 +99,8 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Edita uma configuração existente.
-        /// PUT api/Configuracoes/{id}
+        /// Edita uma configuração de usuário existente.
+        /// PUT api/Configuracoes/{userId}
         /// </summary>
         [HttpPut("{userId}")]
         public async Task<IActionResult> Edit([FromRoute] string userId, [FromBody] Configuracoes config)
@@ -133,7 +133,7 @@ namespace serverTCC.Controllers
 
         /// <summary>
         /// Deleta uma configuração existente.
-        /// DELETE api/Configuracoes/{id}
+        /// DELETE api/Configuracoes/{userId}
         /// </summary>
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete([FromRoute] string userId)
