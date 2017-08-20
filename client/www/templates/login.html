@@ -1,25 +1,35 @@
-<ion-modal-view>
-  <ion-header-bar>
-    <h1 class="title">Login</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="closeLogin()">Close</button>
-    </div>
-  </ion-header-bar>
-  <ion-content>
-    <form ng-submit="doLogin()">
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Username</span>
-          <input type="text" ng-model="loginData.username">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Password</span>
-          <input type="password" ng-model="loginData.password">
-        </label>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit">Log in</button>
-        </label>
+<ion-view view-title="Login"">
+  <ion-content class="padding">
+    <img class="logo" src="img/logo.png">
+    <h1><center>Jarbas</center></h1>
+    <center><em>Personal Accounting. Made easy.</em></center>
+    <hr width="90%">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col col-80">
+        <h2>Entre:</h2>
+        <div class="row">
+          <div class="col">com suas<br> redes sociais</div>
+          <div class="col">
+            <button class="button icon ion-social-facebook"></button>
+            <button class="button icon ion-social-google"></button>
+            <!--<button style="width:45px; height:45px"><img style="width:25px; height:auto" src="img/google.png"></button></div> -->
+          </div>
+        </div>
+        <div class="col"></div>
       </div>
-    </form>
+    </div>
+    <div class="divider">
+      <hr class="leftt">ou<hr class="rightt">
+    </div>
+    <br>
+    <label class="item item-input">
+      <input ng-model="vm.dados.user" type="email" placeholder="E-mail" required name="email">
+    </label>
+    <label class="item item-input">
+      <input ng-model="vm.dados.pass" type="password" placeholder="Senha" required name="senha">
+    </label>
+
+
   </ion-content>
-</ion-modal-view>
+</ion-view>

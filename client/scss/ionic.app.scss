@@ -17,6 +17,30 @@ $dark:                            #444 !default;
 
 $dark: #3f4041;
 
+.divider {
+  width: 100%;
+  text-align:center;
+}
+
+.divider hr {
+  margin-left:auto;
+  margin-right:auto;
+  width:45%;
+
+}
+
+.leftt {
+  float:left;
+}
+
+.rightt {
+  float:right;
+}
+
+em, i{
+  font-style: italic !important;
+}
+
 .logo {
 		
 	display: block;
