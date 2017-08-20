@@ -12,6 +12,9 @@ namespace serverTCC.Models
         public string UsuarioId { get; set; }
 
         public decimal Valor { get; set; }
+        public Moeda Moeda { get; set; }
+        public int MoedaId { get; set; }
+
         public DateTime DataInicial { get; set; }
 
         public string Descricao { get; set; }

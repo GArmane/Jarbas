@@ -46,7 +46,7 @@ namespace serverTCC.Controllers
                             {
                                 var historico = objetivo.HistoricoObjetivo.FirstOrDefault();
                                 var aux = decimal.Divide((decimal)objetivoConta.Porcentagem,100m);
-                                historico.ValorFinal = decimal.Multiply(conta.Saldo, aux);
+                                historico.ValorFinal += decimal.Multiply(conta.Saldo, aux);
                             }
                             else
                             {
@@ -62,7 +62,7 @@ namespace serverTCC.Controllers
                             {
                                 var historico = objetivo.HistoricoObjetivo.FirstOrDefault();
                                 var aux = decimal.Divide((decimal)objetivoConta.Porcentagem, 100m);
-                                historico.ValorFinal = decimal.Multiply(investimento.ValorAtual, aux);
+                                historico.ValorFinal += decimal.Multiply(investimento.ValorAtual, aux);
                             }
                             else
                             {
@@ -90,12 +90,21 @@ namespace serverTCC.Controllers
             }
         }
 
-        // GET: api/Objetivos
-        [HttpGet]
-        public IEnumerable<Objetivo> GetObjetivo()
+        /// <summary>
+        /// Retorna todos os objetivos do usuário
+        /// GET api/Objetivos/Usuario/{userId}
+        /// </summary>
+        /*[HttpGet("Usuario/{userId}")]
+        public IActionResult GetUser([FromRoute] string userId)
         {
-            return context.Objetivo;
-        }
+            try
+            {
+                var objetivos = context.Objetivo
+                    .Include(o => o.ObjetivosConta)
+                        .ThenInclude(o => o.IConta)
+                    .Include(o => o.HistoricoObjetivo)
+            }
+        }*/
 
         // GET: api/Objetivos/5
         [HttpGet("{id}")]
