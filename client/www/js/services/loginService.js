@@ -1,3 +1,21 @@
+
+/* Promise Tutorial
+ * new Promise(function (resolve, reject) {
+ * 	   resolve('jajajajaja');            // resolved: jajajajaja
+ * 	   reject(new Error('jajajajaja')); // rejected: Error: jajajajaja
+ * 	   throw 'jajajajaja';              // rejected: jajajajaja
+ * }).then(function res(r) { console.log ('resolved: ' + r); })
+ *         function rej(r) { console.log ('rejected: ' + r); });
+ * 
+ * new Promise(function (resolve, reject) {
+ * 	   resolve('jajajajaja');            // resolved: jajajajaja
+ * 	   reject(new Error('jajajajaja')); // catched: Error: jajajajaja
+ * 	   throw 'jajajajaja';              // catched: jajajajaja
+ * }).then(function res(r) { console.log ('resolved: ' + r); })
+ *   .catch(function cat(r) { console.log ('catched: ' + r); });
+ */
+
+
 (function() {
 'use strict';
 
@@ -11,10 +29,11 @@
         })
         .service('LoginService', LoginService);
 
-    LoginService.$inject = ['api', '$http', 'auth', '$ionicPopup', '$rootScope'];
-    function LoginService(api, $http, auth, $ionicPopup, $rootScope) {
+    LoginService.$inject = ['api', '$http', 'auth'];
+    function LoginService(api, $http, auth) {
         this.doLogin = doLogin;
-        this.recover = recover;
+        this.sendRecoverCode = sendRecoverCode;
+        this.recoverChangePswd = recoverChangePswd;
         this.gLogin = gLogin;
         this.fLogin = fLogin;
 
@@ -42,114 +61,91 @@
                 auth.done = false;
         }
 
-        function doLogin(user, pass, cb) {
-            if (!api.on()) {
-                auth.done = true;
-                cb(true);
-                return;
-            }
-            $http({
-                method: 'POST',
-                url: api.url() + 'logins',
-                data: { email: user, senha: pass }
-            }).success(function (data) {
-                defineAuth(data);
-                cb(true);
-            }).error(function (data) {
-                auth.done = false;
-                console.log(data);
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
+        function doLogin(user, pass) {
+            return new Promise(function (resolve, reject) {
+                $http({
+                    method: 'POST',
+                    url: api.url() + 'logins',
+                    data: { email: user, senha: pass }
+                }).success(function (data) {
+                    defineAuth(data);
+                    resolve(data);
+                }).error(function (data) {
+                    auth.done = false;
+                    console.log(data);
+                    reject(data[0].errorMessage);
                 });
-                cb(false);
             });
         }
 
-        function recover(email, $scope) { /// TODO: tira esse $scope daqui que isso é  C A G A D A
-            $ionicPopup.show({
-                title: 'Recuperar Conta',
-                template: '<label class="item item-input"><input ng-model="vm.dados.usuario" type="email" placeholder="E-mail"></label>',
-                scope: $scope,
-                buttons: [{
-                    text: 'Cancelar',
-                    type: 'button-default'
-                }, {
-                    text: 'OK',
-                    type: 'button-positive',
-                    onTap: function(e) {
-                        return vm.dados.user;
-                    }
-                }]
-            }).then(function(email) {
-                if(!email) return;
+        function sendRecoverCode(email) {
+            return new Promise(function (resolve, reject) {
                 $http({
                     method: 'POST',
                     url: api.url() + 'logins/recuperar',
-                    data: email,
-                    headers: { 'Content-Type': 'application/json' }
-                }).success(function (data) {
-                    
-                    /// TODO: No lugar dessa mensagem, mostra outro dialog solicitando o código enviado por email e a nova senha
-                    $ionicPopup.alert({
-                        title: 'Falta pouco!',
-                        template: 'Enviamos um e-mail com um link e instruções para que você possa recuperar a sua conta ;)'
-                    });
-
+                    data: email
+                }).success(function () {
+                    resolve();
                 }).error(function (data) {
                     console.log(data);
-                    $ionicPopup.alert({
-                        title: 'Ops!',
-                        template: data[0].errorMessage
-                    });
+                    reject(data[0].errorMessage);
+                });
+            });
+        }
+
+        function recoverChangePswd(dados) {
+            return new Promise(function (resolve, reject) {
+                $http({
+                    method: 'POST',
+                    url: api.url() + 'logins/recuperar', /// TODO: Olha essa URL ai
+                    data: dados
+                }).success(function () {
+                    resolve();
+                }).error(function (data) {
+                    console.log(data);
+                    reject(data[0].errorMessage);
                 });
             });
         }
         
-        function gLogin(cb) {
-            console.log('Logando com Google...');
-            auth2.grantOfflineAccess().then(function(authRes) {
-                console.log('Objeto de auth obtido:')
-                console.log(authRes);
-                if (authRes['code']) {
-                    console.log('Código da auth: ' + authRes['code']);
-                    var data = {
-                        'grant_type': 'googleAuth',
-                        'id_token': authRes['code'],
-                        'scope': 'api1 offline_access',
-                        'client_id': 'jarbasApp',
-                        'client_secret': 'secret'
-                    };
-                    console.log('Enviando dados para a API:')
-                    console.log(data);
-                    $http({
-                        method: 'POST',
-                        url: 'http://localhost:5000/connect/token',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        transformRequest: formUrlEncode,
-                        data: data
-                    }).success(function(data) {
-                        console.log('API retornou sucesso:')
+        function gLogin() {
+            return new Promise(function (resolve, reject) {
+                console.log('Logando com Google...');
+                auth2.grantOfflineAccess().then(function(authRes) {
+                    console.log('Objeto de auth obtido:');
+                    console.log(authRes);
+                    if (authRes.code) {
+                        console.log('Código da auth: ' + authRes.code);
+                        var data = {
+                            'grant_type': 'googleAuth',
+                            'id_token': authRes.code,
+                            'scope': 'api1 offline_access',
+                            'client_id': 'jarbasApp',
+                            'client_secret': 'secret'
+                        };
+                        console.log('Enviando dados para a API:');
                         console.log(data);
-                        // defineAuth(data); /// TODO: Trata o retorno da api no objeto auth
-                        cb(true);
-                    }).error(function(data) {
-                        console.log('API retornou falha:')
-                        console.log(data);
-                        $ionicPopup.alert({
-                            title: 'Ops!',
-                            template: data[0].errorMessage
+                        $http({
+                            method: 'POST',
+                            url: 'http://localhost:5000/connect/token',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            transformRequest: formUrlEncode,
+                            data: data
+                        }).success(function(data) {
+                            console.log('API retornou sucesso:');
+                            console.log(data);
+                            // defineAuth(data); /// TODO: Trata o retorno da api no objeto auth
+                            resolve(data);
+                        }).error(function(data) {
+                            console.log('API retornou falha:');
+                            console.log(data);
+                            reject(data[0].errorMessage);
                         });
-                        cb(false);
-                    });
-                } else {
-                    console.log('Falha na autenticação: objeto auth não possui código.');
-                    $ionicPopup.alert({
-                        title: 'Ops!',
-                        template: 'Ocorreu uma falha no processo de autenticação com Google.'
-                    });
-                    cb(false);
-                }
+                    } else {
+                        console.log('Falha na autenticação: objeto auth não possui código.');
+                        reject('Ocorreu uma falha no processo de autenticação com Google.');
+                    }
+                });
             });
         }
 
