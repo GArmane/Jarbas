@@ -31,6 +31,7 @@
 
     LoginService.$inject = ['api', '$http', 'auth'];
     function LoginService(api, $http, auth) {
+        this.defineAuth = defineAuth;
         this.doLogin = doLogin;
         this.sendRecoverCode = sendRecoverCode;
         this.recoverChangePswd = recoverChangePswd;

@@ -2,13 +2,22 @@ Tela LOGIN:
 =======================
 vm.dados.email : string - email do usuário para login ou para recuperação de senha
 vm.dados.senha : string - senha do usuário para login
-vm.dados.codigoRec : string - código para recuperação de senha
-vm.dados.novaSenha : string - nova senha no processo de recuperação de senha
-vm.dados.confirmaSenha : string - confirmação da nova senha
 vm.fazerLogin : função - faz login com email e senha
-vm.recuperarConta : função - exibe os popups para recuperação da senha
 vm.loginGoogle : função - exibe a janela de login do google e realiza os procedimentos de login
 vm.loginFacebook : função - não implementado
+
+Tela RECUPERAÇÃO DE SENHA:
+=======================
+vm.dados.email : string - email do usuário para login ou para recuperação de senha
+vm.dados.codigo : string - código para recuperação de senha
+vm.dados.senha : string - nova senha no processo de recuperação de senha
+vm.confirmaSenha : string - confirmação da nova senha
+vm.forcaSenha: int - força da senha digitada, de 1 a 10
+vm.passo: int - indica a etapa do processo de recuperação: 1 = código de recuperação, 2 = alteração da senha
+vm.analisaSenha : função - verifica a força da senha digitada. Usar no ng-change do campo senha
+vm.tooltipSenha : função - exibe o tooltip de ajuda sobre a força da senha. Instruções de como usar em breve
+vm.enviarCodigo : função - envia o endereço de email para a API, para enviar o código de recuperação para o usuário
+vm.alterarSenha : função - envia a nova senha para a API
 
 Tela CADASTRO:
 =======================

@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('cadastroController', cadastroController);
 
-    cadastroController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', 'tooltipAjuda', '$scope'];
-    function cadastroController(auth, $state, api, $http, $ionicPopup, $scope, tooltipAjuda, $scope) {
+    cadastroController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', 'tooltipAjuda', 'LoginService', 'promiseError'];
+    function cadastroController(auth, $state, api, $http, $ionicPopup, $scope, tooltipAjuda, LoginService, promiseError) {
         var vm = this;
 
         vm.dados = {
@@ -46,7 +46,7 @@
                 method: 'POST',
                 data: vm.dados
             }).success(function (data) {
-                // LoginService.defineAuth(data); /// TODO: Vê essa fita ai parça
+                LoginService.defineAuth(data);
                 $state.go('app.principal'); /// TODO: principal? acho que não
             }).error(function (data) {
                 $ionicPopup.alert({
@@ -57,11 +57,11 @@
         }
 
         function tooltipSenha() {
-            tooltipAjuda.create()
+            // tooltipAjuda.create();
         }
 
         function cadastroGoogle() {
-            LoginService.gLogin(loginResult);
+            LoginService.gLogin().then(loginResult, promiseError.rejection).catch(promiseError.exception);
         }
 
         function cadastroFacebook() {
