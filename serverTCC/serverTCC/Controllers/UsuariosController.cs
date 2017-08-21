@@ -97,6 +97,18 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
+        /// Cria um novo usuário com informações do google
+        /// POST api/Usuarios/Google/{idToken}
+        /// </summary>
+        /*[HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateGoogle(string idToken)
+        {
+            
+            
+        }*/
+
+        /// <summary>
         /// Busca o usuário por sua ID
         /// GET api/Usuarios/ID
         /// </summary>
