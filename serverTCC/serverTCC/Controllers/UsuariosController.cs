@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
 using serverTCC.Services;
+using AcessoGoogle;
 
 namespace serverTCC.Controllers
 {
@@ -100,13 +101,40 @@ namespace serverTCC.Controllers
         /// Cria um novo usuário com informações do google
         /// POST api/Usuarios/Google/{idToken}
         /// </summary>
-        /*[HttpPost]
+        [HttpPost("Google")]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateGoogle(string idToken)
+        public async Task<IActionResult> CreateGoogle([FromBody] string idToken)
         {
-            
-            
-        }*/
+            try
+            {
+                //Usa biblioteca para acessar o google e pegar o perfil
+                GetProfile getProfile = new GetProfile();
+
+                //Classe com os campos de retorno do google
+                ObjetoGoogle profile = await getProfile.Acessar(idToken);
+
+                if (profile != null)
+                {
+                    UsuarioModel model = new UsuarioModel
+                    {
+                        Email = profile.email,
+                        Nome = profile.name,
+                        Senha = Guid.NewGuid().ToString()
+                    };
+
+                    return await Create(model);
+                }
+                else
+                {
+                    ModelState.AddModelError("Google", "Erro ao obter informações do Google, tente novamente");
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }           
+        }
 
         /// <summary>
         /// Busca o usuário por sua ID

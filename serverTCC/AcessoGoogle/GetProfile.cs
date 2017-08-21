@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace AcessoGoogle
 {
-    public class AcessoGoogle
+    public class GetProfile
     {
         public async Task<ObjetoGoogle> Acessar(string idToken)
         {
@@ -42,7 +42,7 @@ namespace AcessoGoogle
 
                     var conteudoProfile = await requestProfile.Content.ReadAsStringAsync();
 
-                    var profile = (ObjetoGoogle)await Task.Factory.StartNew(() => JsonConvert.DeserializeObject(conteudoProfile));
+                    var profile = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<ObjetoGoogle>(conteudoProfile));
 
                     return profile;
                 }

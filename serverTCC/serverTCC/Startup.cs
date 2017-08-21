@@ -43,7 +43,7 @@ namespace serverTCC
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireUppercase = false;
                 opts.Password.RequireLowercase = false;
-                opts.Password.RequiredLength = 1;
+                opts.Password.RequiredLength = 0;
                 opts.Password.RequireDigit = false;
             })
             .AddEntityFrameworkStores<JarbasContext>();

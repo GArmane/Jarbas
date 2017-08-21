@@ -406,7 +406,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+CreateGoogle(model: UsuarioModel): Task<IActionResult>",
+											"text": "+CreateGoogle(idToken: string): Task<IActionResult>",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -3412,24 +3412,6 @@
 									"parameters": [
 										{
 											"_type": "UMLParameter",
-											"_id": "AAAAAAFeBpY1YW4JSIY=",
-											"_parent": {
-												"$ref": "AAAAAAFeBpW1Hm36STI="
-											},
-											"name": "model",
-											"visibility": "public",
-											"isStatic": false,
-											"isLeaf": false,
-											"type": {
-												"$ref": "AAAAAAFdtFmCVL/gsQo="
-											},
-											"isReadOnly": false,
-											"isOrdered": false,
-											"isUnique": false,
-											"direction": "in"
-										},
-										{
-											"_type": "UMLParameter",
 											"_id": "AAAAAAFeBpY1Y24Kv20=",
 											"_parent": {
 												"$ref": "AAAAAAFeBpW1Hm36STI="
@@ -3442,6 +3424,22 @@
 											"isOrdered": false,
 											"isUnique": false,
 											"direction": "return"
+										},
+										{
+											"_type": "UMLParameter",
+											"_id": "AAAAAAFeBteNFG4UxiE=",
+											"_parent": {
+												"$ref": "AAAAAAFeBpW1Hm36STI="
+											},
+											"name": "idToken",
+											"visibility": "public",
+											"isStatic": false,
+											"isLeaf": false,
+											"type": "string",
+											"isReadOnly": false,
+											"isOrdered": false,
+											"isUnique": false,
+											"direction": "in"
 										}
 									],
 									"concurrency": "sequential",
