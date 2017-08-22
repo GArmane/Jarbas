@@ -56,11 +56,11 @@ angular.module('starter')
     //     }
     // })
 
-     .state('app.search', {
-    url: '/search',
+     .state('app.tela_inicial', {
+    url: '/tela_inicial',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        templateUrl: 'templates/tela_inicial.html'
       }
     }
   })
@@ -103,5 +103,5 @@ angular.module('starter')
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/tela_inicial');
 });
