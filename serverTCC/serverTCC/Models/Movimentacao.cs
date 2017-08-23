@@ -20,10 +20,11 @@ namespace serverTCC.Models
 
         public decimal Valor { get; set; }
         public string Descricao { get; set; }
-        public int QtdTempo { get; set; }
+
+        public int? AgendamentoId { get; set; }
+        public Agendamento Agendamento { get; set; }
 
         public DateTime Data { get; set; }
-        public EscalaTempo EscalaTempo { get; set; }
         public TipoMovimentacao TipoMovimentacao { get; set; }
     }
 }

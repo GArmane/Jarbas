@@ -24,12 +24,13 @@ namespace serverTCC.Data
         public DbSet<TipoInvestimento> TipoInvestimento { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<RecuperacaoSenha> RecuperacaoSenha { get; set; }
+        public DbSet<Agendamento> Agendamento { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
             builder.Ignore<UsuarioModel>();
             builder.Ignore<RecuperacaoModel>();
-            base.OnModelCreating(builder);
         }
     }
 }
