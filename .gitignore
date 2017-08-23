@@ -261,3 +261,6 @@ __pycache__/
 
 # Visual Studio Code
 .vscode/
+
+# Windows folder icons
+desktop.ini
