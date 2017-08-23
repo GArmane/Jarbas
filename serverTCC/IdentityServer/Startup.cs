@@ -44,8 +44,8 @@ namespace IdentityServer
                 .AddTemporarySigningCredential()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<Usuario>();
-            //.AddExtensionGrantValidator<GoogleGrantValidator>();
+                .AddAspNetIdentity<Usuario>()
+                .AddExtensionGrantValidator<GoogleGrantValidator>();
 
             services.AddIdentity<Usuario, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();

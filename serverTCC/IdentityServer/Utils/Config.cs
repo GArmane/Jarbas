@@ -34,7 +34,7 @@ namespace IdentityServer.Utils
                     RefreshTokenExpiration = TokenExpiration.Sliding,
                     SlidingRefreshTokenLifetime = 60 * 60 * 24 * 7,
                     AccessTokenLifetime = 60 * 60 * 24 * 1,
-                    AllowedCorsOrigins = {"http:localhost:8100"}
+                    AllowedCorsOrigins = {"http://localhost:8100"}
                 }
             };
         }
