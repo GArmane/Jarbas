@@ -1,0 +1,55 @@
+<ion-view view-title="Cadastre-se">
+  <ion-content class="padding">
+    <center><h4>Crie uma conta para poder usar o JARBAS onde quiser!</h4>
+      <br>
+      <h4>Você só precisa de:</h4>
+    </center>
+    <form name="cadastro" ng-submit="vm.cadastro()">
+      <span class="input-label">Nome</span>
+      <label class="item item-input">
+        <input ng-model="vm.dados.nome" type="text" placeholder="Digite seu nome" required name="nome">
+   	  </label>
+   	  <br>
+   	  <span class="input-label">E-mail</span>
+      <label class="item item-input">
+        <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
+   	  </label>
+   	  <br>
+   	  <span class="input-label">Senha</span>
+      <label class="item item-input">
+        <input ng-model="vm.dados.senha" type="password" placeholder="Digite uma senha forte" required name="password">
+   	  </label>
+   	  <br>
+   	  <div class="row">
+   	  	<div class="col col-33">Força da senha:</div>
+   	  	
+   	  	<div class="col col-50">
+   	  	  <p class="styled">
+      	    <meter min="0" max="100" low="25" high="75" optimum="100" value="50"></meter>
+          </p>
+        </div>
+        <div class="col"><a class="button button-icon icon ion-help"></a></div>
+      </div>
+   	  <span class="input-label">Confirmação de senha</span>
+      <label class="item item-input">
+        <input ng-model="vm.confirmaSenha" type="password" placeholder="Digite uma senha novamente" required name="password">
+   	  </label>
+   	  <br>
+   	  <hr width="90%">
+   	  <div class="row">
+        <div class="col"><h5>Ou cadastre-se <br> com suas redes sociais</h5></div>
+        <div class="col">
+          <button class="button icon ion-social-facebook"></button>
+          <button class="button icon ion-social-google"></button>
+          <!--<button style="width:45px; height:45px"><img style="width:25px; height:auto" src="img/google.png"></button></div> -->
+        </div>
+      </div>
+    </form>
+    <button class="button button-block">Cadastrar</button>
+
+          
+      
+
+
+  </ion-content>
+</ion-view>

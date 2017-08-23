@@ -74,6 +74,15 @@ angular.module('starter')
       }
     })
 
+  .state('app.cadastro', {
+      url: '/cadastro',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/cadastro.html'
+        }
+      }
+    })
+
   .state('app.login', {
       url: '/login',
       views: {
