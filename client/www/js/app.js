@@ -65,11 +65,11 @@ angular.module('starter')
     }
   })
 
-  .state('app.browse', {
-      url: '/browse',
+  .state('app.complete_cad', {
+      url: '/complete_cad',
       views: {
         'menuContent': {
-          templateUrl: 'templates/browse.html'
+          templateUrl: 'templates/complete_cad.html'
         }
       }
     })

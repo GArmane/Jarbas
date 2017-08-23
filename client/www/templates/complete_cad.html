@@ -1,15 +1,58 @@
-<ion-view view-title="Cadastre-se">
+<ion-view view-title="Complete seu cadastro">
   <ion-content class="padding">
-    <center><h4>Crie uma conta para poder usar o JARBAS onde quiser!</h4>
+    <h4>Insira mais algumas informações sobre você, para obter uma experiência personalizada.</h4>
       <br>
-      <h4>Você só precisa de:</h4>
-    </center>
     <form name="cadastro" ng-submit="vm.cadastro()">
-      <span class="input-label">Nome</span>
-      <label class="item item-input">
-        <input ng-model="vm.dados.nome" type="text" placeholder="Digite seu nome" required name="nome">
-   	  </label>
+      <span class="input-label">Faixa etária</span>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Idade
+        </div>
+        <select>
+          <option selected>5 a 10 anos</option>
+          <option>Green</option>
+          <option>Red</option>
+        </select>
+      </label>
    	  <br>
+      <span class="input-label">Profissão</span>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Profissão
+        </div>
+        <select>
+          <option selected>Programador</option>
+          <option>Green</option>
+          <option>Red</option>
+        </select>
+      </label>
+      <br>
+      <span class="input-label">Faixa etária</span>
+      <div class="row">
+        <div class="col col-33">
+          
+            <label class="item item-input item-select">
+              <div class="input-label">
+                R$
+              </div>
+              <select>
+                <option>5 a 10 anos</option>
+                <option>Green</option>
+                <option>Red</option>
+              </select>
+            </label>
+        </div>
+        <div class="col">
+          
+            <label class="item item-input">
+        <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
+      </label>
+        </div>
+      </div>
+          
+      <br>  
+        </div>
+      </div>
    	  <span class="input-label">E-mail</span>
       <label class="item item-input">
         <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
