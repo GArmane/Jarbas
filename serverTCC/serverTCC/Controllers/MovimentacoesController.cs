@@ -80,29 +80,38 @@ namespace serverTCC.Controllers
             }
         }
 
-        [HttpGet]
-        public IEnumerable<Movimentacao> GetMovimentacao()
+        /// <summary>
+        /// Retorna todas as movimentações do usuário
+        /// Get api/Movimentacoes/Usuario/{userId}
+        /// </summary>
+        [HttpGet("Usuario/{userId}")]
+        public IActionResult GetUser([FromRoute] string userId)
         {
-            return context.Movimentacao;
+            var contas = context.ContaContabil.Where(c => c.UsuarioId.Equals(userId));
+
+            var movimentacoes = context.Movimentacao.Where(m => m.ContaContabil.UsuarioId.Equals(userId));
+
+            return Ok(movimentacoes);
         }
 
-        // GET: api/Movimentacoes/5
+        /// <summary>
+        /// Retorna uma movimentação específica
+        /// Get api/Movimentacoes/{id}
+        /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetMovimentacao([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            var movimentacao = await context.Movimentacao.FirstOrDefaultAsync(m => m.Id.Equals(id));
+
+            if (movimentacao != null)
             {
-                return BadRequest(ModelState);
+                return Ok(movimentacao);
             }
-
-            var movimentacao = await context.Movimentacao.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (movimentacao == null)
+            else
             {
-                return NotFound();
+                ModelState.AddModelError("Usuario", "Movimentaao no encontrada.");
+                return NotFound(ModelState.Values.SelectMany(e => e.Errors));
             }
-
-            return Ok(movimentacao);
         }
 
         // PUT: api/Movimentacoes/5

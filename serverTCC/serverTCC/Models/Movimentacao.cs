@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace serverTCC.Models
 {
@@ -12,6 +13,7 @@ namespace serverTCC.Models
     {
         public int Id { get; set; }
 
+        [JsonIgnore]
         public ContaContabil ContaContabil { get; set; }
         public int ContaContabilId { get; set; }
 
