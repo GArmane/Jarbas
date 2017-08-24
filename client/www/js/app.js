@@ -103,6 +103,15 @@ angular.module('starter')
       }
     })
 
+    .state('app.lista_movimentacoes', {
+      url: '/lista_movimentacoes',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/lista_movimentacoes.html',
+        }
+      }
+    })
+
   .state('app.single', {
     url: '/playlists/:playlistId',
     views: {
