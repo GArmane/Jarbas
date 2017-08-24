@@ -15,6 +15,37 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+.no-padding {
+  padding: 0px !important; }
+
+.item-select select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 50px;
+  padding: 0px 45px 0px 0px;
+  max-width: 100%;
+  background: #FFF none repeat scroll 0% 0%;
+  color: #333;
+  text-indent: 0.01px;
+  text-overflow: "";
+  white-space: nowrap;
+  font-size: 14px;
+  cursor: pointer;
+  direction: rtl; }
+
+.item-select {
+  height: 100%;
+  width: 100%;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0; }
+
+.item-input {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0; }
+
 meter {
   width: 100%; }
 

@@ -8,91 +8,75 @@
         <div class="input-label">
           Idade
         </div>
-        <select>
+        <select ng-model="vm.dados.FaixaEtaria">
           <option selected>5 a 10 anos</option>
-          <option>Green</option>
-          <option>Red</option>
+          <option>11 a 15 anos</option>
+          <option>16 a 20 anos</option>
         </select>
       </label>
+
    	  <br>
+
       <span class="input-label">Profissão</span>
       <label class="item item-input item-select">
-        <div class="input-label">
-          Profissão
-        </div>
-        <select>
+        <div class="input-label">Profissão</div>
+        <select ng-model="vm.dados.Profissao">
           <option selected>Programador</option>
-          <option>Green</option>
-          <option>Red</option>
+          <option>Médico</option>
+          <option>Professor</option>
         </select>
       </label>
+
       <br>
-      <span class="input-label">Faixa etária</span>
-      <div class="row">
-        <div class="col col-33">
-          
-            <label class="item item-input item-select">
-              <div class="input-label">
-                R$
-              </div>
-              <select>
-                <option>5 a 10 anos</option>
-                <option>Green</option>
-                <option>Red</option>
-              </select>
-            </label>
+
+      <span class="input-label">Renda</span>
+      <div class="row row-no-padding">
+        <div class="col col-33">          
+            <label class="item item-select">
+            <select ng-model="vm.dados.MoedaId">
+              <option selected>R$</option>
+              <option>U$</option>
+          	  <option>€</option>
+            </select>
+          </label>
         </div>
+        &nbsp&nbsp
         <div class="col">
-          
-            <label class="item item-input">
-        <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
-      </label>
+          <label class="item item-input">
+        	<input ng-model="vm.dados.Valor" type="email" placeholder="0,00" required name="email">
+      	  </label>
         </div>
       </div>
           
       <br>  
-        </div>
+
+      <span class="input-label">Tipo de renda</span>
+      <label class="item item-input item-select">
+        <div class="input-label">Renda</div>
+        <select ng-model="vm.dados.EscalaTempo">
+          <option selected>Mensal</option>
+          <option>Quinzenal</option>
+          <option>Anual</option>
+        </select>
+      </label>
+	  <br>	
+      <div class="row row-no-padding">
+      	<div class="col">
+      	  <ion-radio ng-model="vm.dados.RendaFixa">Renda fixa</ion-radio>	
+      	</div>
+      	&nbsp&nbsp
+      	<div class="col">
+      	  <ion-radio ng-model="vm.dados.RendaFixa">Renda variável</ion-radio>
+      	</div>
+      	<div class="col"><button class="button button-icon icon ion-help-circled" ng-click="vm.tooltipRenda"></button></div>
       </div>
-   	  <span class="input-label">E-mail</span>
-      <label class="item item-input">
-        <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
-   	  </label>
-   	  <br>
-   	  <span class="input-label">Senha</span>
-      <label class="item item-input">
-        <input ng-model="vm.dados.senha" type="password" placeholder="Digite uma senha forte" required name="password">
-   	  </label>
-   	  <br>
-   	  <div class="row">
-   	  	<div class="col col-33">Força da senha:</div>
-   	  	
-   	  	<div class="col col-50">
-   	  	  <span class="styled">
-      	    <meter min="0" max="100" low="25" high="75" optimum="100" value="50"></meter>
-          </span>
-        </div>
-        <div class="col"><button class="button button-icon icon ion-help-circled"></button></div>
-      </div>
-   	  <span class="input-label">Confirmação de senha</span>
-      <label class="item item-input">
-        <input ng-model="vm.confirmaSenha" type="password" placeholder="Digite uma senha novamente" required name="password">
-   	  </label>
-   	  <br>
-   	  <hr width="90%">
-   	  <div class="row">
-        <div class="col"><h5>Ou cadastre-se <br> com suas redes sociais</h5></div>
-        <div class="col">
-          <button class="button icon ion-social-facebook"></button>
-          <button class="button icon ion-social-google"></button>
-          <!--<button style="width:45px; height:45px"><img style="width:25px; height:auto" src="img/google.png"></button></div> -->
-        </div>
-      </div>
+
     </form>
-    <button class="button button-block">Cadastrar</button>
-
-          
-      
-
+    <div class="row">
+    	<div class="col col-33"><button class="button button-block">Pular</button></div>
+    	<div class="col"><button class="button button-block" ng-click="vm.cadastrar()">Cadastrar</button></div>
+    </div>
+    
 
   </ion-content>
 </ion-view>

@@ -92,12 +92,11 @@ angular.module('starter')
       }
     })
   
-    .state('app.playlists', {
-      url: '/playlists',
+    .state('app.lista_contas', {
+      url: '/lista_contas',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/lista_contas.html',
         }
       }
     })
