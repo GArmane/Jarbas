@@ -122,17 +122,15 @@ namespace serverTCC.Controllers
         {
             try
             {
-                var contaAux = await context.ContaContabil.AsNoTracking().FirstOrDefaultAsync(c => c.Id.Equals(id));
+                var contaExists = await context.ContaContabil.AnyAsync(c => c.Id.Equals(id));
 
-                if (contaAux != null)
+                if (contaExists)
                 {
-                    contaAux = contaContabil;
-
-                    context.ContaContabil.Update(contaAux);
+                    context.ContaContabil.Update(contaContabil);
 
                     await context.SaveChangesAsync();
 
-                    return Ok(contaAux);
+                    return Ok(contaContabil);
                 }
                 else
                 {

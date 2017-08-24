@@ -30,53 +30,60 @@ namespace serverTCC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Movimentacao movimentacao)
         {
-            var conta = await context.ContaContabil.FirstOrDefaultAsync(c => c.Id.Equals(movimentacao.ContaContabilId));
-
-            if(conta != null)
+            try
             {
-                bool usuarioExists = await context.Usuario.AnyAsync(u => u.Id.Equals(conta.UsuarioId));
+                var conta = await context.ContaContabil.FirstOrDefaultAsync(c => c.Id.Equals(movimentacao.ContaContabilId));
 
-                if (usuarioExists)
+                if (conta != null)
                 {
-                    if (movimentacao.TipoMovimentacao == TipoMovimentacao.Receita)
+                    bool usuarioExists = await context.Usuario.AnyAsync(u => u.Id.Equals(conta.UsuarioId));
+
+                    if (usuarioExists)
                     {
-                        conta.Saldo += movimentacao.Valor;
-                    }
-                    else if (movimentacao.TipoMovimentacao == TipoMovimentacao.Despesa)
-                    {
-                        if(verificarSaldo(conta, movimentacao))
+                        if (movimentacao.TipoMovimentacao == TipoMovimentacao.Receita)
                         {
-                            conta.Saldo -= movimentacao.Valor;
+                            conta.Saldo += movimentacao.Valor;
+                        }
+                        else if (movimentacao.TipoMovimentacao == TipoMovimentacao.Despesa)
+                        {
+                            if (verificarSaldo(conta, movimentacao))
+                            {
+                                conta.Saldo -= movimentacao.Valor;
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("Conta", "Saldo insuficiente.");
+                                return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                            }
                         }
                         else
                         {
-                            ModelState.AddModelError("Conta", "Saldo insuficiente.");
+                            ModelState.AddModelError("Movimentação", "Informe um tipo de movimentação válido");
                             return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
                         }
+
+                        context.Movimentacao.Add(movimentacao);
+                        context.ContaContabil.Update(conta);
+
+                        await context.SaveChangesAsync();
+
+                        return CreatedAtAction("Create", movimentacao);
                     }
                     else
                     {
-                        ModelState.AddModelError("Movimentação", "Informe um tipo de movimentação válido");
-                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                        ModelState.AddModelError("Usuario", "Usurio no cadastrado no sistema.");
+                        return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                     }
-
-                    context.Movimentacao.Add(movimentacao);
-                    context.ContaContabil.Update(conta);
-
-                    await context.SaveChangesAsync();
-
-                    return CreatedAtAction("Create", movimentacao);
                 }
                 else
                 {
-                    ModelState.AddModelError("Usuario", "Usurio no cadastrado no sistema.");
+                    ModelState.AddModelError("Conta", "Conta no cadastrada no sistema.");
                     return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("Conta", "Conta no cadastrada no sistema.");
-                return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                return BadRequest(e.Message);
             }
         }
 
@@ -87,11 +94,18 @@ namespace serverTCC.Controllers
         [HttpGet("Usuario/{userId}")]
         public IActionResult GetUser([FromRoute] string userId)
         {
-            var contas = context.ContaContabil.Where(c => c.UsuarioId.Equals(userId));
+            try
+            {
+                var contas = context.ContaContabil.Where(c => c.UsuarioId.Equals(userId));
 
-            var movimentacoes = context.Movimentacao.Where(m => m.ContaContabil.UsuarioId.Equals(userId));
+                var movimentacoes = context.Movimentacao.Where(m => m.ContaContabil.UsuarioId.Equals(userId));
 
-            return Ok(movimentacoes);
+                return Ok(movimentacoes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }   
         }
 
         /// <summary>
@@ -101,78 +115,123 @@ namespace serverTCC.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
-            var movimentacao = await context.Movimentacao.FirstOrDefaultAsync(m => m.Id.Equals(id));
-
-            if (movimentacao != null)
-            {
-                return Ok(movimentacao);
-            }
-            else
-            {
-                ModelState.AddModelError("Usuario", "Movimentaao no encontrada.");
-                return NotFound(ModelState.Values.SelectMany(e => e.Errors));
-            }
-        }
-
-        // PUT: api/Movimentacoes/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovimentacao([FromRoute] int id, [FromBody] Movimentacao movimentacao)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != movimentacao.Id)
-            {
-                return BadRequest();
-            }
-
-            context.Entry(movimentacao).State = EntityState.Modified;
-
             try
             {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovimentacaoExists(id))
+                var movimentacao = await context.Movimentacao.FirstOrDefaultAsync(m => m.Id.Equals(id));
+
+                if (movimentacao != null)
                 {
-                    return NotFound();
+                    return Ok(movimentacao);
                 }
                 else
                 {
-                    throw;
+                    ModelState.AddModelError("Usuario", "Movimentaao no encontrada.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
-
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }          
         }
 
-        // DELETE: api/Movimentacoes/5
+        /// <summary>
+        /// Edita uma movimentação
+        /// PUT api/Movimentacoes/{id}
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] Movimentacao movimentacao)
+        {
+            try
+            {
+                var movimentacaoAux = await context.Movimentacao
+                    .Include(m => m.ContaContabil)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Id.Equals(id));
+
+                var conta = movimentacaoAux.ContaContabil;
+
+                if (movimentacaoAux != null)
+                {
+                    //Primeiro vê o tipo da movimentação original e volta o valor para a conta, para então editar
+                    if(movimentacaoAux.TipoMovimentacao == TipoMovimentacao.Receita)
+                    {
+                        conta.Saldo -= movimentacaoAux.Valor;
+                    }
+                    else
+                    {
+                        conta.Saldo += movimentacaoAux.Valor;
+                    }
+
+                    //Edita a conta conforme a nova movimentação
+                    if (movimentacao.TipoMovimentacao == TipoMovimentacao.Receita)
+                    {
+                        conta.Saldo += movimentacao.Valor;
+                    }
+                    else
+                    {
+                        conta.Saldo -= movimentacao.Valor;
+                    }
+
+                    context.Movimentacao.Update(movimentacao);
+                    context.ContaContabil.Update(conta);
+                    await context.SaveChangesAsync();
+                    return Ok(movimentacao);
+                }
+                else
+                {
+                    ModelState.AddModelError("Movimentação", "Movimentação não encontrada.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Apaga uma movimentação
+        /// DELETE api/Movimentacoes/{id}
+        /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovimentacao([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                var movimentacao = await context.Movimentacao
+                    .Include(m => m.ContaContabil)
+                    .FirstOrDefaultAsync(m => m.Id.Equals(id));
 
-            var movimentacao = await context.Movimentacao.SingleOrDefaultAsync(m => m.Id == id);
-            if (movimentacao == null)
+                var conta = movimentacao.ContaContabil;
+
+                if (movimentacao != null)
+                {
+                    if (movimentacao.TipoMovimentacao == TipoMovimentacao.Receita)
+                    {
+                        conta.Saldo -= movimentacao.Valor;
+                    }
+                    else
+                    {
+                        conta.Saldo += movimentacao.Valor;
+                    }
+
+                    context.Movimentacao.Remove(movimentacao);
+                    context.ContaContabil.Update(conta);
+                    await context.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                {
+                    ModelState.AddModelError("Movimentação", "Movimenção não encontrada.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch (Exception e)
             {
-                return NotFound();
-            }
-
-            context.Movimentacao.Remove(movimentacao);
-            await context.SaveChangesAsync();
-
-            return Ok(movimentacao);
-        }
-
-        private bool MovimentacaoExists(int id)
-        {
-            return context.Movimentacao.Any(e => e.Id == id);
+                return BadRequest(e.Message);
+            }        
         }
 
         private bool verificarSaldo(ContaContabil conta, Movimentacao movimentacao)

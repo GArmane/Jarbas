@@ -35,6 +35,18 @@ namespace IdentityServer.Utils
                     SlidingRefreshTokenLifetime = 60 * 60 * 24 * 7,
                     AccessTokenLifetime = 60 * 60 * 24 * 1,
                     AllowedCorsOrigins = {"http://localhost:8100"}
+                },
+                new Client
+                {
+                    ClientId = "script",
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes = {"jarbasApi"},
+                    AccessTokenLifetime = 60 * 60 * 24 * 1,
+                    AllowedCorsOrigins = {"http://localhost:80"}
                 }
             };
         }
