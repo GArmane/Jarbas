@@ -1,21 +1,3 @@
-
-/* Promise Tutorial
- * new Promise(function (resolve, reject) {
- * 	   resolve('jajajajaja');            // resolved: jajajajaja
- * 	   reject(new Error('jajajajaja')); // rejected: Error: jajajajaja
- * 	   throw 'jajajajaja';              // rejected: jajajajaja
- * }).then(function res(r) { console.log ('resolved: ' + r); })
- *         function rej(r) { console.log ('rejected: ' + r); });
- * 
- * new Promise(function (resolve, reject) {
- * 	   resolve('jajajajaja');            // resolved: jajajajaja
- * 	   reject(new Error('jajajajaja')); // catched: Error: jajajajaja
- * 	   throw 'jajajajaja';              // catched: jajajajaja
- * }).then(function res(r) { console.log ('resolved: ' + r); })
- *   .catch(function cat(r) { console.log ('catched: ' + r); });
- */
-
-
 (function() {
 'use strict';
 
@@ -39,19 +21,16 @@
         this.fLogin = fLogin;
 
         var auth2 = {};
+        var googleLoaded = false;
         
         activate();
 
         ////////////////
 
         function activate() {
-            window.gapi.load('auth2', function() {
-                auth2 = gapi.auth2.init({
-                    client_id: '641375641307-rcps29q38f8k9k19u7sribgt66c9n3l6.apps.googleusercontent.com',
-                });
-            });
+            
         }
-
+        
         function defineAuth(authResult) {
             if (authResult) {
                 auth.data = authResult;
@@ -59,26 +38,35 @@
                 auth.token = authResult.tokenUsuario.tokenUsuario;
                 auth.id = authResult.usuario.id;
             } else
-                auth.done = false;
+            auth.done = false;
         }
-
+        
         function doLogin(user, pass) {
             return new Promise(function (resolve, reject) {
                 $http({
                     method: 'POST',
-                    url: api.url() + 'logins',
-                    data: { email: user, senha: pass }
+                    url: api.token(),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    transformRequest: formUrlEncode,
+                    data: {
+                        'grant_type': 'password',
+                        'scope': 'jarbasApi offline_access',
+                        'client_id': 'jarbasApp',
+                        'client_secret': 'secret',
+                        'username': user,
+                        'pass': pass
+                    }
                 }).success(function (data) {
                     defineAuth(data);
                     resolve(data);
                 }).error(function (data) {
                     auth.done = false;
                     console.log(data);
-                    reject(data[0].errorMessage);
+                    reject(data.error_description);
                 });
             });
         }
-
+        
         function sendRecoverCode(email) {
             return new Promise(function (resolve, reject) {
                 $http({
@@ -93,7 +81,7 @@
                 });
             });
         }
-
+        
         function recoverChangePswd(dados) {
             return new Promise(function (resolve, reject) {
                 $http({
@@ -108,45 +96,63 @@
                 });
             });
         }
+
+        function lazyLoadGoogle(cb) {
+            if (!googleLoaded) {
+                window.gapi.load('auth2', function() {
+                    auth2 = gapi.auth2.init({
+                        client_id: '646057312978-8voqfqkpn4aicqnamtdl7o2pj0k4qkp4.apps.googleusercontent.com',
+                    });
+                    if (typeof cb === 'function')
+                        cb();
+                });
+                googleLoaded = true;
+            } else
+                cb();
+        }
         
         function gLogin() {
+            console.log('Lazily Loading GAPI...');
             return new Promise(function (resolve, reject) {
+                lazyLoadGoogle(cb);
                 console.log('Logando com Google...');
-                auth2.grantOfflineAccess().then(function(authRes) {
-                    console.log('Objeto de auth obtido:');
-                    console.log(authRes);
-                    if (authRes.code) {
-                        console.log('Código da auth: ' + authRes.code);
-                        var data = {
-                            'grant_type': 'googleAuth',
-                            'id_token': authRes.code,
-                            'scope': 'api1 offline_access',
-                            'client_id': 'jarbasApp',
-                            'client_secret': 'secret'
-                        };
-                        console.log('Enviando dados para a API:');
-                        console.log(data);
-                        $http({
-                            method: 'POST',
-                            url: 'http://localhost:5000/connect/token',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            transformRequest: formUrlEncode,
-                            data: data
-                        }).success(function(data) {
-                            console.log('API retornou sucesso:');
+                function cb() {
+                    auth2.grantOfflineAccess().then(function(authRes) {
+                        console.log('Objeto de auth obtido:');
+                        console.log(authRes);
+                        if (authRes.code) {
+                            console.log('Código da auth: ' + authRes.code);
+                            var data = {
+                                'grant_type': 'googleAuth',
+                                'id_token': authRes.code,
+                                'scope': 'jarbasApi offline_access',
+                                'client_id': 'jarbasApp',
+                                'client_secret': 'secret'
+                            };
+                            console.log('Enviando dados para a API:');
                             console.log(data);
-                            // defineAuth(data); /// TODO: Trata o retorno da api no objeto auth
-                            resolve(data);
-                        }).error(function(data) {
-                            console.log('API retornou falha:');
-                            console.log(data);
-                            reject(data[0].errorMessage);
-                        });
-                    } else {
-                        console.log('Falha na autenticação: objeto auth não possui código.');
-                        reject('Ocorreu uma falha no processo de autenticação com Google.');
-                    }
-                });
+                            $http({
+                                method: 'POST',
+                                url: api.token(),
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                transformRequest: formUrlEncode,
+                                data: data
+                            }).success(function(data) {
+                                console.log('API retornou sucesso:');
+                                console.log(data);
+                                // defineAuth(data); /// TODO: Trata o retorno da api no objeto auth
+                                resolve(data);
+                            }).error(function(data) {
+                                console.log('API retornou falha:');
+                                console.log(data);
+                                reject(data.error_description);
+                            });
+                        } else {
+                            console.log('Falha na autenticação: objeto auth não possui código.');
+                            reject('Ocorreu uma falha no processo de autenticação com Google.');
+                        }
+                    });
+                }
             });
         }
 
@@ -157,7 +163,8 @@
         function formUrlEncode(obj) {
             var str = [];
             for (var p in obj)
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                if (obj.hasOwnProperty(p))
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
             return str.join("&");
         }
     }

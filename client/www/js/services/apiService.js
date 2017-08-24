@@ -13,7 +13,7 @@
 
         var onState = true;
         var strUrl = 'https://localhost:5001/api/';
-        var strToken = 'https://localhost:5001/token/';
+        var strToken = 'http://localhost:5000/connect/token';
         
         ////////////////
 

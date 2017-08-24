@@ -87,7 +87,9 @@ angular.module('starter')
       url: '/login',
       views: {
         'menuContent': {
-          templateUrl: 'templates/login.html'
+          templateUrl: 'templates/login.html',
+          controller: 'loginController',
+          controllerAs: 'vm'
         }
       }
     })
@@ -111,5 +113,5 @@ angular.module('starter')
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/tela_inicial');
+  $urlRouterProvider.otherwise('/app/login');
 });
