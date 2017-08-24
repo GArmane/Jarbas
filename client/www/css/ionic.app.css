@@ -15,6 +15,33 @@ $assertive:                       #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
+.ion-input-select,
+select {
+  -webkit-appearance: none;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: thin solid #dddddd;
+  font-weight: 300;
+  display: inline;
+  vertical-align: middle;
+  color: #333;
+  padding: auto 0;
+  overflow: hidden;
+  box-sizing: border-box; }
+
+.ion-input-select {
+  width: 200px;
+  font-size: 1rem;
+  background-image: url(https://i.imgur.com/nA9xx1X.png);
+  text-indent: 20px;
+  padding: .5rem 0; }
+
+select::-ms-expand {
+  display: none; }
+
+:focus {
+  outline: none; }
+
 .no-padding {
   padding: 0px !important; }
 

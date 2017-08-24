@@ -65,6 +65,15 @@ angular.module('starter')
     }
   })
 
+     .state('app.add_movimentacao', {
+    url: '/add_movimentacao',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/add_movimentacao.html'
+      }
+    }
+  })
+
   .state('app.complete_cad', {
       url: '/complete_cad',
       views: {

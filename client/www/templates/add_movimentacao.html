@@ -1,0 +1,101 @@
+<ion-view view-title="Inserir movimentação">
+  <ion-content class="padding">
+    <form name="cadastro" ng-submit="vm.cadastro()">
+    <span class="input-label">Tipo de movimentação</span>
+    <div class="row row-no-padding">
+        <div class="col">
+          <ion-radio style="font-size: 13px; border: none;" ng-model="vm.dados.RendaFixa">Receita</ion-radio> 
+        </div>
+        
+        <div class="col">
+          <ion-radio style="font-size: 13px; border: none;" ng-model="vm.dados.RendaFixa">Despesa</ion-radio>
+        </div>
+        <div class="col">
+            <ion-radio style="font-size: 13px; border: none;" ng-model="vm.dados.RendaFixa">Transferência</ion-radio>
+        </div>
+      </div>
+
+      <br>
+    
+      <span class="input-label">Faixa etária</span>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Idade
+        </div>
+        <select ng-model="vm.dados.FaixaEtaria">
+          <option selected>5 a 10 anos</option>
+          <option>11 a 15 anos</option>
+          <option>16 a 20 anos</option>
+        </select>
+      </label>
+
+   	  <br>
+
+      <span class="input-label">Profissão</span>
+      <label class="item item-input item-select">
+        <div class="input-label">Profissão</div>
+        <select ng-model="vm.dados.Profissao">
+          <option selected>Programador</option>
+          <option>Médico</option>
+          <option>Professor</option>
+        </select>
+      </label>
+
+      <br>
+
+      <span class="input-label">Renda</span>
+      <div class="row row-no-padding">
+        <label>
+  Select
+    <select class="ion-input-select">
+ 
+      <option>Chrome Canary</option>
+  <option>Firefox Nightly</option>
+  <option>Chrome Canary</option>
+  <option>Firefox Nightly</option>
+  <option>Chrome Canary</option>
+  <option>Firefox Nightly</option>
+  <option>Chrome Canary</option>
+</select>
+</label>
+        </div>
+        &nbsp&nbsp
+        <div class="col">
+          <label class="item item-input">
+        	<input ng-model="vm.dados.Valor" type="email" placeholder="0,00" required name="email">
+      	  </label>
+        </div>
+      </div>
+          
+      <br>  
+
+      <span class="input-label">Tipo de renda</span>
+      <label class="item item-input item-select">
+        <div class="input-label">Renda</div>
+        <select ng-model="vm.dados.EscalaTempo">
+          <option selected>Mensal</option>
+          <option>Quinzenal</option>
+          <option>Anual</option>
+        </select>
+      </label>
+	  <br>	
+      <div class="row row-no-padding">
+      	<div class="col">
+      	  <ion-radio ng-model="vm.dados.RendaFixa">Renda fixa</ion-radio>	
+      	</div>
+      	&nbsp&nbsp
+      	<div class="col">
+      	  <ion-radio ng-model="vm.dados.RendaFixa">Renda variável</ion-radio>
+      	</div>
+      	<div class="col"><button class="button button-icon icon ion-help-circled" ng-click="vm.tooltipRenda"></button></div>
+      </div>
+
+    </form>
+    <div class="row">
+    	<div class="col col-33"><button class="button button-block">Pular</button></div>
+    	<div class="col"><button class="button button-block" ng-click="vm.cadastrar()">Cadastrar</button></div>
+    </div>
+    
+
+  </ion-content>
+</ion-view>
