@@ -42,7 +42,7 @@
 
         function cadastrar() {
             $http({
-                url: api.url() + 'cadastro...', /// TODO: Coloca a URL real daqui
+                url: api.url() + 'usuarios',
                 method: 'POST',
                 data: vm.dados
             }).success(function (data) {
