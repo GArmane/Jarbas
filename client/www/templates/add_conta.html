@@ -1,31 +1,24 @@
-<form name="cadastro" ng-submit="vm.cadastro()">
+<form name="cadastro">
+    <button type="submit" style="position: absolute; top: -5000px" id="hiddenSubmit">sub</button>
     <span class="input-label">Nome</span>
         <label class="item item-input">
-            <input type="text" placeholder="(Opcional)">
+            <input type="text" ng-model="vm.conta.nome" placeholder="" required>
         </label>
     <br>       
     <span class="input-label">Valor</span>
     <div class="row row-no-padding">
         <div class="col col-33">          
             <label class="item item-select">
-                <select ng-model="vm.dados.MoedaId">
-                    <option selected>R$</option>
-                    <option>U$</option>
-                    <option>€</option>
+                <select ng-model="vm.conta.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" required>
                 </select>
             </label>
         </div>
         &nbsp&nbsp
         <div class="col">
             <label class="item item-input">
-                <input ng-model="vm.dados.Valor" type="email" placeholder="0,00" required name="email">
+                <input ng-model="vm.conta.saldo" type="number" placeholder="0,00" required>
             </label>
         </div>
-    </div>
-    <br>    
-    <div class="row">
-        <div class="col"><button class="button button-block">Cancelar</button></div>
-        <div class="col"><button class="button button-block" ng-click="vm.cadastrar()">Cadastrar</button></div>
     </div>
 </form>
   

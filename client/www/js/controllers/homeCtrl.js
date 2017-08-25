@@ -18,6 +18,8 @@
         activate();
 
         function activate() {
+            if (!auth.verify())
+                return;
             carregarDados();
         }
 
@@ -31,9 +33,9 @@
 
         function carregarDados() {
             $http({
-                url: api.url() + 'ContasContabeis/' + auth.id,
+                url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
                 method: 'GET',
-                headers: { 'Authorization': 'Bearer' + auth.token }
+                headers: auth.header
             }).success(function (data) {
                 vm.dados.contas = data;
             }).error(function (data) {
@@ -43,9 +45,9 @@
                 });
             });
             $http({
-                url: api.url() + 'Movimentacoes/' + auth.id,
+                url: api.url() + 'Movimentacoes/Usuario/' + auth.id,
                 method: 'GET',
-                headers: { 'Authorization': 'Bearer' + auth.token }
+                headers: auth.header
             }).success(function (data) {
                 vm.dados.movimentacoes = data;
             }).error(function (data) {

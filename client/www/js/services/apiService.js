@@ -11,13 +11,12 @@
         this.url = url;
         this.token = token;
 
-        var onState = true;
-        var strUrl = 'https://localhost:5001/api/';
+        var strUrl = 'http://localhost:5001/api/';
         var strToken = 'http://localhost:5000/connect/token';
         
         ////////////////
 
-        function available(swit) {
+        function available() {
             /// TODO: Consulta se a API está acessível
         }
 

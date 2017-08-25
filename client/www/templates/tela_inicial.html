@@ -4,26 +4,17 @@
       <div class="item item-divider">
         Movimentações
       </div>
-      <a class="item" href="#">
+      <a class="item" href="#" ng-repeat="mov in vm.dados.movimentacoes">
       	<div class="row">
       	  <div class="col col-75">
-            <h2>Bolsa estágio</h2>
-            <p>Salário - Poupança</p>
+            <h2>{{mov.descricao}}</h2>
+            <p>{{mov.grupoMovimentacoes.nome}} - {{mov.contaContabil.nome}}</p>
           </div>
-          <div class="col">+ R$ 300,00</div>
-        </div>
-      </a>
-      <a class="item" href="#">
-      	<div class="row">
-      	  <div class="col col-75">
-            <h2>Almoço</h2>
-            <p>Alimentação - Carteira</p>
-          </div>
-          <div class="col">- R$ 20,00</div>
+          <div class="col">{{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}</div>
         </div>
       </a>
       <div class="item" align="right">
-      	<a href="#">Ver mais</a>
+      	<a ui-sref="app.lista_movimentacoes">Ver mais</a>
       </div>
     </div>
 
@@ -32,23 +23,15 @@
       	Contas
       </div>
       <a class="item" href="#">
-      	<div class="row">
+      	<div class="row" ng-repeat="conta in vm.dados.contas">
       	  <div class="col col-75">
-            <h2>Poupança</h2>
+            <h2>{{conta.nome}}</h2>
           </div>
-          <div class="col">+ R$ 350,00</div>
-        </div>
-      </a>
-      <a class="item" href="#">
-      	<div class="row">
-      	  <div class="col col-75">
-            <h2>Carteira</h2>
-          </div>
-          <div class="col">+ R$ 5,00</div>
+          <div class="col">{{conta.saldo | currency: conta.moeda.simbolo + ' '}}</div>
         </div>
       </a>
       <div class="item" align="right">
-      	<a href="#">Ver mais</a>
+      	<a ui-sref="app.lista_contas">Ver mais</a>
       </div>
     </div>
 

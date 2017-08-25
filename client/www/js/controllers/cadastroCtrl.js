@@ -5,10 +5,10 @@
         .module('starter.controllers')
         .controller('cadastroController', cadastroController);
 
-    cadastroController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', 'tooltipAjuda', 'LoginService', 'promiseError'];
-    function cadastroController(auth, $state, api, $http, $ionicPopup, $scope, tooltipAjuda, LoginService, promiseError) {
+    cadastroController.$inject = ['auth', 'api', '$http', '$ionicPopup', 'tooltipAjuda', 'LoginService', 'promiseError', '$state'];
+    function cadastroController(auth, api, $http, $ionicPopup, tooltipAjuda, LoginService, promiseError, $state) {
         var vm = this;
-
+        
         vm.dados = {
             nome: '',
             email: '',
@@ -33,9 +33,13 @@
 
         function analisaSenha() {
             /// TODO: usa uns regex pra testar a força da senha e
-            /// retornar uma pontuação de 1 a 10
-            if (vm.dados.senha.length > 6)
-                vm.forcaSenha = 10;
+            /// retornar uma pontuação de 1 a 100
+            if (vm.dados.senha.length >= 8)
+                vm.forcaSenha = 100;
+            else if (vm.dados.senha.length >= 6)
+                vm.forcaSenha = 76;
+            else if (vm.dados.senha.length >= 4)
+                vm.forcaSenha = 26;
             else
                 vm.forcaSenha = 0;
         }
@@ -44,10 +48,12 @@
             $http({
                 url: api.url() + 'usuarios',
                 method: 'POST',
-                data: vm.dados
+                data: vm.dados,
+                headers: { 'Content-Type': 'application/json' }
             }).success(function (data) {
-                LoginService.defineAuth(data);
-                $state.go('app.principal'); /// TODO: principal? acho que não
+                LoginService.doLogin(vm.dados.email, vm.dados.senha)
+                    .then(loginSucess, promiseError.rejection)
+                    .catch(promiseError.exception);
             }).error(function (data) {
                 $ionicPopup.alert({
                     title: 'Ops!',
@@ -61,18 +67,32 @@
         }
 
         function cadastroGoogle() {
-            LoginService.gLogin().then(loginResult, promiseError.rejection).catch(promiseError.exception);
+            LoginService.gDialog()
+                .then(function (auth) {
+                    console.log(encodeURIComponent(auth.code));
+                    $http({
+                        url: api.url() + 'Usuarios/Google/' + encodeURIComponent(auth.code),
+                        method: 'POST',
+                    }).success(function (data) {
+                        LoginService.gLogin(auth)
+                            .then(loginSucess, promiseError.rejection)
+                            .catch(promiseError.exception);
+                    }).error(function (data) {
+                        $ionicPopup.alert({
+                            title: 'Ops!',
+                            template: data[0].errorMessage
+                        });
+                    });
+                }, promiseError.rejection)
+                .catch(promiseError.exception);
         }
 
         function cadastroFacebook() {
             
         }
 
-        function loginResult(result) {
-            /// TODO: Se for o primeiro acesso, não vai para a tela principal e sim
-            /// para a tela de perfil completar o cadastro
-            if (result)
-                $state.go('app.principal'); /// TODO: principal? acho que não
+        function loginSucess() {
+            $state.go('app.tela_inicial');            
         }
     }
 })();

@@ -1,27 +1,13 @@
 <ion-view view-title="Contas contábeis">
 	<ion-content>
 		<div class="list">
-			<a class="item href="#">
-    			Poupança
+			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
+    			{{conta.nome}}
     			<span class="item-note">
-      				+R$ 380,00
-    			</span>
-  			</a>
-  			<a class="item href="#">
-    			C.C
-    			<span class="item-note">
-      				-R$ 120,00
-    			</span>
-  			</a>
-  			<a class="item href="#">
-    			Cartão de Crédito
-    			<span class="item-note">
-      				+R$ 12,00
+					{{conta.saldo | currency: conta.moeda.simbolo + ' '}}
     			</span>
   			</a>
 		</div>
-		<a style="position: absolute; right: 20px; bottom: 30px;" class="button button-icon icon ion-plus-round"></a>
-    	
-
+		<a style="position: absolute; right: 20px; bottom: 30px;" ng-click="vm.add()" class="button button-icon icon ion-plus-round"></a>
   </ion-content>
 </ion-view>

@@ -4,7 +4,7 @@
       <br>
       <h4>Você só precisa de:</h4>
     </center>
-    <form name="cadastro" ng-submit="vm.cadastro()">
+    <form name="cadastro" ng-submit="vm.cadastrar()">
       <span class="input-label">Nome</span>
       <label class="item item-input">
         <input ng-model="vm.dados.nome" type="text" placeholder="Digite seu nome" required name="nome">
@@ -17,7 +17,7 @@
    	  <br>
    	  <span class="input-label">Senha</span>
       <label class="item item-input">
-        <input ng-model="vm.dados.senha" type="password" placeholder="Digite uma senha forte" required name="password">
+        <input ng-model="vm.dados.senha" ng-change="vm.analisaSenha()" type="password" placeholder="Digite uma senha forte" required name="password">
    	  </label>
    	  <br>
    	  <div class="row">
@@ -25,7 +25,7 @@
    	  	
    	  	<div class="col col-50">
    	  	  <span class="styled">
-      	    <meter min="0" max="100" low="25" high="75" optimum="100" value="50"></meter>
+      	    <meter value="{{vm.forcaSenha}}" min="0" max="100" low="25" high="75" optimum="100" style="-webkit-appearance: meter;"></meter>
           </span>
         </div>
         <div class="col"><button class="button button-icon icon ion-help-circled"></button></div>
@@ -39,13 +39,12 @@
    	  <div class="row">
         <div class="col"><h5>Ou cadastre-se <br> com suas redes sociais</h5></div>
         <div class="col">
-          <button class="button icon ion-social-facebook"></button>
-          <button class="button icon ion-social-google"></button>
+          <button ng-click="vm.cadastroGoogle()" class="button icon ion-social-google"></button>
           <!--<button style="width:45px; height:45px"><img style="width:25px; height:auto" src="img/google.png"></button></div> -->
         </div>
       </div>
+      <button type="submit" class="button button-block">Cadastrar</button>
     </form>
-    <button class="button button-block">Cadastrar</button>
 
           
       

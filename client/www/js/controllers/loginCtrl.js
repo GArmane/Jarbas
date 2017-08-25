@@ -31,25 +31,22 @@
         }
 
         function fazerLogin() {
-            LoginService.doLogin(vm.dados.user, vm.dados.pass)
+            LoginService.doLogin(vm.dados.email, vm.dados.senha)
                 .then(loginSuccess, promiseError.rejection)
                 .catch(promiseError.exception);
         }
 
         function loginGoogle() {
-            LoginService.gLogin().then(loginSuccess, promiseError.rejection).catch(promiseError.exception);
+            LoginService.gDialog()
+                .then(LoginService.gLogin, promiseError.rejection)
+                .then(loginSuccess, promiseError.rejection)
+                .catch(promiseError.exception);
         }
 
         //////////////// Private
 
-        function loginSuccess(data) {
-            /// TODO: Se for o primeiro acesso, não vai para a tela principal e sim
-            /// para a tela de perfil completar o cadastro
-            console.log(data);
-            console.log('E A E   C A P A T R Ã O');
-            return;
-            if (result)
-                $state.go('app.principal'); /// TODO: principal? acho que não
+        function loginSuccess() {
+            $state.go('app.tela_inicial');
         }
     }
 })();

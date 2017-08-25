@@ -3,11 +3,11 @@
 
     angular
         .module('starter.controllers')
-        .controller('cadastroController', cadastroController);
+        .controller('recuperacaoController', recuperacaoController);
 
-    cadastroController.$inject = ['$stateParams', '$ionicPopup', '$scope', '$history', 'tooltipAjuda', 'LoginService', 'promiseError'];
+    recuperacaoController.$inject = ['$stateParams', '$ionicPopup', '$scope', 'tooltipAjuda', 'LoginService', 'promiseError'];
 
-    function cadastroController($stateParams, $ionicPopup, $scope, $history, tooltipAjuda, LoginService, promiseError) {
+    function recuperacaoController($stateParams, $ionicPopup, $scope, tooltipAjuda, LoginService, promiseError) {
         var vm = this;
 
         vm.dados = {
@@ -57,7 +57,7 @@
                         title: 'Ops!',
                         template: 'Senha alterada com sucesso!'
                     }).then(function () {
-                        $history.back();
+                        history.back();
                     });
                 }, promiseError.rejection)
                 .catch(promiseError.exception);
