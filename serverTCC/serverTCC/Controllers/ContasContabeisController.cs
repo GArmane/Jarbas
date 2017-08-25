@@ -14,7 +14,7 @@ namespace serverTCC.Controllers
     [Authorize]
     public class ContasContabeisController : Controller
     {
-        private readonly JarbasContext context;
+        private JarbasContext context;
 
         public ContasContabeisController(JarbasContext ctx)
         {

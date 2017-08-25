@@ -1,19 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Movimentacoes")]
-    //[Authorize]
+    [Authorize]
     public class MovimentacoesController : Controller
     {
         private JarbasContext context;
@@ -89,7 +87,7 @@ namespace serverTCC.Controllers
 
         /// <summary>
         /// Retorna todas as movimentações do usuário
-        /// Get api/Movimentacoes/Usuario/{userId}
+        /// GET api/Movimentacoes/Usuario/{userId}
         /// </summary>
         [HttpGet("Usuario/{userId}")]
         public IActionResult GetUser([FromRoute] string userId)
@@ -110,7 +108,7 @@ namespace serverTCC.Controllers
 
         /// <summary>
         /// Retorna uma movimentação específica
-        /// Get api/Movimentacoes/{id}
+        /// GET api/Movimentacoes/{id}
         /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
