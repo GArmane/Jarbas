@@ -18,7 +18,8 @@ namespace serverTCC.Controllers
             this.context = ctx;
         }
 
-        public async Task<IActionResult> Get()
+        [HttpGet]
+        public IActionResult Get()
         {
             var moedas = context.Moeda;
             return Ok(moedas);
@@ -33,7 +34,7 @@ namespace serverTCC.Controllers
                 await context.SaveChangesAsync();
                 return Ok(moeda);
             }
-            catch(System.Exception e)
+            catch(Exception e)
             {
                 return BadRequest(e.Message);
             }

@@ -67,7 +67,7 @@ def main():
     api_cotacoes.update_cotacao()
 
     for moeda in api_cotacoes.cotacao.moedas:
-        request = requests.post('http://localhost:5000/api/Moedas', json=dict(moeda))
+        request = requests.post('http://localhost:5001/api/Moedas', json=dict(moeda))
         print(request.json)
 
 if __name__ == "__main__":
