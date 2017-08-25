@@ -9,9 +9,10 @@ using serverTCC.Models;
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20170825003833_Moeda")]
+    partial class Moeda
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -269,7 +270,7 @@ namespace serverTCC.Migrations
 
                     b.Property<string>("Simbolo");
 
-                    b.Property<TimeSpan>("UltimaConsulta");
+                    b.Property<DateTime>("UltimaConsulta");
 
                     b.HasKey("Id");
 
