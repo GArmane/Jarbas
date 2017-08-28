@@ -13,6 +13,7 @@ namespace serverTCC
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
+                .UseUrls("http://*:5001")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
