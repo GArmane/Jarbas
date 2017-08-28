@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using serverTCC.Data;
 using serverTCC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace serverTCC.Controllers
 {
@@ -26,11 +27,23 @@ namespace serverTCC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Moeda moeda)
+        public async Task<IActionResult> UpdateCotacoes([FromBody] Moeda moeda)
         {
             try
             {
-                context.Moeda.Add(moeda);
+                var moedaAux = await context.Moeda.AsNoTracking().FirstOrDefaultAsync(m => m.Nome.Equals(moeda.Nome));
+
+                if(moedaAux != null)
+                {
+                    moeda.Id = moedaAux.Id;
+                    moedaAux = moeda;
+                    context.Moeda.Update(moedaAux);
+                }
+                else
+                {
+                    context.Moeda.Add(moeda);
+                }             
+                
                 await context.SaveChangesAsync();
                 return Ok(moeda);
             }
