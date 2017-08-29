@@ -183,10 +183,27 @@ em, i{
 
 /*sidebar*/
 .custom{
-  background-color: #30e3ca !important;
+  background-color: #E3FDFD !important;
   color: #40514E !important;
-  border: none;
-  border-color:   darken( #11999E, 10% );
+
+  .item {
+    background-color: #CBF1F5;
+    border: none;
+    border-top: 1px solid #464646;
+    border-bottom: 1px solid #333333;
+
+    max-height: none;
+
+    &:last-child {
+      border-bottom: 1px solid #333333;
+    }
+    &.current{ background-color:darken( $dark, 10% )   !important;
+       border-top: 1px solid #464646 !important;
+    border-bottom: 2px solid #333333 !important;
+      p,h3{opacity: .7;}
+            }
+  }
+
   h1{
     color: #40514E;
   }
@@ -200,7 +217,7 @@ em, i{
 .padrao{
 		
 	background-color: #E3FDFD !important;
-  	color: #40514E;
+  	color: #71C9CE;
   	border-color:   darken(#A6E3E9, 10% );
   	.item{
   		background-color: transparent;
