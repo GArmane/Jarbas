@@ -18,6 +18,7 @@ $dark:                            #444 !default;
 .item-radio .radio-icon {
   top: -5px !important; }
 
+/*alterar select*/
 .ion-input-select,
 select {
   -webkit-appearance: none;
@@ -83,6 +84,7 @@ select::-ms-expand {
   padding: 0 0 0 0;
   margin: 0 0 0 0; }
 
+/*barra força de senha*/
 meter {
   width: 100%; }
 
@@ -118,6 +120,7 @@ meter {
 .styled meter::-webkit-meter-even-less-good-value {
   background: #CC4600; }
 
+/*divisores hr*/
 .divider {
   width: 100%;
   text-align: center; }
@@ -136,6 +139,7 @@ meter {
 em, i {
   font-style: italic !important; }
 
+/*logo*/
 .logo {
   display: block;
   margin-left: auto;
@@ -147,6 +151,7 @@ em, i {
   height: 70px;
   width: auto; }
 
+/*sidebar*/
 .custom {
   background-color: #30e3ca !important;
   color: #40514E !important;
@@ -157,13 +162,14 @@ em, i {
   .custom button {
     color: #40514E !important; }
 
+/*padrão de cores das telas*/
 .padrao {
-  background-color: #f3F6F6 !important;
+  background-color: #E3FDFD !important;
   color: #40514E;
-  border-color: #0c6c70; }
+  border-color: #7dd6df; }
   .padrao .item {
     background-color: transparent; }
-  .padrao h1, .padrao h3, .padrao h4, .padrao h5 {
+  .padrao h1, .padrao h2, .padrao h3, .padrao h4, .padrao h5, .padrao p, .padrao a {
     color: #40514E; }
   .padrao .cor {
     background-color: #11999E !important;
@@ -172,38 +178,8 @@ em, i {
     border: 1px solid;
     border-color: #0c6c70 !important; }
 
-.gohorse {
-  background-color: #f3f6f6 !important;
-  color: #40514E; }
-  .gohorse .item {
-    background-color: transparent !important;
-    border: none;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-    border-color: #0c6c70;
-    color: #000000;
-    max-height: none; }
-    .gohorse .item:last-child {
-      border-bottom: 1px solid;
-      border-color: #0c6c70; }
-    .gohorse .item.current {
-      background-color: #262727 !important;
-      border-top: 1px solid #464646 !important;
-      border-bottom: 2px solid #333333 !important; }
-      .gohorse .item.current p, .gohorse .item.current h3 {
-        opacity: .7; }
-  .gohorse h2,
-  .gohorse h3,
-  .gohorse p,
-  .gohorse a {
-    color: #40514E; }
-
 .dark-head {
   text-decoration: none; }
-
-.tama {
-  height: 100px;
-  width: auto; }
 
 .centro {
   display: block;

@@ -21,6 +21,7 @@ $dark: #3f4041;
   top: -5px !important;
 }
 
+/*alterar select*/
 .ion-input-select,
 select {
   -webkit-appearance:none;
@@ -94,6 +95,7 @@ select::-ms-expand {
   margin: 0 0 0 0;
 }
 
+/*barra força de senha*/
 meter {
   width: 100%;
 }
@@ -138,7 +140,7 @@ meter {
   background: #CC4600;
 }
 
-
+/*divisores hr*/
 .divider {
   width: 100%;
   text-align:center;
@@ -159,10 +161,12 @@ meter {
   float:right;
 }
 
+
 em, i{
   font-style: italic !important;
 }
 
+/*logo*/
 .logo {
 		
 	display: block;
@@ -177,6 +181,7 @@ em, i{
 	width: auto;
 }
 
+/*sidebar*/
 .custom{
   background-color: #30e3ca !important;
   color: #40514E !important;
@@ -191,15 +196,16 @@ em, i{
   }
 }
 
+/*padrão de cores das telas*/
 .padrao{
 		
-	background-color: #f3F6F6 !important;
+	background-color: #E3FDFD !important;
   	color: #40514E;
-  	border-color:   darken( #11999E, 10% );
+  	border-color:   darken(#A6E3E9, 10% );
   	.item{
   		background-color: transparent;
   	}
-  	h1,h3,h4,h5{
+  	h1,h2,h3,h4,h5,p,a{
     	     color: #40514E;
   	}
   	.cor{
@@ -214,46 +220,10 @@ em, i{
 }
 
 
-.gohorse {
-  background-color: #f3f6f6 !important;
-  color: #40514E;
-  .item {
-    background-color: transparent !important;
-    border: none;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-    border-color:   darken( #11999E, 10% );    
-
-    color: #000000;
-    max-height: none;
-
-    &:last-child {
-      border-bottom: 1px solid;
-      border-color:   darken( #11999E, 10% );
-    }
-    &.current{ background-color:darken( $dark, 10% )   !important;
-       border-top: 1px solid #464646 !important;
-    border-bottom: 2px solid #333333 !important;
-      p,h3{opacity: .7;}
-            }
-  }
-  h2,
-  h3,
-  p,
-  a{
-    color: #40514E;
-  }
-}
 .dark-head {
   text-decoration: none;
 }
 
-
-
-.tama{
-	height: 100px;
-	width: auto;
-}
 
 .centro{
 	
