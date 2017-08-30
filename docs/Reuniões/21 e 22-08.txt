@@ -1,0 +1,58 @@
+21-08
+	tratar o objetivo como uma conta contábil
+	conversão de valor no cliente OK
+	agendamentos de movimentações e objetivo fica no front end
+	movimentação em 1 controller só
+	Tirar get por objeto unico de todos os controllers
+	Ver com a Sonia se a taxa de investimento troca de banco pra banco TROCA
+	Atualizar o investimento no get
+
+	Objetivo como reserva: o objetivo funciona como uma reserva de dinheiro.
+	Ao adicionar um montante na reserva, o aplicativo indica que uma certa
+	porcentagem ou montante na conta esta reservado para um objetivo especifico,
+	ao mesmo tempo, indica em um objetivo que certa porcentagem ou quantia "entrou"
+	no objetivo e este esta X completos. Se por acaso o usuario tiver que retirar
+	uma quantia da conta que ultrapasse o reservado, o aplicativo avisa de forma
+	transparente que aquele debito o regrediu no progresso de um objetivo. 
+
+22-08
+	Ver objetivo e investimento com a Sonia
+		- Fazer a conta como um balde normal, para dar a liberdade para o usuário, e é mais rapido, no final do tcc colocar as melhorias futuras
+		- fazer transferencia com 2 movimentações e mostrar pro usuário como transferencia
+		- Procurar api do banco do brasil pra se usar de media
+		- Perguntar pra Sonia sobre a api de cotação/investimento
+	Preencher enum de profissões e de faixa etaria
+	Definir model de movimentação pra conseguir aplicar repetição - FEITO ABAIXO
+	Criar controller para moeda com create e get - GIOVANNI VAI CRIAR
+	Fazer movimentação e adiar transferencia OK
+	Leo vai pegar as cotações do jarbas OK
+	Giovanni vai fazer as cotações e tem que criar client no identity server e explicar requests OK
+	tirar qtdTempo e escalaTempo de movimentação (FAZER EM INVESTIMENTO TBM NO FUTURO)
+	criar model Agendamento com os campos: escalaTempo; qtdDiaria; qtdSemanal; qtdMensal; qtdAnual; para repetição semanal tem os dias da semana que repetem; para mensal tem vc escolhe o mesmo dia do mes (exemplo: dia 15), ou a cada dia da semana de cada mes (segunda terça do mes), até onde repete, pra sempre, até um dia específico, ou quantas vezes isso vai se repetir;
+		// Geral
+		- id : int
+		- escalaTempo : EscalaTempo
+		- qtdTempo: int
+
+		// Ate quando repete
+			- dataLimite : DateTime? // Caso 1: Repete ate uma data especifica
+			- vezesLimite: int? // Caso 2: Repete por uma quantidade de vezes
+			// Caso 3: os dois sao nulos, repete indefinidamente
+
+		// Exclusivo de repeticao semanal
+		- diasSemana : IEnumerable<DiaSemana>?
+
+		// Exclusivo de repeticao mensal
+			// Caso 1: repete num dia especifico do mes
+			- diaMes : int?
+
+			// Caso 2: repete num dia da semana de uma semana especifica do mes
+			- semanaMes : int?
+			- diaSemana : DiaSemana?
+
+
+
+	fazer objetivo como um balde e uma reserva que avisa o usuário caso ele entre nessa reserva
+
+	fazer as transferencias com uma despesa, receita e uma classe intermediaria com as 2 movimentações
+	refatorar model de transferencia
