@@ -23,23 +23,25 @@
     </div>
     <br>
     <form name="login" ng-submit="vm.fazerLogin()">
-      <label class="item item-input">
+      <label class="item item-input item-floating-label">
+        <span class="input-label">E-mail</span>
         <input ng-model="vm.dados.email" type="email" placeholder="E-mail" required name="email">
       </label>
-      <br>
-      <label class="item item-input">
+      
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Senha</span>
         <input ng-model="vm.dados.senha" type="password" placeholder="Senha" required name="senha">
       </label>
       <div class="row">
         <div class="col link">
         <!--<a class="test" ng-click="vm.recuperarConta()" style="border-bottom: 1px solid !important;">Esqueci minha senha</a> -->
-          <a class="test" href="#/cadastro">Esqueci minha senha</a>
+          <a style="border: none;" class="test" href="#/cadastro">Esqueci minha senha</a>
         </div>
         <div class="col text-right">
           <button type="submit" class="button icon-right ion-chevron-right button-clear button-dark">Entrar</button>
         </div>
       </div>    
-      <center><a class="test login" href="#/app/cadastro">Cadastre-se</a></center>
+      <center><a style="border: none;" class="test login" href="#/app/cadastro">Cadastre-se</a></center>
     </form>
   </ion-content>
 </ion-view>
