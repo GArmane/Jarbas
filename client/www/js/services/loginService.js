@@ -125,10 +125,12 @@
                 window.gapi.load('auth2', function() {
                     auth2 = gapi.auth2.init({
                         client_id: '646057312978-8voqfqkpn4aicqnamtdl7o2pj0k4qkp4.apps.googleusercontent.com',
+                        scope: 'email',
+                        fetch_basic_profile: true
                     });
+                    googleLoaded = true;
                     cb();
                 });
-                googleLoaded = true;
             } else
                 cb();
         }
@@ -173,7 +175,13 @@
                 }).success(function(data) {
                     console.log('API retornou sucesso:');
                     console.log(data);
-                    // defineAuth(data); /// TODO: Trata o retorno da api no objeto auth
+
+                    var authInstance = gapi.auth2.getAuthInstance();
+                    var user = authInstance.currentUser.get();
+                    var profile = user.getBasicProfile();
+                    var email = profile.getEmail();
+
+                    defineAuth(data, email, resolve, reject); /// TODO: Trata o retorno da api no objeto auth
                     resolve(data);
                 }).error(function(data) {
                     console.log('API retornou falha:');

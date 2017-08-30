@@ -67,32 +67,29 @@
         }
 
         function cadastroGoogle() {
-            LoginService.gDialog()
-                .then(function (auth) {
-                    console.log(encodeURIComponent(auth.code));
-                    $http({
-                        url: api.url() + 'Usuarios/Google/' + encodeURIComponent(auth.code),
-                        method: 'POST',
-                    }).success(function (data) {
-                        LoginService.gLogin(auth)
-                            .then(loginSucess, promiseError.rejection)
-                            .catch(promiseError.exception);
-                    }).error(function (data) {
-                        $ionicPopup.alert({
-                            title: 'Ops!',
-                            template: data[0].errorMessage
-                        });
+            LoginService.gDialog().then(function (auth) {
+                $http({
+                    url: api.url() + 'Usuarios/Google/',
+                    data: '"' + auth.code + '"',
+                    method: 'POST',
+                }).success(function (data) {
+                    $state.go('app.login');
+                    $ionicPopup.alert({
+                        title: 'Sucesso!',
+                        template: 'Seu cadastro foi realizado. Por favor, faça login com sua conta Google para continuar.'
                     });
-                }, promiseError.rejection)
-                .catch(promiseError.exception);
+                }).error(function (data) {
+                    $ionicPopup.alert({
+                        title: 'Ops!',
+                        template: data[0].errorMessage
+                    });
+                });
+            }, promiseError.rejection)
+            .catch(promiseError.exception);
         }
 
         function cadastroFacebook() {
             
-        }
-
-        function loginSucess() {
-            $state.go('app.tela_inicial');            
         }
     }
 })();
