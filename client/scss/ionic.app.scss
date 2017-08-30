@@ -183,36 +183,36 @@ em, i{
 
 /*sidebar*/
 .custom{
-  background-color: #E3FDFD !important;
-  color: #40514E !important;
+  background-color: #A6E3E9 !important;
+}
 
-  .item {
+.teste{ 
+  background-color: #625772 !important;
+}
+.custom .item {
     background-color: #CBF1F5;
     border: none;
     border-top: 1px solid #464646;
     border-bottom: 1px solid #333333;
-
     max-height: none;
-
-    &:last-child {
-      border-bottom: 1px solid #333333;
-    }
-    &.current{ background-color:darken( $dark, 10% )   !important;
-       border-top: 1px solid #464646 !important;
-    border-bottom: 2px solid #333333 !important;
-      p,h3{opacity: .7;}
-            }
-  }
-
-  h1{
-    color: #40514E;
-  }
-
-  button{
-  	color: #40514E !important;
-  }
 }
 
+.custom .item .item-content{
+    background-color: transparent !important;
+
+}
+
+    .custom .item:last-child {
+      border-bottom: 1px solid #333333;
+    }
+
+.custom .item .current{ background-color:darken( $dark, 10% )   !important;
+    border-top: 1px solid #464646 !important;
+    border-bottom: 2px solid #333333 !important;
+      p,h3{opacity: .7;}
+}
+
+  
 /*padrão de cores das telas*/
 .padrao{
 		

@@ -153,26 +153,30 @@ em, i {
 
 /*sidebar*/
 .custom {
-  background-color: #E3FDFD !important;
-  color: #40514E !important; }
-  .custom .item {
-    background-color: #CBF1F5;
-    border: none;
-    border-top: 1px solid #464646;
-    border-bottom: 1px solid #333333;
-    max-height: none; }
-    .custom .item:last-child {
-      border-bottom: 1px solid #333333; }
-    .custom .item.current {
-      background-color: #262727 !important;
-      border-top: 1px solid #464646 !important;
-      border-bottom: 2px solid #333333 !important; }
-      .custom .item.current p, .custom .item.current h3 {
-        opacity: .7; }
-  .custom h1 {
-    color: #40514E; }
-  .custom button {
-    color: #40514E !important; }
+  background-color: #A6E3E9 !important; }
+
+.teste {
+  background-color: #625772 !important; }
+
+.custom .item {
+  background-color: #CBF1F5;
+  border: none;
+  border-top: 1px solid #464646;
+  border-bottom: 1px solid #333333;
+  max-height: none; }
+
+.custom .item .item-content {
+  background-color: transparent !important; }
+
+.custom .item:last-child {
+  border-bottom: 1px solid #333333; }
+
+.custom .item .current {
+  background-color: #262727 !important;
+  border-top: 1px solid #464646 !important;
+  border-bottom: 2px solid #333333 !important; }
+  .custom .item .current p, .custom .item .current h3 {
+    opacity: .7; }
 
 /*padrão de cores das telas*/
 .padrao {
