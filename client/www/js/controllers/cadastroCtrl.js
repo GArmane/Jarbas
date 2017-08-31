@@ -52,7 +52,12 @@
                 headers: { 'Content-Type': 'application/json' }
             }).success(function (data) {
                 LoginService.doLogin(vm.dados.email, vm.dados.senha)
-                    .then(loginSucess, promiseError.rejection)
+                    .then(function () {
+                        $state.go('app.tela_inicial');
+                        $ionicPopup.alert({
+                            title: 'Bem-vindo ao Jarbas!'
+                        });
+                    }, promiseError.rejection)
                     .catch(promiseError.exception);
             }).error(function (data) {
                 $ionicPopup.alert({
@@ -73,11 +78,13 @@
                     data: '"' + auth.code + '"',
                     method: 'POST',
                 }).success(function (data) {
-                    $state.go('app.login');
-                    $ionicPopup.alert({
-                        title: 'Sucesso!',
-                        template: 'Seu cadastro foi realizado. Por favor, faça login com sua conta Google para continuar.'
-                    });
+                    LoginService.defineAuth(data.token, data.usuario.email).then(function () {
+                        $state.go('app.tela_inicial');
+                        $ionicPopup.alert({
+                            title: 'Sucesso!',
+                            template: 'Seu cadastro foi realizado. Bem-vindo ao Jarbas!'
+                        });
+                    }, promiseError.rejection).catch(promiseError.exception);
                 }).error(function (data) {
                     $ionicPopup.alert({
                         title: 'Ops!',

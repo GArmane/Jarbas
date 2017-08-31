@@ -40,29 +40,33 @@
 
         function activate() { }
         
-        function defineAuth(authResult, email, resolve, reject) {
-            if (authResult) {
-                auth.done = true;
-                auth.data = authResult;
-                auth.token = authResult.access_token;
-                auth.expiration = authResult.expires_in;
-                auth.refresh = authResult.refresh_token;
-                auth.header = { 'Authorization': 'Bearer ' + auth.token };
-
-                $http({
-                    method: 'GET',
-                    url: api.url() + 'Usuarios/Email/' + email,
-                    headers: auth.header,
-                }).success(function (data) {
-                    auth.id = data.id;
-                    resolve(data);
-                }).error(function (data) {
+        function defineAuth(authResult, email) {
+            return new Promise(function (resolve, reject) {
+                if (authResult) {
+                    auth.done = true;
+                    auth.data = authResult;
+                    auth.token = authResult.access_token;
+                    auth.expiration = authResult.expires_in;
+                    auth.refresh = authResult.refresh_token;
+                    auth.header = { 'Authorization': 'Bearer ' + auth.token };
+    
+                    $http({
+                        method: 'GET',
+                        url: api.url() + 'Usuarios/Email/' + email,
+                        headers: auth.header,
+                    }).success(function (data) {
+                        auth.id = data.id;
+                        resolve(data);
+                    }).error(function (data) {
+                        auth.done = false;
+                        console.log(data);
+                        reject(data.error_description);
+                    });
+                } else {
                     auth.done = false;
-                    console.log(data);
-                    reject(data.error_description);
-                });
-            } else
-                auth.done = false;
+                    reject();
+                }
+            });
         }
         
         function doLogin(email, senha) {
@@ -81,7 +85,7 @@
                         'password': senha
                     }
                 }).success(function (data) {
-                    defineAuth(data, email, resolve, reject);
+                    defineAuth(data, email).then(resolve, reject);
                 }).error(function (data) {
                     auth.done = false;
                     console.log(data);
@@ -181,8 +185,7 @@
                     var profile = user.getBasicProfile();
                     var email = profile.getEmail();
 
-                    defineAuth(data, email, resolve, reject); /// TODO: Trata o retorno da api no objeto auth
-                    resolve(data);
+                    defineAuth(data, email).then(resolve, reject);
                 }).error(function(data) {
                     console.log('API retornou falha:');
                     console.log(data);
