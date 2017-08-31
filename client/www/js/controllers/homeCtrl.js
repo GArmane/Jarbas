@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('homeController', homeController);
 
-    homeController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope'];
-    function homeController(auth, $state, api, $http, $ionicPopup, $scope) {
+    homeController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', '$ionicLoading'];
+    function homeController(auth, $state, api, $http, $ionicPopup, $scope, $ionicLoading) {
         var vm = this;
 
         vm.dados = {};
@@ -18,6 +18,7 @@
         activate();
 
         function activate() {
+            $ionicLoading.hide();
             if (!auth.verify())
                 return;
             carregarDados();
