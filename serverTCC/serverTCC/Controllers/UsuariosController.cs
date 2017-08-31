@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Text;
 using serverTCC.Services;
 using AcessoGoogle;
+using IdentityModel.Client;
 
 namespace serverTCC.Controllers
 {
@@ -98,7 +99,7 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Cria um novo usuário com informações do google
+        /// Cria um novo usuário com informações do google e faz login automaticamente
         /// POST api/Usuarios/Google/{idToken}
         /// </summary>
         [HttpPost("Google")]
@@ -122,7 +123,34 @@ namespace serverTCC.Controllers
                         Senha = Guid.NewGuid().ToString()
                     };
 
-                    return await Create(model);
+                    var usuarioResult = await Create(model);
+                    //Faz o casting da resposta do metodo
+                    var aux = usuarioResult as CreatedAtActionResult;
+
+                    if (aux != null)
+                    {
+                        //Fazer o request do token
+                        var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
+
+                        var tokenClient = new TokenClient(disco.TokenEndpoint, "jarbasApp", "secret");
+                        var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(model.Email, model.Senha, "jarbasApi offline_access");
+
+                        if (!tokenResponse.IsError)
+                        {
+                            var usuario = aux.Value as Usuario;
+                            var token = tokenResponse.Json;
+                            return CreatedAtAction("Create", new { usuario, token});
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Token", "O usuário foi criado, porém houve um erro no login, tente novamente");
+                            return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                        }
+                    }
+                    else
+                    {
+                        return usuarioResult;
+                    }
                 }
                 else
                 {
