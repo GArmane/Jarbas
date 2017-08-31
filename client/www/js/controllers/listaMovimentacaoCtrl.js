@@ -9,8 +9,8 @@
     function listaMovimentacaoController(auth, api, $http, $ionicPopup) {
         var vm = this;
         
-        vm.movimentacoes = [];
-        vm.dados = vm.movimentacoes;
+        vm.movimentacoes = []; // Tem todas as movimentações
+        vm.dados = vm.movimentacoes; // Tem as movimentações exibidas na tela
         vm.contas = [];
         vm.grupos = [];
 
@@ -81,6 +81,7 @@
                 headers: auth.header
             }).success(function (data) {
                 vm.dados = data;
+                vm.movimentacoes = data;
             }).error(function (data) {
                 $ionicPopup.alert({
                     title: 'Ops!',
@@ -100,20 +101,19 @@
                     template: data
                 });
             });
-            // $http({
-            //     url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
-            //     method: 'GET',
-            //     headers: auth.header
-            // }).success(function (data) {
-            //     vm.grupos = data;
-            //     vm.grupos.unshift({ nome: 'Sem filtro' });
-            // }).error(function (data) {
-            //     $ionicPopup.alert({
-            //         title: 'Ops!',
-            //         template: data[0].errorMessage
-            //     });
-            // });
+            $http({
+                url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
+                method: 'GET',
+                headers: auth.header
+            }).success(function (data) {
+                vm.grupos = data;
+                vm.grupos.unshift({ nome: 'Sem filtro' });
+            }).error(function (data) {
+                $ionicPopup.alert({
+                    title: 'Ops!',
+                    template: data[0].errorMessage
+                });
+            });
         }
-
     }
 })();

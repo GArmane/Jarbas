@@ -14,22 +14,9 @@
         vm.conta = {};
         vm.conta.nome = '';
         vm.conta.moeda = null;
+        vm.conta.moedaId = null;
         vm.conta.saldo = null;
-        vm.moedas = [/*{
-            id: 1,
-            simbolo: 'R$',
-            nome: 'Real',
-            cotacaoComercial: 1,
-            ultimaConsulta: null,
-            fonte: '',
-        }, {
-            id: 2,
-            simbolo: 'US$',
-            nome: 'Dólar Americano',
-            cotacaoComercial: 3,
-            ultimaConsulta: null,
-            fonte: '',
-        }*/];
+        vm.moedas = [];
 
         vm.add = add;
         vm.alterar = alterar;
@@ -66,13 +53,17 @@
                 if (!salvar)
                     return;
                 vm.conta.usuarioId = auth.id;
+                var conta = JSON.parse(JSON.stringify(vm.conta));
+                conta.moedaId = conta.moeda.id;
+                conta.moeda = null;
                 $http({
                     method: 'POST',
                     url: api.url() + 'ContasContabeis/',
-                    data: vm.conta,
+                    data: conta,
                     headers: auth.header
                 }).success(function (data) {
                     vm.dados.push(data);
+                    data.moeda = vm.conta.moeda;
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Conta contábil adicionada.'
@@ -88,8 +79,11 @@
 
         function alterar(index) {
             vm.conta = JSON.parse(JSON.stringify(vm.dados[index]));
+            vm.conta.moeda = vm.moedas.find(function (moeda) {
+                return moeda.id == vm.conta.moeda.id;
+            });
             $ionicPopup.show({
-                title: 'Adicionar conta contábil',
+                title: 'Alterar conta contábil',
                 templateUrl: 'templates/add_conta.html',
                 scope: $scope,
                 buttons: [{
@@ -115,13 +109,17 @@
             }).then(function (salvar) {
                 if (!salvar)
                     return;
+                var conta = JSON.parse(JSON.stringify(vm.conta));
+                conta.moedaId = conta.moeda.id;
+                conta.moeda = null;
                 $http({
-                    method: 'POST',
-                    url: api.url() + 'ContasContabeis/',
-                    data: vm.conta,
+                    method: 'PUT',
+                    url: api.url() + 'ContasContabeis/' + vm.conta.id,
+                    data: conta,
                     headers: auth.header
                 }).success(function (data) {
                     vm.dados[index] = data;
+                    data.moeda = vm.conta.moeda;
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Conta contábil alterada.'
@@ -191,37 +189,13 @@
                 url: api.url() + 'Moedas',
                 headers: auth.header
             }).success(function (data) {
-                if (data && data.length > 0)
-                    vm.moedas = data;
-                else {
-                    criarMoedas();
-                }
+                vm.moedas = data;
             }).error(function (data) {
                 $ionicPopup.alert({
                     title: 'Ops!',
                     template: data[0].errorMessage
                 });
             });
-            // criarMoedas();
         }
-
-        // function criarMoedas() {
-        //     .forEach(function (moeda) {
-        //         // $http({
-        //         //     method: 'POST',
-        //         //     url: api.url() + 'Moedas',
-        //         //     data: moeda,
-        //         //     headers: auth.header
-        //         // }).success(function (data) {
-        //         //     vm.moedas.push(data);
-        //         // }).error(function (data) {
-        //         //     $ionicPopup.alert({
-        //         //         title: 'Ops!',
-        //         //         template: data[0].errorMessage
-        //         //     });
-        //         // });
-        //         vm.moedas.push(moeda);
-        //     });
-        // }
     }
 })();

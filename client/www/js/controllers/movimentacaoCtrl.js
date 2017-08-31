@@ -27,6 +27,7 @@
             if (!auth.verify())
                 return;
             carregarDados();
+            vm.alteracao = !!$stateParams.id;
         }
 
         //////////////// Public

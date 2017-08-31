@@ -1,4 +1,4 @@
-<ion-view view-title="Inserir movimentação">
+<ion-view view-title="{{vm.alteracao ? 'Alterar movimentação' : 'Inserir movimentação'}}">
   <ion-content class="padding">
     <form name="cadastro" ng-submit="vm.cadastro()">
     <span class="input-label">Tipo de movimentação</span>
