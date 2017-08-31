@@ -95,6 +95,7 @@
             }).success(function (data) {
                 vm.contas = data;
                 vm.contas.unshift({ nome: 'Sem filtro' });
+                associaContaMov();
             }).error(function (data) {
                 $ionicPopup.alert({
                     title: 'Ops!',
@@ -108,12 +109,25 @@
             }).success(function (data) {
                 vm.grupos = data;
                 vm.grupos.unshift({ nome: 'Sem filtro' });
+                associaContaMov();
             }).error(function (data) {
                 $ionicPopup.alert({
                     title: 'Ops!',
                     template: data[0].errorMessage
                 });
             });
+        }
+
+        function associaContaMov() {
+            if (vm.movimentacoes.length == 0 || vm.contas.length == 0)
+                return;
+            vm.movimentacoes.forEach(function(mov) {
+                for (var i = 0; i < vm.contas.length; i++) {
+                    var conta = vm.contas[i];
+                    if (conta.id == mov.contaContabilId)
+                        mov.contaContabil = conta;
+                }
+            }, this);
         }
     }
 })();
