@@ -60,11 +60,14 @@
                     }).error(function (data) {
                         auth.done = false;
                         console.log(data);
-                        reject(data.error_description);
+                        if (data.error_description == 'invalid_username_or_password')
+                            reject('E-mail e ou senha incorreto(s).');
+                        else
+                            reject(data.error_description);
                     });
                 } else {
                     auth.done = false;
-                    reject();
+                    reject('Erro no login: authResult é nulo ou indefinido.');
                 }
             });
         }
