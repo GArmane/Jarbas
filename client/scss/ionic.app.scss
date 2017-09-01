@@ -216,11 +216,11 @@ em, i{
 /*padrão de cores das telas*/
 .padrao{
 		
-	background-color: #E3FDFD !important;
-  	color: #71C9CE;
-  	border-color:   darken(#A6E3E9, 10% );
-  	.item{
-  		background-color: transparent;
+	background-color: #F1F1F1 !important;
+  	color: #40514E;
+  	
+  	.item .item-content{
+  		background-color: transparent !important;
   	}
   	h1,h2,h3,h4,h5,p,a{
     	     color: #40514E;
@@ -228,10 +228,6 @@ em, i{
   	.cor{
   		background-color: #11999E !important;
   		color: white;
-  	}
-  	a{
-  		border: 1px solid;
-  		border-color:   darken( #11999E, 10% ) !important;
   	}
 
 }

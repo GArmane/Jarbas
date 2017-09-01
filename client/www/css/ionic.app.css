@@ -180,19 +180,15 @@ em, i {
 
 /*padrão de cores das telas*/
 .padrao {
-  background-color: #E3FDFD !important;
-  color: #71C9CE;
-  border-color: #7dd6df; }
-  .padrao .item {
-    background-color: transparent; }
+  background-color: #F1F1F1 !important;
+  color: #40514E; }
+  .padrao .item .item-content {
+    background-color: transparent !important; }
   .padrao h1, .padrao h2, .padrao h3, .padrao h4, .padrao h5, .padrao p, .padrao a {
     color: #40514E; }
   .padrao .cor {
     background-color: #11999E !important;
     color: white; }
-  .padrao a {
-    border: 1px solid;
-    border-color: #0c6c70 !important; }
 
 .dark-head {
   text-decoration: none; }
