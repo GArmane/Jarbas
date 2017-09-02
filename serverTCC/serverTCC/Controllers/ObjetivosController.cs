@@ -32,57 +32,14 @@ namespace serverTCC.Controllers
         {
             try
             {
-                bool usuarioExists = await context.Usuario.AnyAsync(u => u.Id.Equals(objetivo.UsuarioId));
+                /*FAZER VERIFICAÇÕES ANTES DE CRIAR*/
 
-                if (usuarioExists)
-                {
-                    foreach (var objetivoConta in objetivo.ObjetivosConta)
-                    {
-                        if (objetivoConta.ContaContabilId != null)
-                        {
-                            var conta = await context.ContaContabil.FirstOrDefaultAsync(c => c.Id.Equals(objetivoConta.ContaContabilId));
+                context.Objetivo.Add(objetivo);
 
-                            if (conta != null)
-                            {
-                                var historico = objetivo.HistoricoObjetivo.FirstOrDefault();
-                                var aux = decimal.Divide((decimal)objetivoConta.Porcentagem,100m);
-                                historico.ValorFinal += decimal.Multiply(conta.Saldo, aux);
-                            }
-                            else
-                            {
-                                ModelState.AddModelError("ContaContabil", "Conta contábil invalida");
-                                return NotFound(ModelState.Values.SelectMany(e => e.Errors));
-                            }
-                        }
-                        else if (objetivoConta.InvestimentoId != null)
-                        {
-                            var investimento = await context.Investimento.FirstOrDefaultAsync(i => i.Id.Equals(objetivoConta.InvestimentoId));
+                await context.SaveChangesAsync();
 
-                            if (investimento != null) 
-                            {
-                                var historico = objetivo.HistoricoObjetivo.FirstOrDefault();
-                                var aux = decimal.Divide((decimal)objetivoConta.Porcentagem, 100m);
-                                historico.ValorFinal += decimal.Multiply(investimento.ValorAtual, aux);
-                            }
-                            else
-                            {
-                                ModelState.AddModelError("Investimento", "Investimento invalido");
-                                return NotFound(ModelState.Values.SelectMany(e => e.Errors));
-                            }
-                        }
-                    }
+                return CreatedAtAction("Create", objetivo);
 
-                    context.Objetivo.Add(objetivo);
-
-                    await context.SaveChangesAsync();
-
-                    return CreatedAtAction("Create", objetivo);
-                }
-                else
-                {
-                    ModelState.AddModelError("Usuario", "Usuário não cadastrado no sistema.");
-                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
-                }
             }
             catch (Exception e)
             {

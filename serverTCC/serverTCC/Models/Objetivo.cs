@@ -21,7 +21,6 @@ namespace serverTCC.Models
 
         public bool Arquivar { get; set; }
 
-        public IEnumerable<ObjetivoConta> ObjetivosConta { get; set; }
         public IEnumerable<HistoricoObjetivo> HistoricoObjetivo { get; set; }
     }
 }

@@ -19,7 +19,6 @@ namespace serverTCC.Data
         public DbSet<Movimentacao> Movimentacao { get; set; }
         public DbSet<Transferencia> Transferencia { get; set; }
         public DbSet<Objetivo> Objetivo { get; set; }
-        public DbSet<ObjetivoConta> ObjetivoConta { get; set; }
         public DbSet<Perfil> Perfil { get; set; }
         public DbSet<TipoInvestimento> TipoInvestimento { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
