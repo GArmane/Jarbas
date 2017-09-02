@@ -30,6 +30,10 @@ namespace serverTCC.Data
             base.OnModelCreating(builder);
             builder.Ignore<UsuarioModel>();
             builder.Ignore<RecuperacaoModel>();
+
+            builder.Entity<Objetivo>()
+                .Property(o => o.Arquivar)
+                .HasDefaultValue(false);
         }
     }
 }

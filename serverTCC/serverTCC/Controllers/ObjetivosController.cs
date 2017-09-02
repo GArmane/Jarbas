@@ -32,7 +32,21 @@ namespace serverTCC.Controllers
         {
             try
             {
-                /*FAZER VERIFICAÇÕES ANTES DE CRIAR*/
+                var usuarioExists = await context.Usuario.AnyAsync(u => u.Id == objetivo.UsuarioId);
+
+                if (!usuarioExists)
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                var moedaExists = await context.Moeda.AnyAsync(m => m.Id == objetivo.MoedaId);
+
+                if (!moedaExists)
+                {
+                    ModelState.AddModelError("Usuario", "Moeda não encontrada");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
 
                 context.Objetivo.Add(objetivo);
 
