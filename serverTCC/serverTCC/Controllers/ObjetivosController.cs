@@ -1,19 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Objetivos")]
-    //[Authorize]
+    [Authorize]
     public class ObjetivosController : Controller
     {
         private JarbasContext context;
@@ -65,96 +63,112 @@ namespace serverTCC.Controllers
         /// Retorna todos os objetivos do usuário
         /// GET api/Objetivos/Usuario/{userId}
         /// </summary>
-        /*[HttpGet("Usuario/{userId}")]
+        [HttpGet("Usuario/{userId}")]
         public IActionResult GetUser([FromRoute] string userId)
         {
             try
             {
                 var objetivos = context.Objetivo
-                    .Include(o => o.ObjetivosConta)
-                        .ThenInclude(o => o.IConta)
                     .Include(o => o.HistoricoObjetivo)
-            }
-        }*/
+                    .Where(o => o.UsuarioId == userId);
 
-        // GET: api/Objetivos/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetObjetivo([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
+                return Ok(objetivos);
+            }
+            catch (Exception e)
             {
-                return BadRequest(ModelState);
+                return BadRequest(e.Message);
             }
-
-            var objetivo = await context.Objetivo.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (objetivo == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(objetivo);
         }
 
-        // PUT: api/Objetivos/5
+        /// <summary>
+        /// Edita um objetivo
+        /// PUT api/Objetivos/{id}
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutObjetivo([FromRoute] int id, [FromBody] Objetivo objetivo)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] Objetivo objetivo)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != objetivo.Id)
-            {
-                return BadRequest();
-            }
-
-            context.Entry(objetivo).State = EntityState.Modified;
-
             try
             {
+                var objetivoExists = await context.Objetivo.AnyAsync(o => o.Id == id);
+
+                if (!objetivoExists)
+                {
+                    ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                var usuarioExists = await context.Usuario.AnyAsync(u => u.Id == objetivo.UsuarioId);
+
+                if (!usuarioExists)
+                {
+                    ModelState.AddModelError("Usuario", "Usuário não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                context.Objetivo.Update(objetivo);
                 await context.SaveChangesAsync();
+                return Ok(objetivo);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                if (!ObjetivoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(e.Message);
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/Objetivos/5
+        /// <summary>
+        /// Apaga um objetivo
+        /// DELETE api/Objetivos/{id}
+        /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteObjetivo([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                var objetivo = await context.Objetivo.FirstOrDefaultAsync(o => o.Id == id);
 
-            var objetivo = await context.Objetivo.SingleOrDefaultAsync(m => m.Id == id);
-            if (objetivo == null)
+                if(objetivo == null)
+                {
+                    ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                context.Objetivo.Remove(objetivo);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch(Exception e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
             }
-
-            context.Objetivo.Remove(objetivo);
-            await context.SaveChangesAsync();
-
-            return Ok(objetivo);
         }
 
-        private bool ObjetivoExists(int id)
+        /// <summary>
+        /// Arquiva um objetivo
+        /// POST api/Objetivos/Arquivar/{id}
+        /// </summary>
+        [HttpPost("Arquivar/{id}")]
+        public async Task<IActionResult> Arquivar([FromRoute] int id)
         {
-            return context.Objetivo.Any(e => e.Id == id);
+            try
+            {
+                var objetivo = await context.Objetivo.FirstOrDefaultAsync(o => o.Id == id);
+
+                if(objetivo == null)
+                {
+                    ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                objetivo.Arquivar = true;
+
+                context.Objetivo.Update(objetivo);
+                await context.SaveChangesAsync();
+                return Ok(objetivo);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
