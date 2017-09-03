@@ -83,6 +83,9 @@ namespace serverTCC
             
 
             app.UseMvcWithDefaultRoute();
+
+            //Para adicionar a moeda Real no BD, caso ela não exista
+            MoedaSeed.Seed(app);
         }
     }
 }
