@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('cadastroController', cadastroController);
 
-    cadastroController.$inject = ['auth', 'api', '$http', '$ionicPopup', 'tooltipAjuda', 'LoginService', 'promiseError', '$state'];
-    function cadastroController(auth, api, $http, $ionicPopup, tooltipAjuda, LoginService, promiseError, $state) {
+    cadastroController.$inject = ['auth', 'api', '$http', '$ionicPopup', 'tooltipAjuda', 'LoginService', 'utilities', '$state'];
+    function cadastroController(auth, api, $http, $ionicPopup, tooltipAjuda, LoginService, utilities, $state) {
         var vm = this;
         
         vm.dados = {
@@ -57,14 +57,9 @@
                         $ionicPopup.alert({
                             title: 'Bem-vindo ao Jarbas!'
                         });
-                    }, promiseError.rejection)
-                    .catch(promiseError.exception);
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+                    }, utilities.promiseRejection)
+                    .catch(utilities.promiseException);
+            }).error(utilities.apiError);
         }
 
         function tooltipSenha() {
@@ -84,15 +79,10 @@
                             title: 'Sucesso!',
                             template: 'Seu cadastro foi realizado. Bem-vindo ao Jarbas!'
                         });
-                    }, promiseError.rejection).catch(promiseError.exception);
-                }).error(function (data) {
-                    $ionicPopup.alert({
-                        title: 'Ops!',
-                        template: data[0].errorMessage
-                    });
-                });
-            }, promiseError.rejection)
-            .catch(promiseError.exception);
+                    }, utilities.promiseRejection).catch(utilities.promiseException);
+                }).error(utilities.apiError);
+            }, utilities.promiseRejection)
+            .catch(utilities.promiseException);
         }
 
         function cadastroFacebook() {

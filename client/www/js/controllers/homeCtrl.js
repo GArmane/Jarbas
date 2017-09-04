@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('homeController', homeController);
 
-    homeController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', '$ionicLoading'];
-    function homeController(auth, $state, api, $http, $ionicPopup, $scope, $ionicLoading) {
+    homeController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', '$ionicLoading', 'utilities'];
+    function homeController(auth, $state, api, $http, $ionicPopup, $scope, $ionicLoading, utilities) {
         var vm = this;
 
         vm.dados = {};
@@ -39,24 +39,14 @@
                 headers: auth.header
             }).success(function (data) {
                 vm.dados.contas = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
             $http({
                 url: api.url() + 'Movimentacoes/Usuario/' + auth.id,
                 method: 'GET',
                 headers: auth.header
             }).success(function (data) {
                 vm.dados.movimentacoes = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
         }
     }
 })();

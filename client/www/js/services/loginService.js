@@ -22,8 +22,8 @@
         };
     }
 
-    LoginService.$inject = ['api', '$http', 'auth'];
-    function LoginService(api, $http, auth) {
+    LoginService.$inject = ['api', '$http', 'auth', 'utilities'];
+    function LoginService(api, $http, auth, utilities) {
         this.defineAuth = defineAuth;
         this.doLogin = doLogin;
         this.sendRecoverCode = sendRecoverCode;
@@ -88,7 +88,9 @@
                         'password': senha
                     }
                 }).success(function (data) {
-                    defineAuth(data, email).then(resolve, reject);
+                    defineAuth(data, email)
+                        .then(resolve, reject)
+                        .catch(utilities.promiseException);
                 }).error(function (data) {
                     auth.done = false;
                     console.log(data);
@@ -157,7 +159,7 @@
                             console.log('Falha na autenticação: objeto auth não possui código.');
                             reject('Ocorreu uma falha no processo de autenticação com Google.');
                         }
-                    });
+                    }, reject);
                 }
             });
         }
@@ -188,7 +190,7 @@
                     var profile = user.getBasicProfile();
                     var email = profile.getEmail();
 
-                    defineAuth(data, email).then(resolve, reject);
+                    defineAuth(data, email).then(resolve, reject).catch(utilities.promiseException);
                 }).error(function(data) {
                     console.log('API retornou falha:');
                     console.log(data);

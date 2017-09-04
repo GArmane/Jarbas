@@ -47,12 +47,7 @@
             }).success(function (data) {
                 // LoginService.defineAuth(data); /// TODO: Vê essa fita ai parça
                 $state.go('app.principal'); /// TODO: principal? acho que não
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
         }
 
         function tooltipRenda() {

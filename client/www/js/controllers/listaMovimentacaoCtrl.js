@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('listaMovimentacaoController', listaMovimentacaoController);
 
-    listaMovimentacaoController.$inject = ['auth', 'api', '$http', '$ionicPopup'];
-    function listaMovimentacaoController(auth, api, $http, $ionicPopup) {
+    listaMovimentacaoController.$inject = ['auth', 'api', '$http', '$ionicPopup', 'utilities'];
+    function listaMovimentacaoController(auth, api, $http, $ionicPopup, utilities) {
         var vm = this;
         
         vm.movimentacoes = []; // Tem todas as movimentações
@@ -82,12 +82,7 @@
             }).success(function (data) {
                 vm.dados = data;
                 vm.movimentacoes = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data
-                });
-            });
+            }).error(utilities.apiError);
             $http({
                 url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
                 method: 'GET',
@@ -96,12 +91,7 @@
                 vm.contas = data;
                 vm.contas.unshift({ nome: 'Sem filtro' });
                 associaContaMov();
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data
-                });
-            });
+            }).error(utilities.apiError);
             $http({
                 url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
                 method: 'GET',
@@ -110,12 +100,7 @@
                 vm.grupos = data;
                 vm.grupos.unshift({ nome: 'Sem filtro' });
                 associaContaMov();
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
         }
 
         function associaContaMov() {

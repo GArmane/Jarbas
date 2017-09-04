@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('loginController', loginController);
 
-    loginController.$inject = ['LoginService', '$state', 'api', '$ionicPopup', '$scope', 'promiseError', '$ionicLoading'];
-    function loginController(LoginService, $state, api, $ionicPopup, $scope, promiseError, $ionicLoading) {
+    loginController.$inject = ['LoginService', '$state', 'api', '$ionicPopup', '$scope', 'utilities', '$ionicLoading'];
+    function loginController(LoginService, $state, api, $ionicPopup, $scope, utilities, $ionicLoading) {
         var vm = this;
 
         vm.dados = {
@@ -33,16 +33,16 @@
         function fazerLogin() {
             startLoading();
             LoginService.doLogin(vm.dados.email, vm.dados.senha)
-                .then(loginSuccess, promiseError.rejection)
-                .catch(promiseError.exception);
+                .then(loginSuccess, utilities.promiseRejection)
+                .catch(utilities.promiseException);
         }
 
         function loginGoogle() {
             startLoading();
             LoginService.gDialog()
-                .then(LoginService.gLogin, promiseError.rejection)
-                .then(loginSuccess, promiseError.rejection)
-                .catch(promiseError.exception);
+                .then(LoginService.gLogin, utilities.promiseRejection)
+                .then(loginSuccess, utilities.promiseRejection)
+                .catch(utilities.promiseException);
         }
 
         //////////////// Private

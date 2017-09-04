@@ -44,12 +44,7 @@
                     title: 'Sucesso!',
                     template: 'Movimentação inserida.'
                 });
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data
-                });
-            });
+            }).error(utilities.apiError);
         }
 
         function alterar() {
@@ -64,12 +59,7 @@
                     title: 'Sucesso!',
                     template: 'Movimentação alterada.'
                 });
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data
-                });
-            });
+            }).error(utilities.apiError);
         }
 
         function excluir() {
@@ -88,12 +78,7 @@
                             title: 'Sucesso!',
                             template: 'Movimentação excluída.'
                         });
-                    }).error(function (data) {
-                        $ionicPopup.alert({
-                            title: 'Ops!',
-                            template: data
-                        });
-                    });
+                    }).error(utilities.apiError);
             });
         }
 
@@ -107,48 +92,28 @@
                     headers: auth.header
                 }).success(function (data) {
                     vm.dados = data;
-                }).error(function (data) {
-                    $ionicPopup.alert({
-                        title: 'Ops!',
-                        template: data
-                    });
-                });
+                }).error(utilities.apiError);
             $http({
                 url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
                 method: 'GET',
                 headers: auth.header
             }).success(function (data) {
                 vm.contas = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data
-                });
-            });
+            }).error(utilities.apiError);
             $http({
                 url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
                 method: 'GET',
                 headers: auth.header
             }).success(function (data) {
                 vm.grupos = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
             $http({
                 method: 'GET',
                 url: api.url() + 'Moedas',
                 headers: auth.header
             }).success(function (data) {
                 vm.moedas = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
         }
     }
 })();

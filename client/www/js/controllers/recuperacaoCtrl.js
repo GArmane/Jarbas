@@ -5,9 +5,9 @@
         .module('starter.controllers')
         .controller('recuperacaoController', recuperacaoController);
 
-    recuperacaoController.$inject = ['$stateParams', '$ionicPopup', '$scope', 'tooltipAjuda', 'LoginService', 'promiseError'];
+    recuperacaoController.$inject = ['$stateParams', '$ionicPopup', '$scope', 'tooltipAjuda', 'LoginService', 'utilities'];
 
-    function recuperacaoController($stateParams, $ionicPopup, $scope, tooltipAjuda, LoginService, promiseError) {
+    function recuperacaoController($stateParams, $ionicPopup, $scope, tooltipAjuda, LoginService, utilities) {
         var vm = this;
 
         vm.dados = {
@@ -46,8 +46,8 @@
             LoginService.sendRecoverCode(vm.Dados.email)
                 .then(function () {
                     vm.passo = 2; // Ativa os inputs para digitação de código e nova senha
-                }, promiseError.rejection)
-                .catch(promiseError.exception);
+                }, utilities.promiseRejection)
+                .catch(utilities.promiseException);
         }
                  
         function alterarSenha() {
@@ -59,8 +59,8 @@
                     }).then(function () {
                         history.back();
                     });
-                }, promiseError.rejection)
-                .catch(promiseError.exception);
+                }, utilities.promiseRejection)
+                .catch(utilities.promiseException);
         }
 
         function tooltipSenha() {

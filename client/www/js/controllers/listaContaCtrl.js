@@ -5,9 +5,9 @@
         .module('starter.controllers')
         .controller('listaContaController', listaContaController);
 
-    listaContaController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', '$timeout'];
+    listaContaController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope', '$timeout', 'utilities'];
 
-    function listaContaController(auth, $state, api, $http, $ionicPopup, $scope, $timeout) {
+    function listaContaController(auth, $state, api, $http, $ionicPopup, $scope, $timeout, utilities) {
         var vm = this;
 
         vm.dados = [];
@@ -68,12 +68,7 @@
                         title: 'Sucesso!',
                         template: 'Conta contábil adicionada.'
                     });
-                }).error(function (data) {
-                    $ionicPopup.alert({
-                        title: 'Ops!',
-                        template: data[0].errorMessage
-                    });
-                });
+                }).error(utilities.apiError);
             });
         }
 
@@ -124,12 +119,7 @@
                         title: 'Sucesso!',
                         template: 'Conta contábil alterada.'
                     });
-                }).error(function (data) {
-                    $ionicPopup.alert({
-                        title: 'Ops!',
-                        template: data
-                    });
-                });
+                }).error(utilities.apiError);
             });
         }
         
@@ -162,12 +152,7 @@
                             title: 'Sucesso!',
                             template: 'Conta contábil excluída.'
                         });
-                    }).error(function (data) {
-                        $ionicPopup.alert({
-                            title: 'Ops!',
-                            template: data
-                        });
-                    });
+                    }).error(utilities.apiError);
             });
         }
 
@@ -178,24 +163,14 @@
                 headers: auth.header
             }).success(function (data) {
                 vm.dados = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data
-                });
-            });
+            }).error(utilities.apiError);
             $http({
                 method: 'GET',
                 url: api.url() + 'Moedas',
                 headers: auth.header
             }).success(function (data) {
                 vm.moedas = data;
-            }).error(function (data) {
-                $ionicPopup.alert({
-                    title: 'Ops!',
-                    template: data[0].errorMessage
-                });
-            });
+            }).error(utilities.apiError);
         }
     }
 })();
