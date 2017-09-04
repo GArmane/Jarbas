@@ -26,16 +26,14 @@
                     templateUrl: 'templates/menu.html',
                     controller: 'AppCtrl'
                 })
-                .state('app.login', {
+
+                .state('login', {
                     url: '/login',
-                    views: {
-                        'menuContent': {
-                            templateUrl: 'templates/login.html',
-                            controller: 'loginController',
-                            controllerAs: 'vm'
-                        }
-                    }
+                    templateUrl: 'templates/login.html',
+                    controller: 'loginController',
+                    controllerAs: 'vm'
                 })
+
                 .state('app.cadastro', {
                     url: '/cadastro',
                     views: {
@@ -117,6 +115,6 @@
                 })*/;
             
             // Rota default
-            $urlRouterProvider.otherwise('/app/login');
+            $urlRouterProvider.otherwise('/login');
         });
 })();
