@@ -10,7 +10,7 @@
             <h2>{{mov.descricao}}</h2>
             <p>{{mov.grupoMovimentacoes.nome}} - {{mov.contaContabil.nome}}</p>
           </div>
-          <div class="col">{{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}</div>
+          <div class="col">{{mov.valor | currency: mov.contaContabil.moeda.sigla + ' '}}</div>
         </div>
       </a>
       <div class="item" align="right">
@@ -27,7 +27,7 @@
       	  <div class="col col-75">
             <h2>{{conta.nome}}</h2>
           </div>
-          <div class="col">{{conta.saldo | currency: conta.moeda.simbolo + ' '}}</div>
+          <div class="col">{{conta.saldo | currency: conta.moeda.sigla + ' '}}</div>
         </div>
       </a>
       <div class="item" align="right">
