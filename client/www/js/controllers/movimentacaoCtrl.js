@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('movimentacaoController', movimentacaoController);
 
-    movimentacaoController.$inject = ['auth', '$state', '$stateParams', 'api', '$http', '$ionicPopup'];
-    function movimentacaoController(auth, $state, $stateParams, api, $http, $ionicPopup) {
+    movimentacaoController.$inject = ['auth', '$state', '$stateParams', 'api', '$http', '$ionicPopup', 'utilities'];
+    function movimentacaoController(auth, $state, $stateParams, api, $http, $ionicPopup, utilities) {
         var vm = this;
 
         vm.dados = {};

@@ -5,8 +5,8 @@
         .module('starter.controllers')
         .controller('perfilController', perfilController);
 
-    perfilController.$inject = ['auth', '$state', 'api', '$http', '$ionicPopup', '$scope'];
-    function perfilController(auth, $state, api, $http, $ionicPopup, $scope) {
+    perfilController.$inject = ['auth', '$state', 'api', '$http', '$scope', 'utilities'];
+    function perfilController(auth, $state, api, $http, $scope, utilities) {
         var vm = this;
 
         vm.dados = {
