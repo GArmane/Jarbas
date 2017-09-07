@@ -1,5 +1,5 @@
 <ion-view view-title="Contas contábeis">
-	<ion-content class="padrao">
+	<ion-content class="padrao has-header">
 		<div class="list">
 			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
     			{{conta.nome}}
@@ -8,6 +8,6 @@
     			</span>
   			</a>
 		</div>
-		<a style="position: absolute; right: 20px; bottom: 30px;" ng-click="vm.add()" class="button button-icon icon ion-plus-round"></a>
+		<a style="position: absolute; bottom: 30px; right: 20px;" ng-click="vm.add()" class="button button-icon icon ion-plus-round"></a>
   </ion-content>
 </ion-view>

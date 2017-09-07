@@ -62,8 +62,8 @@ select::-ms-expand {
   position: absolute;
   top: 0px;
   bottom: 0px;
-  right: 50px;
-  padding: 0px 45px 0px 0px;
+  right: 200px;
+  padding: 0px 0px 0px 0px;
   max-width: 100%;
   background: #FFF none repeat scroll 0% 0%;
   color: #333;
@@ -189,6 +189,11 @@ em, i {
   .padrao .cor {
     background-color: #11999E !important;
     color: white; }
+
+.adicionar {
+  position: absolute !important;
+  right: 20px !important;
+  bottom: 30px !important; }
 
 .dark-head {
   text-decoration: none; }
