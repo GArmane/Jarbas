@@ -1,47 +1,48 @@
 <ion-view view-title="Login">
-  <ion-content class="padding padrao">
-    <img class="logo" src="img/logo.png">
-    <h1><center>Jarbas</center></h1>
-    <center><em>Personal Accounting. Made easy.</em></center>
-    <hr width="90%">
-    <div class="row">
-      <div class="col col-80">
-        <h2>Entre:</h2>
-        <div class="row">
-          <div class="col">com suas<br> redes sociais</div>
-          <div class="col">
-            <button class="button icon ion-social-facebook"></button>
-            <button ng-click="vm.loginGoogle()" class="button icon ion-social-google"></button>
-            <!--<button style="width:45px; height:45px"><img style="width:25px; height:auto" src="img/google.png"></button></div> -->
-          </div>
-        </div>
-        <div class="col"></div>
-      </div>
-    </div>
-    <div class="divider">
-      <hr class="leftt">ou<hr class="rightt">
-    </div>
-    <br>
-    <form name="login" ng-submit="vm.fazerLogin()">
-      <label style="border: 1px solid #8E8B82;" class="item item-input item-floating-label">
-        <span class="input-label">E-mail</span>
-        <input  ng-model="vm.dados.email" type="email" placeholder="E-mail" required name="email">
-      </label>
-      
-      <label style="border: 1px solid #8E8B82;" class="item item-input item-floating-label">
-        <span class="input-label">Senha</span>
-        <input ng-model="vm.dados.senha" type="password" placeholder="Senha" required name="senha">
-      </label>
-      <div class="row">
-        <div class="col link">
-        <!--<a class="test" ng-click="vm.recuperarConta()" style="border-bottom: 1px solid !important;">Esqueci minha senha</a> -->
-          <a style="border: none;" class="test" href="#/cadastro">Esqueci minha senha</a>
-        </div>
-        <div class="col text-right">
-          <button type="submit" class="button icon-right ion-chevron-right button-clear button-dark">Entrar</button>
-        </div>
-      </div>    
-      <center><a style="border: none;" class="test login" href="#/app/cadastro">Cadastre-se</a></center>
-    </form>
+    <ion-content class="padding padrao">
+        <img class="logo" src="img/logo.png">
+        <h1><center>Jarbas</center></h1>
+        <center><em>Personal Accounting. Made easy.</em></center>
+        <hr width="90%">
+        <form name="login" ng-submit="vm.fazerLogin()">
+            <div class="row">
+                <div class="col">
+                    <h2>Entre:</h2>
+                    <div class="row">
+                        <div class="col">
+                            <label style="border: 1px solid #8E8B82;" class="item item-input item-floating-label">
+                                <span class="input-label">E-mail</span>
+                                <input  ng-model="vm.dados.email" type="email" placeholder="E-mail" required name="email">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label style="border: 1px solid #8E8B82;" class="item item-input item-floating-label">
+                                <span class="input-label">Senha</span>
+                                <input ng-model="vm.dados.senha" type="password" placeholder="Senha" required name="senha">
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col link">
+                        <!--<a class="test" ng-click="vm.recuperarConta()" style="border-bottom: 1px solid !important;">Esqueci minha senha</a> -->
+                            <a style="border: none;" class="test" href="#/cadastro">Esqueci minha senha</a>
+                        </div>
+                        <div class="col text-right">
+                            <button style="font-size: 20px;" type="submit" class="button icon-right ion-chevron-right button-clear button-dark">Entrar</button>
+                        </div>
+                    </div>
+                    <hr width="90%">
+                </div>
+            </div>
+        </form>        
+        <br>
+        <center>
+            <button ng-click="vm.loginGoogle()" class="button icon ion-social-google"> | Login com Google</button>
+            <br><br>
+            Não possui conta? <a style="border: none;" class="test login" href="#/app/cadastro"> Cadastre-se</a>
+        </center>    
   </ion-content>
 </ion-view>
