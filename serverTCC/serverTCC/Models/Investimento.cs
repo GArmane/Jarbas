@@ -2,7 +2,7 @@
 
 namespace serverTCC.Models
 {
-    public class Investimento : IConta
+    public class Investimento
     {
         public int Id { get; set; }
 

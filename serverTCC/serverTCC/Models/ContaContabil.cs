@@ -1,6 +1,6 @@
 ﻿namespace serverTCC.Models
 {
-    public class ContaContabil : IConta
+    public class ContaContabil
     {
         public int Id { get; set; }
 

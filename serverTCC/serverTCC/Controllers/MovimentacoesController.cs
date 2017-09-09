@@ -11,7 +11,6 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Movimentacoes")]
-    [Authorize]
     public class MovimentacoesController : Controller
     {
         private JarbasContext context;
@@ -69,13 +68,13 @@ namespace serverTCC.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("Usuario", "Usurio no cadastrado no sistema.");
+                        ModelState.AddModelError("Usuario", "Usuário não cadastrado no sistema.");
                         return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("Conta", "Conta no cadastrada no sistema.");
+                    ModelState.AddModelError("Conta", "Conta não cadastrada no sistema.");
                     return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
@@ -86,7 +85,7 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Retorna todas as movimentações do usuário
+        /// Retorna todas as movimentações e transferencias do usuário
         /// GET api/Movimentacoes/Usuario/{userId}
         /// </summary>
         [HttpGet("Usuario/{userId}")]
@@ -98,7 +97,9 @@ namespace serverTCC.Controllers
 
                 var movimentacoes = context.Movimentacao.Where(m => m.ContaContabil.UsuarioId.Equals(userId));
 
-                return Ok(movimentacoes);
+                var transferencias = context.Transferencia.Where(t => t.Receita.ContaContabil.UsuarioId.Equals(userId));
+
+                return Ok(new { movimentacoes, transferencias });
             }
             catch (Exception e)
             {
@@ -243,6 +244,44 @@ namespace serverTCC.Controllers
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Cria uma nova transferencia
+        /// POST api/Movimentacoes/Transferencia
+        /// </summary>
+        [HttpPost("Transferencia")]
+        public async Task<IActionResult> CreateTransferencia([FromBody] Transferencia transferencia)
+        {
+            var aux = await Create(transferencia.Despesa);
+
+            if (aux is CreatedAtActionResult despesa)
+            {
+                aux = await Create(transferencia.Receita);
+
+                if (aux is CreatedAtActionResult receita)
+                {
+                    transferencia.DespesaId = (despesa.Value as Movimentacao).Id;
+                    transferencia.Despesa = despesa.Value as Movimentacao;
+
+                    transferencia.ReceitaId = (receita.Value as Movimentacao).Id;
+                    transferencia.Receita = receita.Value as Movimentacao;
+
+                    context.Transferencia.Add(transferencia);
+                    await context.SaveChangesAsync();
+
+                    return CreatedAtAction("CreateTransferencia", transferencia);
+                }
+                else
+                {
+                    var rmDespesa = await Delete((despesa.Value as Movimentacao).Id);
+                    return aux;
+                }
+            }
+            else
+            {
+                return aux;
+            }
         }
     }
 }
