@@ -6,14 +6,10 @@ namespace serverTCC.Models
     {
         public int Id { get; set; }
 
-        public ContaContabil ContaContabilOrigem { get; set; }
-        public int ContaContabilOrigemId { get; set; }
+        public int ReceitaId { get; set; }
+        public Movimentacao Receita { get; set; }
 
-        public ContaContabil ContaContabilDestino { get;set; }
-        public int ContaContabilDestinoId { get; set; }
-
-        public decimal Valor { get; set; }
-        public DateTime Data { get; set; }
-        public string Descricao { get; set; }
+        public int DespesaId { get; set; }
+        public Movimentacao Despesa { get; set; }
     }
 }

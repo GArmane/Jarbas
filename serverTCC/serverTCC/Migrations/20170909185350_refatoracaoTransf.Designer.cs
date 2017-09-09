@@ -9,9 +9,10 @@ using serverTCC.Models;
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20170909185350_refatoracaoTransf")]
+    partial class refatoracaoTransf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)

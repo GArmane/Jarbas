@@ -558,7 +558,5 @@ namespace serverTCC.Controllers
                 return BadRequest(e.Message);
             }
         }
-
     }
-
 }

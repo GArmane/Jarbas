@@ -44,7 +44,7 @@ namespace serverTCC.Controllers
                         }
                         else if (movimentacao.TipoMovimentacao == TipoMovimentacao.Despesa)
                         {
-                            if (verificarSaldo(conta, movimentacao))
+                            if (VerificarSaldo(conta, movimentacao))
                             {
                                 conta.Saldo -= movimentacao.Valor;
                             }
@@ -232,7 +232,10 @@ namespace serverTCC.Controllers
             }        
         }
 
-        private bool verificarSaldo(ContaContabil conta, Movimentacao movimentacao)
+        /// <summary>
+        /// Verifica o saldo de uma conta
+        /// </summary>
+        private bool VerificarSaldo(ContaContabil conta, Movimentacao movimentacao)
         {
             if ((conta.Saldo - movimentacao.Valor) < 0)
             {
@@ -241,6 +244,5 @@ namespace serverTCC.Controllers
 
             return true;
         }
-
     }
 }
