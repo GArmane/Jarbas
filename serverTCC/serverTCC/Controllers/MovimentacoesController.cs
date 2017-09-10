@@ -97,7 +97,15 @@ namespace serverTCC.Controllers
 
                 var movimentacoes = context.Movimentacao.Where(m => m.ContaContabil.UsuarioId.Equals(userId));
 
-                var transferencias = context.Transferencia.Where(t => t.Receita.ContaContabil.UsuarioId.Equals(userId));
+                var transferencias = context.Transferencia
+                    .Include(t => t.Despesa)
+                    .Include(t => t.Receita)
+                    .Where(t => t.Receita.ContaContabil.UsuarioId.Equals(userId));
+
+                foreach(var transf in transferencias)
+                {
+                    movimentacoes = movimentacoes.Where(m => (m.Id != transf.Despesa.Id) && (m.Id != transf.Receita.Id));
+                }
 
                 return Ok(new { movimentacoes, transferencias });
             }
@@ -124,7 +132,7 @@ namespace serverTCC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("Usuario", "Movimentaao no encontrada.");
+                    ModelState.AddModelError("Usuario", "Movimentação não encontrada.");
                     return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
@@ -147,19 +155,26 @@ namespace serverTCC.Controllers
                     .Include(m => m.ContaContabil)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.Id.Equals(id));
-
-                var conta = movimentacaoAux.ContaContabil;
-
+               
                 if (movimentacaoAux != null)
                 {
+                    var conta = movimentacaoAux.ContaContabil;
+
                     //Primeiro vê o tipo da movimentação original e volta o valor para a conta, para então editar
-                    if(movimentacaoAux.TipoMovimentacao == TipoMovimentacao.Receita)
+                    if (movimentacaoAux.TipoMovimentacao == TipoMovimentacao.Receita)
                     {
                         conta.Saldo -= movimentacaoAux.Valor;
                     }
                     else
                     {
                         conta.Saldo += movimentacaoAux.Valor;
+
+                        //verifica se existe saldo suficiente para a edição da despesa
+                        if(!VerificarSaldo(conta, movimentacao))
+                        {
+                            ModelState.AddModelError("Conta", "Saldo insuficiente.");
+                            return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                        }
                     }
 
                     //Edita a conta conforme a nova movimentação
@@ -253,34 +268,169 @@ namespace serverTCC.Controllers
         [HttpPost("Transferencia")]
         public async Task<IActionResult> CreateTransferencia([FromBody] Transferencia transferencia)
         {
-            var aux = await Create(transferencia.Despesa);
-
-            if (aux is CreatedAtActionResult despesa)
+            try
             {
-                aux = await Create(transferencia.Receita);
+                //cria a despesa
+                var aux = await Create(transferencia.Despesa);
 
-                if (aux is CreatedAtActionResult receita)
+                if (aux is CreatedAtActionResult despesa)
                 {
-                    transferencia.DespesaId = (despesa.Value as Movimentacao).Id;
-                    transferencia.Despesa = despesa.Value as Movimentacao;
+                    //cria a receita
+                    aux = await Create(transferencia.Receita);
 
-                    transferencia.ReceitaId = (receita.Value as Movimentacao).Id;
-                    transferencia.Receita = receita.Value as Movimentacao;
+                    if (aux is CreatedAtActionResult receita)
+                    {
+                        transferencia.DespesaId = (despesa.Value as Movimentacao).Id;
+                        transferencia.Despesa = despesa.Value as Movimentacao;
 
-                    context.Transferencia.Add(transferencia);
-                    await context.SaveChangesAsync();
+                        transferencia.ReceitaId = (receita.Value as Movimentacao).Id;
+                        transferencia.Receita = receita.Value as Movimentacao;
 
-                    return CreatedAtAction("CreateTransferencia", transferencia);
+                        context.Transferencia.Add(transferencia);
+                        await context.SaveChangesAsync();
+
+                        return CreatedAtAction("CreateTransferencia", transferencia);
+                    }
+                    else
+                    {
+                        //em caso de erro na criação da receita, apaga e despesa e retorna o erro
+                        var rmDespesa = await Delete((despesa.Value as Movimentacao).Id);
+                        return aux;
+                    }
                 }
                 else
                 {
-                    var rmDespesa = await Delete((despesa.Value as Movimentacao).Id);
+                    //retorna erro da criação de despesa
                     return aux;
                 }
             }
-            else
+            catch (Exception e)
             {
-                return aux;
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Retorna uma transferencia específica
+        /// GET api/Movimentacoes/Transferencia/{id}
+        /// </summary>
+        [HttpGet("Transferencia/{id}")]
+        public async Task<IActionResult> GetTransferencia([FromRoute] int id)
+        {
+            try
+            {
+                var transferencia = await context.Transferencia
+                    .Include(t => t.Despesa)
+                    .Include(t => t.Receita)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(t => t.Id.Equals(id));
+
+                if (transferencia != null)
+                {
+                    return Ok(transferencia);
+                }
+                else
+                {
+                    ModelState.AddModelError("Transferencia", "Transferencia não encontrada.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edita uma transferencia
+        /// PUT api/Movimentacoes/Transferencia/{id}
+        /// </summary>
+        [HttpPut("Transferencia/{id}")]
+        public async Task<IActionResult> EditTransferencia([FromRoute] int id, [FromBody] Transferencia transferencia)
+        {
+            try
+            {
+                //pega a transferencia original, para caso de erro na etapa de receita, poder voltar a despesa para como estava antes do request
+                var oldAux = await GetTransferencia(id);
+
+                if(oldAux is OkObjectResult oldTransferenciaObject)
+                {
+                    //Edita a despesa
+                    var aux = await Edit(transferencia.DespesaId, transferencia.Despesa);
+
+                    if (aux is OkObjectResult despesa)
+                    {
+                        //Edita a receita
+                        aux = await Edit(transferencia.ReceitaId, transferencia.Receita);
+
+                        if (aux is OkObjectResult receita)
+                        {
+                            //passa as movimentacoes atualizadas para o objeto que foi recebido no request e o retorna
+                            transferencia.Despesa = despesa.Value as Movimentacao;
+
+                            transferencia.Receita = receita.Value as Movimentacao;
+
+                            return Ok(transferencia);
+                        }
+                        else
+                        {
+                            //volta a despesa para a anterior, em caso de sucesso na despesa e erro na receita
+                            var oldTransferencia = oldTransferenciaObject.Value as Transferencia;
+                            await Edit(oldTransferencia.DespesaId, oldTransferencia.Despesa);
+
+                            //retorna o objeto com erro da edição da receita
+                            return aux;
+                        }
+                    }
+                    else
+                    {
+                        //retorna o objeto com erro da edição da despesa
+                        return aux;
+                    }
+                }
+                else
+                {
+                    return oldAux;
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Apaga uma transferencia
+        /// DELETE api/Movimentacoes/Transferencia/{id}
+        /// </summary>
+        [HttpDelete("Transferencia/{id}")]
+        public async Task<IActionResult> DeleteTransferencia([FromRoute] int id)
+        {
+            try
+            {
+                var transferencia = await context.Transferencia
+                    .FirstOrDefaultAsync(m => m.Id.Equals(id));
+
+                if(transferencia != null)
+                {
+                    await Delete(transferencia.DespesaId);
+                    await Delete(transferencia.ReceitaId);
+                    
+                    //Não é necessário remover diretamente a transferencia, pois quando é deletada uma movimentação referente a essa transferencia
+                    //o Entity Framework faz um delete em cascata, ou seja, apaga a transferencia junto, então só resta apagar a outra movimentação
+                    //para manter a consistencia de dados
+
+                    return Ok();
+                }
+                else
+                {
+                    ModelState.AddModelError("Transferencia", "Transferencia não encontrada.");
+                    return NotFound(ModelState.Values.SelectMany(e => e.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }
