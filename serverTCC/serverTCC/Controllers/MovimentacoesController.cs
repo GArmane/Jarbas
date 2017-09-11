@@ -11,6 +11,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Movimentacoes")]
+    [Authorize]
     public class MovimentacoesController : Controller
     {
         private JarbasContext context;
