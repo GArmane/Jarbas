@@ -158,6 +158,14 @@ namespace serverTCC.Controllers
                
                 if (movimentacaoAux != null)
                 {
+                    var isTransferencia = await context.Transferencia.AnyAsync(t => (t.ReceitaId == id) || (t.DespesaId == id));
+
+                    if (isTransferencia)
+                    {
+                        ModelState.AddModelError("Transferencia", "Essa movimentação faz parte de uma transferencia, faça a alteração pela transferência");
+                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                    }
+
                     var conta = movimentacaoAux.ContaContabil;
 
                     //Primeiro vê o tipo da movimentação original e volta o valor para a conta, para então editar
@@ -217,10 +225,19 @@ namespace serverTCC.Controllers
                     .Include(m => m.ContaContabil)
                     .FirstOrDefaultAsync(m => m.Id.Equals(id));
 
-                var conta = movimentacao.ContaContabil;
-
                 if (movimentacao != null)
                 {
+                    //verifica se a movimentação faz parte de uma transferencia
+                    var isTransferencia = await context.Transferencia.AnyAsync(t => (t.ReceitaId == id) || (t.DespesaId == id));
+
+                    if (isTransferencia)
+                    {
+                        ModelState.AddModelError("Transferencia", "Essa movimentação faz parte de uma transferencia, faça a remoção pela transferência");
+                        return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                    }
+
+                    var conta = movimentacao.ContaContabil;
+
                     if (movimentacao.TipoMovimentacao == TipoMovimentacao.Receita)
                     {
                         conta.Saldo -= movimentacao.Valor;
@@ -238,7 +255,7 @@ namespace serverTCC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("Movimentação", "Movimenção não encontrada.");
+                    ModelState.AddModelError("Movimentação", "Movimentação não encontrada.");
                     return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
