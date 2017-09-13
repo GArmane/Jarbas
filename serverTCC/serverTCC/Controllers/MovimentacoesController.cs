@@ -148,7 +148,7 @@ namespace serverTCC.Controllers
         /// PUT api/Movimentacoes/{id}
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] Movimentacao movimentacao)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] Movimentacao movimentacao, bool fromTransferencia = false)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace serverTCC.Controllers
                 {
                     var isTransferencia = await context.Transferencia.AnyAsync(t => (t.ReceitaId == id) || (t.DespesaId == id));
 
-                    if (isTransferencia)
+                    if (isTransferencia && !fromTransferencia)
                     {
                         ModelState.AddModelError("Transferencia", "Essa movimentação faz parte de uma transferencia, faça a alteração pela transferência");
                         return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
@@ -218,7 +218,7 @@ namespace serverTCC.Controllers
         /// DELETE api/Movimentacoes/{id}
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id, bool fromTransferencia = false)
         {
             try
             {
@@ -231,7 +231,7 @@ namespace serverTCC.Controllers
                     //verifica se a movimentação faz parte de uma transferencia
                     var isTransferencia = await context.Transferencia.AnyAsync(t => (t.ReceitaId == id) || (t.DespesaId == id));
 
-                    if (isTransferencia)
+                    if (isTransferencia && !fromTransferencia)
                     {
                         ModelState.AddModelError("Transferencia", "Essa movimentação faz parte de uma transferencia, faça a remoção pela transferência");
                         return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
@@ -374,12 +374,12 @@ namespace serverTCC.Controllers
                 if(oldAux is OkObjectResult oldTransferenciaObject)
                 {
                     //Edita a despesa
-                    var aux = await Edit(transferencia.DespesaId, transferencia.Despesa);
+                    var aux = await Edit(transferencia.Despesa.Id, transferencia.Despesa, fromTransferencia: true);
 
                     if (aux is OkObjectResult despesa)
                     {
                         //Edita a receita
-                        aux = await Edit(transferencia.ReceitaId, transferencia.Receita);
+                        aux = await Edit(transferencia.Receita.Id, transferencia.Receita, fromTransferencia: true);
 
                         if (aux is OkObjectResult receita)
                         {
@@ -431,8 +431,8 @@ namespace serverTCC.Controllers
 
                 if(transferencia != null)
                 {
-                    await Delete(transferencia.DespesaId);
-                    await Delete(transferencia.ReceitaId);
+                    await Delete(transferencia.DespesaId, fromTransferencia: true);
+                    await Delete(transferencia.ReceitaId, fromTransferencia: true);
                     
                     //Não é necessário remover diretamente a transferencia, pois quando é deletada uma movimentação referente a essa transferencia
                     //o Entity Framework faz um delete em cascata, ou seja, apaga a transferencia junto, então só resta apagar a outra movimentação
