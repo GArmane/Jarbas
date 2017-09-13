@@ -4,25 +4,24 @@
     <span class="input-label">Tipo de movimentação</span>
     <div class="row row-no-padding">
         <div class="col">
-          <ion-radio style="font-size: 13px; border: none;" ng-model="vm.dados.tipoMovimentacao" ng-value="0">Receita</ion-radio> 
-        </div>
-        
-        <div class="col">
-          <ion-radio style="font-size: 13px; border: none;" ng-model="vm.dados.tipoMovimentacao" ng-value="1">Despesa</ion-radio>
+          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="0">Receita</ion-radio> 
         </div>
         <div class="col">
-            <ion-radio style="font-size: 13px; border: none;" ng-model="vm.dados.tipoMovimentacao" ng-value="2">Transferência</ion-radio>
+          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="1">Despesa</ion-radio>
+        </div>
+        <div class="col">
+            <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="2" ng-click="vm.listaContaTransf()">Transferência</ion-radio>
         </div>
       </div>
 
       <br>
     
       <span class="input-label">Conta origem</span>
-      <select class="ion-input-select" ng-model="vm.dados.contaContabilId" ng-options="conta.id as conta.nome for conta in vm.contas"></select>
+      <select class="ion-input-select" ng-model="vm.contaSelecionada" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
       <br>
       <div ng-show="vm.dados.tipoMovimentacao == 2">
         <span class="input-label">Conta destino</span>
-        <select class="ion-input-select" ng-show="vm.dados.tipoMovimentacao == 2">
+        <select class="ion-input-select" ng-model="vm.contaDestinoId" ng-options="conta.id as conta.nome for conta in vm.contasTransf">
         </select>
       </div>
       <br>
@@ -38,10 +37,7 @@
       <span class="input-label">Valor</span>
       <div class="row row-no-padding">
         <div class="col col-33">          
-            <label class="item item-select">
-            <select ng-model="vm.dados.moedaId" ng-options="moeda.id as moeda.sigla for moeda in vm.moedas">
-            </select>
-          </label>
+          {{vm.contaSelecionada.moeda.simbolo}}
         </div>
         &nbsp&nbsp
         <div class="col">
@@ -50,7 +46,11 @@
           </label>
         </div>
       </div>
-
+      <br>
+      <span class="input-label">Data</span>
+      <label class="item item-input">
+          <input type="date" ng-model="vm.dados.data">
+      </label>
       <span class="input-label">Repetir movimentação</span>
       <select class="ion-input-select">
           <option selected="">Mensalmente</option>

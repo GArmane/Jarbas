@@ -65,7 +65,7 @@
                 } else if (vm.filtro1Selected == vm.filtro1.grupo) {
                     vm.dados = [];
                     vm.movimentacoes.forEach(function(mov) {
-                        if (mov.GrupoMovimentacoes.id == vm.filtro2Selected.id)
+                        if (mov.grupoMovimentacoes.id == vm.filtro2Selected.id)
                             vm.dados.push(mov);
                     });
                 }
@@ -80,8 +80,11 @@
                 method: 'GET',
                 headers: auth.header
             }).success(function (data) {
-                vm.dados = data;
+                vm.dados = data.movimentacoes;
                 vm.movimentacoes = data;
+                transformaMov();
+                associaContaMov();
+                associaGrupoMov();
             }).error(utilities.apiError);
             $http({
                 url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
@@ -99,8 +102,20 @@
             }).success(function (data) {
                 vm.grupos = data;
                 vm.grupos.unshift({ nome: 'Sem filtro' });
-                associaContaMov();
+                associaGrupoMov();
             }).error(utilities.apiError);
+        }
+
+        function associaGrupoMov() {
+            if (vm.movimentacoes.length == 0 || vm.grupos.length == 0)
+                return;
+            vm.movimentacoes.forEach(function(mov) {
+                for (var i = 0; i < vm.grupos.length; i++) {
+                    var grupo = vm.grupos[i];
+                    if (grupo.id == mov.grupoMovimentacoesId)
+                        mov.grupoMovimentacoes = grupo;
+                }
+            });
         }
 
         function associaContaMov() {
@@ -111,8 +126,28 @@
                     var conta = vm.contas[i];
                     if (conta.id == mov.contaContabilId)
                         mov.contaContabil = conta;
+                    if (mov.tipoMovimentacao == 2 && conta.id == mov.contaDestinoId)
+                        mov.contaDestino = conta;
                 }
-            }, this);
+            });
+        }
+
+        function transformaMov() {
+            var transfs = vm.movimentacoes.transferencias;
+            vm.movimentacoes = vm.movimentacoes.movimentacoes;
+            transfs.forEach(function(tr) {
+                var transf = tr.despesa;
+                transf.id = tr.id;
+                transf.contaDestinoId = tr.receita.contaContabilId;
+                transf.tipoMovimentacao = 2;
+                vm.movimentacoes.push(transf);
+            });
+            vm.movimentacoes.forEach(function (mov) {
+                mov.data = new Date(mov.data);
+            });
+            vm.movimentacoes.sort(function (a, b) {
+                a.data.getTime() - b.data.getTime();
+            });
         }
     }
 })();

@@ -11,7 +11,15 @@
         this.promiseException = promiseException;
         this.apiError = apiError;
         
+        activate();
+
         ////////////////
+
+        function activate() {
+            // window.defineExceptionHandler(function () {
+            //     promiseException('Exceção global capturada!');
+            // });
+        }
 
         function promiseRejection(errorMessage) {
             $ionicLoading.hide();
@@ -22,7 +30,7 @@
         }
 
         function promiseException(errorMessage) {
-            console.error(errorMessage);
+            console.error('JARBAS - ' + errorMessage);
             $ionicLoading.hide();
             $ionicPopup.alert({
                 title: 'Ops!',
@@ -31,12 +39,16 @@
         }
 
         function apiError(data) {
-            console.error(data);
-            $ionicLoading.hide();
-            $ionicPopup.alert({
-                title: 'Ops!',
-                template: data[0].errorMessage
-            });
+            try {
+                console.error(data);
+                $ionicLoading.hide();
+                $ionicPopup.alert({
+                    title: 'Ops!',
+                    template: data[0].errorMessage
+                });
+            } catch (error) {
+                promiseException(error);
+            }
         }
     }
 })();

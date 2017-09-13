@@ -4,7 +4,7 @@
 			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
     			{{conta.nome}}
     			<span class="item-note">
-					{{conta.saldo | currency: conta.moeda.sigla + ' '}}
+					{{conta.saldo | currency: conta.moeda.simbolo + ' '}}
     			</span>
   			</a>
 		</div>

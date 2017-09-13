@@ -95,7 +95,7 @@
                     }
                 })
                 .state('app.add_movimentacao_param', {
-                    url: '/add_movimentacao/:id',
+                    url: '/add_movimentacao/:id/:transf',
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_movimentacao.html',
