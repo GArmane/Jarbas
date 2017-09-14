@@ -13,56 +13,62 @@
             <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="2" ng-click="vm.listaContaTransf()">Transferência</ion-radio>
         </div>
       </div>
+      <br>
 
+      <span class="input-label">Conta</span>
+      <label class="item item-input item-select">
+          <div class="input-label">Conta</div>
+          <select ng-model="vm.contaSelecionada" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
+      </label>
       <br>
-    
-      <span class="input-label">Conta origem</span>
-      <select class="ion-input-select" ng-model="vm.contaSelecionada" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
-      <br>
-      <div ng-show="vm.dados.tipoMovimentacao == 2">
-        <span class="input-label">Conta destino</span>
-        <select class="ion-input-select" ng-model="vm.contaDestinoId" ng-options="conta.id as conta.nome for conta in vm.contasTransf">
-        </select>
-      </div>
-      <br>
+
       <span class="input-label">Grupo de movimentações</span>
-      <select class="ion-input-select" ng-model="vm.dados.grupoMovimentacoesId" ng-options="grupo.id as grupo.nome for grupo in vm.grupos">
-      </select>
-      <br><br>
+      <label class="item item-input item-select">
+          <div class="input-label">Grupo</div>
+          <select ng-model="vm.dados.grupoMovimentacoesId" ng-options="grupo.id as grupo.nome for grupo in vm.grupos"></select>
+      </label>
+      <br>
+
       <span class="input-label">Descrição</span>
       <label class="item item-input">
           <input type="text" placeholder="(Opcional)" ng-model="vm.dados.descricao">
       </label>
       <br>
+
       <span class="input-label">Valor</span>
       <div class="row row-no-padding">
-        <div class="col col-33">          
-          {{vm.contaSelecionada.moeda.simbolo}}
+          <div class="col col-33">          
+              <label class="item item-input item-select">
+                  <select ng-model="vm.conta.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" required></select>
+            </label>
         </div>
         &nbsp&nbsp
         <div class="col">
-          <label class="item item-input">
-          <input ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
-          </label>
+            <label class="item item-input">
+                <input ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
+            </label>
         </div>
-      </div>
-      <br>
-      <span class="input-label">Data</span>
-      <label class="item item-input">
-          <input type="date" ng-model="vm.dados.data">
-      </label>
-      <span class="input-label">Repetir movimentação</span>
-      <select class="ion-input-select">
-          <option selected="">Mensalmente</option>
-          <option>Diariamente</option>
-          <option>Quinzenalmente</option>
-      </select>
+    </div>
+    <br>
+    
+    <span class="input-label">Repetir movimentação</span>
+    <label class="item item-input item-select">
+        <div class="input-label">Repetir</div>
+            <select>
+                <option>Mensalmente</option>   
+                <option>Diariamente</option>   
+                <option>Semanalmente</option>   
+                <option selected="">Personalizada</option>   
+            </select>
+    </label>
+    <br>
+      
       <br>    
       <div class="row">
     	   <!-- <div class="col col-33"><button class="button button-block">Cancelar</button></div> -->
-         <div class="col"><button class="button button-block" ng-click="vm.excluir()" ng-show="vm.alteracao">Excluir</button></div>
-         <div class="col"><button class="button button-block" ng-click="vm.salvar()" ng-show="!vm.alteracao">Cadastrar</button></div>
-         <div class="col"><button class="button button-block" ng-click="vm.alterar()" ng-show="vm.alteracao">Alterar</button></div>
+         <div class="col col-33"><button class="button button-block" ng-click="vm.alterar()">Cancelar</button></div>
+         <div class="col"><button class="button button-block" ng-click="vm.salvar()">Cadastrar</button></div>
+         
       </div>
     </form>
     

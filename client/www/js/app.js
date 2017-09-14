@@ -73,6 +73,17 @@
                         }
                     }
                 })
+                .state('app.grupos_movimentacoes', {
+                    url: '/grupos_movimentacoes',
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/grupos_movimentacoes.html',
+                            controller: 'listaContaController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
                 .state('app.lista_movimentacoes', {
                     url: '/lista_movimentacoes',
                     cache: false,

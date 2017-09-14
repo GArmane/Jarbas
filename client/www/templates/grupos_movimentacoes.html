@@ -1,0 +1,11 @@
+<ion-view view-title="Grupos de movimentações">
+	<ion-content class="padrao has-header">
+		<div class="list">
+			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
+    			{{conta.nome}}
+    			
+  			</a>
+		</div>
+		<a ng-click="vm.add()" class="button button-icon icon ion-plus-round"></a>
+  </ion-content>
+</ion-view>
