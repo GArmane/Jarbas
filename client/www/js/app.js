@@ -105,6 +105,17 @@
                         }
                     }
                 })
+                 .state('app.personalizado', {
+                    url: '/personalizado',
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/personalizado.html',
+                            controller: 'movimentacaoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
                 .state('app.add_movimentacao_param', {
                     url: '/add_movimentacao/:id/:transf',
                     views: {

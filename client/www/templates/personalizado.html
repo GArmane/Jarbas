@@ -1,0 +1,160 @@
+<ion-view view-title="Repetição">
+    <ion-content class="padding padrao">
+        <h4 align="center">Repetição personalizada</h4>
+<form name="cadastro">
+    <br>
+    <div class="row row-no-padding">
+        <div class="col col-20">    
+            <span style="font-size: 15px; position: relative; top: 5px !important;">Repetir</span>
+        </div>
+        
+        <div class="col">
+          <label class="item item-input item-select">
+                <span class="item-input">Repetir</span>
+                <select>
+                    <option>Diariamente</option>
+                    <option>Semanalmente</option>
+                    <option>Mensalmente</option>
+                    <option>Anualmente</option>
+                </select>
+            </label>  
+        </div>
+    <div class="col col-25"></div>
+    </div>
+    
+    <br>
+
+    <div class="row row-no-padding">
+        <div class="col col-20">    
+            <span style="font-size: 15px; position: relative; top: 5px !important;">A cada</span>
+        </div>
+       <div class="col">
+           <input type="number">
+       </div>
+        <div class="col">
+          <center><span style="font-size: 15px; position: relative; top: 6px !important;"  ng-hide="1">dias</span></center>
+          <center><span style="font-size: 15px; position: relative; top: 6px !important;"  ng-hide="1">semanas</span></center>
+          <center><span style="font-size: 15px; position: relative; top: 6px !important;"  ng-hide="0">meses</span></center>
+        </div>
+    </div>
+    
+    <br>
+    <div ng-hide="1" class="semanas">
+        <div class="row row-no-padding">
+            <div class="col col-10">    
+                <span style="font-size: 15px; position: relative; top: 5px !important;">De</span>
+            </div>
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Domingo</ion-checkbox>
+            </div>
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Segunda</ion-checkbox>
+            </div>
+        </div>
+    <br>
+        <div class="row row-no-padding">
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Terça</ion-checkbox>
+            </div>
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Quarta</ion-checkbox>
+            </div>
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Quinta</ion-checkbox>
+            </div>
+        </div>
+    <br>
+        <div class="row row-no-padding">
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Sexta</ion-checkbox>
+            </div>
+            <div class="col col-33">
+                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Sábado</ion-checkbox>
+            </div>
+        </div>
+    <br>
+    </div>
+
+    <div ng-hide="1" style="border: 1px solid !important;" class="mes">
+        <div style="border-bottom: 1px solid;" class="row row-no-padding">
+            <div class="col col-33">
+                <ion-radio style="background-color: transparent !important; border: 1px solid;" ng-model="choice" ng-value="'A'">No dia</ion-radio>
+            </div>
+            &nbsp
+            <div class="col">
+                <input style="position: relative; top: 10px;" type="number">
+            </div>
+            <div class="col">
+                <span  style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <br>
+            <div class="col col-20">
+                <ion-radio style="margin: 7px 0 5px 0;background-color: transparent !important; border: 1px solid;" ng-model="choice" ng-value="'A'">Na</ion-radio>
+            </div>
+            &nbsp
+            <div class="col col-20">
+                <label class="item item-input item-select">
+                    <span class="item-input">a</span>
+                    <select>
+                        <option>1ª</option>
+                        <option>2ª</option>
+                        <option>3ª</option>
+                        <option>4ª</option>
+                    </select>
+                </label> 
+            </div>
+            <div class="col col-33">
+                <label class="item item-input item-select">
+                    <span class="item-input">a</span>
+                    <select>
+                        <option>Segunda-feira</option>
+                        <option>Terça-feira</option>
+                        <option>Quarta-feira</option>
+                        <option>Quinta-feira</option>
+                        <option>Sexta-feira</option>
+                        <option>Sábado</option>
+                        <option>Domingo</option>
+                    </select>
+                </label> 
+            </div>
+            <div class="col">
+                <span style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
+            </div>
+            <br>
+        </div>
+    </div>    
+
+    
+
+    <div class="row row-no-padding">
+        <div class="col col-50">    
+             <label class="item item-input item-select">
+                <span class="item-input">a</span>
+                <select>
+                    <option>Por</option>
+                    <option>Até</option>
+                    <option>Para sempre</option>
+                </select>
+            </label> 
+        </div>
+        &nbsp
+        <div ng-hide="1" class="col">
+           <input type="number">
+        </div>
+        <div ng-hide="1" class="col">
+            <center><span style="font-size: 15px; position: relative; top: 6px !important;">dias</span></center>
+        </div>
+        <div ng-hide="1" class="col">
+            <input type="date">
+        </div>
+    </div>
+    
+    <button class="button button-block">Ok</button>
+</form>
+ </ion-content>
+</ion-view>
+
+  
