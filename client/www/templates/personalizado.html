@@ -1,160 +1,164 @@
-<ion-view view-title="Repetição">
+<!-- <ion-view view-title="Repetição">
     <ion-content class="padding padrao">
-        <h4 align="center">Repetição personalizada</h4>
+        <h4 align="center">Repetição personalizada</h4> -->
 <form name="cadastro">
-    <br>
+    <!-- <br> -->
     <div class="row row-no-padding">
-        <div class="col col-20">    
+        <div class="col col-20">
             <span style="font-size: 15px; position: relative; top: 5px !important;">Repetir</span>
         </div>
-        
+
         <div class="col">
-          <label class="item item-input item-select">
+            <label class="item item-input item-select">
                 <span class="item-input">Repetir</span>
-                <select>
-                    <option>Diariamente</option>
-                    <option>Semanalmente</option>
-                    <option>Mensalmente</option>
-                    <option>Anualmente</option>
+                <select ng-model="vm.dados.agendamento.escalaTempo">
+                    <option ng-value="vm.escalaTempo.diario">Diário</option>
+                    <option ng-value="vm.escalaTempo.semanal">Semanal</option>
+                    <option ng-value="vm.escalaTempo.mensal">Mensal</option>
+                    <option ng-value="vm.escalaTempo.anual">Anual</option>
                 </select>
-            </label>  
+            </label>
         </div>
-    <div class="col col-25"></div>
+        <div class="col col-25"></div>
     </div>
-    
+
     <br>
 
     <div class="row row-no-padding">
-        <div class="col col-20">    
+        <div class="col col-20">
             <span style="font-size: 15px; position: relative; top: 5px !important;">A cada</span>
         </div>
-       <div class="col">
-           <input type="number">
-       </div>
         <div class="col">
-          <center><span style="font-size: 15px; position: relative; top: 6px !important;"  ng-hide="1">dias</span></center>
-          <center><span style="font-size: 15px; position: relative; top: 6px !important;"  ng-hide="1">semanas</span></center>
-          <center><span style="font-size: 15px; position: relative; top: 6px !important;"  ng-hide="0">meses</span></center>
+            <input type="number" ng-model="vm.dados.agendamento.qtdTempo">
+        </div>
+        <div class="col">
+            <center><span style="font-size: 15px; position: relative; top: 6px !important;">
+                <span ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.diario">dia</span><span ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.semanal">semana</span><span ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.anual">ano</span><span ng-show="vm.dados.agendamento.qtdTempo > 1 && vm.dados.agendamento.escalaTempo != vm.escalaTempo.mensal">s</span>
+                
+                <!-- mês é especial, um caso a parte, não dá pra só colocar um S no final -->
+                <span ng-show="!(vm.dados.agendamento.qtdTempo > 1) && vm.dados.agendamento.escalaTempo == vm.escalaTempo.mensal">mês</span>
+                <span ng-show="vm.dados.agendamento.qtdTempo > 1 && vm.dados.agendamento.escalaTempo == vm.escalaTempo.mensal">meses</span>
+            </span></center>
         </div>
     </div>
-    
+
     <br>
-    <div ng-hide="1" class="semanas">
+    <div ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.semanal" class="semanas">
         <div class="row row-no-padding">
-            <div class="col col-10">    
+            <div class="col col-10">
                 <span style="font-size: 15px; position: relative; top: 5px !important;">De</span>
             </div>
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Domingo</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.domingo)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.domingo)">Domingo</ion-checkbox>
             </div>
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Segunda</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.segunda)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.segunda)">Segunda</ion-checkbox>
             </div>
         </div>
-    <br>
+        <br>
         <div class="row row-no-padding">
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Terça</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.terca)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.terca)">Terça</ion-checkbox>
             </div>
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Quarta</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.quarta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.quarta)">Quarta</ion-checkbox>
             </div>
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Quinta</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.quinta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.quinta)">Quinta</ion-checkbox>
             </div>
         </div>
-    <br>
+        <br>
         <div class="row row-no-padding">
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Sexta</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sexta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.sexta)">Sexta</ion-checkbox>
             </div>
             <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-model="filter.red">Sábado</ion-checkbox>
+                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sabado)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.sabado)">Sábado</ion-checkbox>
             </div>
         </div>
-    <br>
+        <br>
     </div>
 
-    <div ng-hide="1" style="border: 1px solid !important;" class="mes">
-        <div style="border-bottom: 1px solid;" class="row row-no-padding">
+    <div ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.mensal" style="border: 1px solid !important;" class="mes">
+        <div style="border-bottom: 1px solid;" class="row row-no-padding" ng-click="vm.setarRepeticaoMensal(1)">
             <div class="col col-33">
-                <ion-radio style="background-color: transparent !important; border: 1px solid;" ng-model="choice" ng-value="'A'">No dia</ion-radio>
+                <ion-radio style="background-color: transparent !important; border: 1px solid;" ng-checked="vm.dados.agendamento.diaMes">No dia</ion-radio>
             </div>
             &nbsp
             <div class="col">
-                <input style="position: relative; top: 10px;" type="number">
+                <input style="position: relative; top: 10px;" ng-model="vm.dados.agendamento.diaMes" type="number">
             </div>
             <div class="col">
-                <span  style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
+                <span style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
             </div>
         </div>
-        
-        <div class="row">
+
+        <div class="row" ng-click="vm.setarRepeticaoMensal(2)">
             <br>
-            <div class="col col-20">
-                <ion-radio style="margin: 7px 0 5px 0;background-color: transparent !important; border: 1px solid;" ng-model="choice" ng-value="'A'">Na</ion-radio>
+            <div class="col col-20" ng-click="">
+                <ion-radio style="margin: 7px 0 5px 0;background-color: transparent !important; border: 1px solid;" ng-checked="vm.dados.agendamento.semanaMes && vm.dados.agendamento.diaSemana">Na</ion-radio>
             </div>
             &nbsp
             <div class="col col-20">
                 <label class="item item-input item-select">
                     <span class="item-input">a</span>
-                    <select>
-                        <option>1ª</option>
-                        <option>2ª</option>
-                        <option>3ª</option>
-                        <option>4ª</option>
+                    <select ng-model="vm.dados.agendamento.semanaMes">
+                        <option value="1">1ª</option>
+                        <option value="2">2ª</option>
+                        <option value="3">3ª</option>
+                        <option value="4">4ª</option>
                     </select>
-                </label> 
+                </label>
             </div>
             <div class="col col-33">
                 <label class="item item-input item-select">
                     <span class="item-input">a</span>
-                    <select>
-                        <option>Segunda-feira</option>
-                        <option>Terça-feira</option>
-                        <option>Quarta-feira</option>
-                        <option>Quinta-feira</option>
-                        <option>Sexta-feira</option>
-                        <option>Sábado</option>
-                        <option>Domingo</option>
+                    <select ng-model="vm.dados.agendamento.diaSemana">
+                        <option ng-value="vm.diaSemana.domingo">Domingo</option>
+                        <option ng-value="vm.diaSemana.segunda">Segunda-feira</option>
+                        <option ng-value="vm.diaSemana.terca">Terça-feira</option>
+                        <option ng-value="vm.diaSemana.quarta">Quarta-feira</option>
+                        <option ng-value="vm.diaSemana.quinta">Quinta-feira</option>
+                        <option ng-value="vm.diaSemana.sexta">Sexta-feira</option>
+                        <option ng-value="vm.diaSemana.sabado">Sábado</option>
                     </select>
-                </label> 
+                </label>
             </div>
             <div class="col">
                 <span style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
             </div>
             <br>
         </div>
-    </div>    
+    </div>
 
-    
+
 
     <div class="row row-no-padding">
-        <div class="col col-50">    
-             <label class="item item-input item-select">
+        <div class="col col-50">
+            <label class="item item-input item-select">
                 <span class="item-input">a</span>
-                <select>
-                    <option>Por</option>
-                    <option>Até</option>
-                    <option>Para sempre</option>
+                <select ng-model="ateQuando" ng-init="ateQuando = 'Para sempre'">
+                    <option ng-checked="vm.dados.agendamento.vezesLimite">Por</option>
+                    <option ng-checked="vm.dados.agendamento.dataLimite">Até</option>
+                    <option ng-checked="!vm.dados.agendamento.vezesLimite && !vm.dados.agendamento.vezesLimite">Para sempre</option>
                 </select>
-            </label> 
+            </label>
         </div>
         &nbsp
-        <div ng-hide="1" class="col">
-           <input type="number">
+        <div ng-show="ateQuando == 'Por'" class="col">
+            <input type="number" ng-model="vm.dados.agendamento.vezesLimite">
         </div>
-        <div ng-hide="1" class="col">
-            <center><span style="font-size: 15px; position: relative; top: 6px !important;">dias</span></center>
+        <div ng-show="ateQuando == 'Por'" class="col">
+            <center><span style="font-size: 15px; position: relative; top: 6px !important;">
+                vezes
+            </span></center>
         </div>
-        <div ng-hide="1" class="col">
-            <input type="date">
+        <div ng-show="ateQuando == 'Até'" class="col">
+            <input type="date" ng-model="vm.dados.agendamento.dataLimite">
         </div>
     </div>
-    
-    <button class="button button-block">Ok</button>
-</form>
- </ion-content>
-</ion-view>
 
-  
+    <!-- <button class="button button-block">Ok</button> -->
+</form>
+<!-- </ion-content>
+</ion-view> -->

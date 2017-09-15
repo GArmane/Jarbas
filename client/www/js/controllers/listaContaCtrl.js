@@ -40,6 +40,8 @@
                     text: 'Cancelar',
                     type: 'button-default',
                     onTap: function () {
+                        vm.conta = {};
+                        vm.conta.nome = '';
                         return false;
                     }
                 }, {
@@ -68,6 +70,8 @@
                         title: 'Sucesso!',
                         template: 'Conta contábil adicionada.'
                     });
+                    vm.conta = {};
+                    vm.conta.nome = '';
                 }).error(utilities.apiError);
             });
         }
@@ -92,6 +96,8 @@
                     text: 'Cancelar',
                     type: 'button-default',
                     onTap: function () {
+                        vm.conta = {};
+                        vm.conta.nome = '';
                         return false;
                     }
                 }, {
@@ -119,6 +125,8 @@
                         title: 'Sucesso!',
                         template: 'Conta contábil alterada.'
                     });
+                    vm.conta = {};
+                    vm.conta.nome = '';
                 }).error(utilities.apiError);
             });
         }
@@ -152,6 +160,8 @@
                             title: 'Sucesso!',
                             template: 'Conta contábil excluída.'
                         });
+                        vm.conta = {};
+                        vm.conta.nome = '';
                     }).error(utilities.apiError);
             });
         }

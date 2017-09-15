@@ -65,6 +65,7 @@
                 })
                 .state('app.lista_contas', {
                     url: '/lista_contas',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/lista_contas.html',
@@ -75,10 +76,11 @@
                 })
                 .state('app.grupos_movimentacoes', {
                     url: '/grupos_movimentacoes',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/grupos_movimentacoes.html',
-                            controller: 'listaContaController',
+                            controller: 'listaGrupoMovController',
                             controllerAs: 'vm'
                         }
                     }
@@ -97,6 +99,7 @@
                 })
                 .state('app.add_movimentacao', {
                     url: '/add_movimentacao',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_movimentacao.html',
@@ -118,6 +121,7 @@
 
                 .state('app.add_movimentacao_param', {
                     url: '/add_movimentacao/:id/:transf',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_movimentacao.html',

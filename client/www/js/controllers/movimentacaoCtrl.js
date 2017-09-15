@@ -5,11 +5,13 @@
         .module('starter.controllers')
         .controller('movimentacaoController', movimentacaoController);
 
-    movimentacaoController.$inject = ['auth', '$state', '$stateParams', 'api', '$http', '$ionicPopup', 'utilities'];
-    function movimentacaoController(auth, $state, $stateParams, api, $http, $ionicPopup, utilities) {
+    movimentacaoController.$inject = ['auth', '$state', '$stateParams', 'api', '$http', '$ionicPopup', 'utilities', '$scope'];
+    function movimentacaoController(auth, $state, $stateParams, api, $http, $ionicPopup, utilities, $scope) {
         var vm = this;
 
         vm.dados = {};
+        vm.dados.agendamento = {};
+        vm.dados.agendamento.diasSemana = [];
         vm.contas = [];
         vm.contasTransf = [];
         vm.grupos = [];
@@ -17,13 +19,34 @@
         vm.alteracao = false;
         vm.contaDestinoId = 0;
         vm.contaSelecionada = {};
-        
+        vm.escalaTempo = {
+            diario: '0',
+            semanal: '1',
+            quinzenal: '2',
+            mensal: '3',
+            anual: '4',
+            personalizado: '5'
+        };
+        vm.diaSemana = {
+            domingo: '0',
+            segunda: '1',
+            terca: '2',
+            quarta: '3',
+            quinta: '4',
+            sexta: '5',
+            sabado: '6'            
+        };
+
         var transferenciaOriginal = {};
 
         vm.salvar = salvar;
         vm.alterar = alterar;
         vm.excluir = excluir;
         vm.listaContaTransf = listaContaTransf;
+        vm.personalizar = personalizar;
+        vm.diaSemanaSelecionado = diaSemanaSelecionado;
+        vm.selecionarDiaSemana = selecionarDiaSemana;
+        vm.setarRepeticaoMensal = setarRepeticaoMensal;
         
         activate();
 
@@ -147,6 +170,72 @@
                 }, this);
                 if (vm.contasTransf.length > 0)
                     vm.contaDestinoId = vm.contasTransf[0].id;
+            }
+        }
+
+        function personalizar() {
+            if (vm.dados.agendamento.escalaTempo == vm.escalaTempo.personalizado) {
+                vm.dados.agendamento.qtdTempo = 1;
+                vm.dados.agendamento.escalaTempo = vm.escalaTempo.diario;
+                $ionicPopup.confirm({
+                    title: 'Repetição personalizada',
+                    templateUrl: 'templates/personalizado.html',
+                    scope: $scope,
+                    buttons: [{
+                        text: 'Cancelar',
+                        type: 'button-default',
+                        onTap: function () {
+                            vm.dados.agendamento = {
+                                escalaTempo: vm.dados.agendamento.escalaTempo,
+                                qtdTempo: 0
+                            };
+                            return false;
+                        }
+                    }, {
+                        text: 'OK',
+                        type: 'button-positive',
+                        onTap: function (e) {
+                            return true;//validar(e); /// TODO: faz a validação
+                        }
+                    }]
+                }).then(function (salvar) {
+                    if (!salvar)
+                        return;
+
+                });
+            } else {
+                vm.dados.agendamento = {
+                    escalaTempo: vm.dados.agendamento.escalaTempo,
+                    qtdTempo: 0
+                };
+            }
+        }
+
+        function diaSemanaSelecionado(dia) {
+            if (!vm.dados.agendamento.diasSemana)
+                vm.dados.agendamento.diasSemana = [];
+            return vm.dados.agendamento.diasSemana && vm.dados.agendamento.diasSemana.indexOf(dia) >= 0;
+        }
+
+        function selecionarDiaSemana(dia) {
+            if (!vm.dados.agendamento.diasSemana)
+                vm.dados.agendamento.diasSemana = [];
+            var index = vm.dados.agendamento.diasSemana.indexOf(dia);
+            if (index >= 0)
+                vm.dados.agendamento.diasSemana.push(dia);
+            else
+                vm.dados.agendamento.diasSemana.splice(index, 1);
+        }
+
+        function setarRepeticaoMensal(caso) {
+            if (caso == 1) {
+                vm.dados.agendamento.diaMes = 1;
+                vm.dados.agendamento.semanaMes = null;
+                vm.dados.agendamento.diaSemana = null;
+            } else {
+                vm.dados.agendamento.semanaMes = '1';
+                vm.dados.agendamento.diaSemana = vm.escalaTempo.domingo;
+                vm.dados.agendamento.diaMes = null;
             }
         }
 

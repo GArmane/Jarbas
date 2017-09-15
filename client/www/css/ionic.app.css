@@ -208,6 +208,9 @@ div.link {
 a.text-right {
   text-align: right; }
 
+.popup-container .popup {
+  width: 85% !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
