@@ -4,10 +4,10 @@
     <span class="input-label">Tipo de movimentação</span>
     <div class="row row-no-padding">
         <div class="col">
-          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="0">Receita</ion-radio> 
+          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao" ng-value="0">Receita</ion-radio> 
         </div>
         <div class="col">
-          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="1">Despesa</ion-radio>
+          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao" ng-value="1">Despesa</ion-radio>
         </div>
         <div class="col">
             <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="2" ng-click="vm.listaContaTransf()">Transferência</ion-radio>
@@ -18,9 +18,16 @@
       <span class="input-label">Conta</span>
       <label class="item item-input item-select">
           <div class="input-label">Conta</div>
-          <select ng-model="vm.contaSelecionada" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
+          <select ng-model="vm.contaSelecionada" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
       </label>
       <br>
+
+      <div ng-show="vm.dados.tipoMovimentacao == 2">
+        <span class="input-label">Conta destino</span>
+        <select class="ion-input-select" ng-model="vm.contaDestino" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contasTransf">
+        </select>
+      </div>
+
 
       <span class="input-label">Grupo de movimentações</span>
       <label class="item item-input item-select">
@@ -39,7 +46,7 @@
       <div class="row row-no-padding">
           <div class="col col-33">          
               <label class="item item-input item-select">
-                  <select ng-model="vm.conta.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" required></select>
+              {{vm.contaSelecionada.moeda.simbolo}}
             </label>
         </div>
         &nbsp&nbsp
@@ -68,10 +75,9 @@
       
       <br>    
       <div class="row">
-    	   <!-- <div class="col col-33"><button class="button button-block">Cancelar</button></div> -->
-         <div class="col col-33"><button class="button button-block" ng-click="vm.alterar()">Cancelar</button></div>
-         <div class="col"><button class="button button-block" ng-click="vm.alteracao ? vm.alterar() : vm.salvar()">{{vm.alteracao ? 'Alterar' : 'Cadastrar'}}</button></div>
-         
+        <div class="col col-33"><button class="button button-block" ng-click="vm.cancelar()">Cancelar</button></div>
+        <div class="col" ng-if="vm.alteracao"><button class="button button-block" ng-click="vm.excluir()">Excluir</button></div>
+        <div class="col"><button class="button button-block" ng-click="vm.alteracao ? vm.alterar() : vm.salvar()">{{vm.alteracao ? 'Alterar' : 'Cadastrar'}}</button></div>
       </div>
     </form>
     

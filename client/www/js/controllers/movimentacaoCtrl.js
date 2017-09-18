@@ -15,9 +15,9 @@
         vm.contas = [];
         vm.contasTransf = [];
         vm.grupos = [];
-        vm.moedas = [];
         vm.alteracao = false;
-        vm.contaDestinoId = 0;
+        vm.originalTransf = false;
+        vm.contaDestino = {};
         vm.contaSelecionada = {};
         vm.escalaTempo = {
             diario: '0',
@@ -47,6 +47,7 @@
         vm.diaSemanaSelecionado = diaSemanaSelecionado;
         vm.selecionarDiaSemana = selecionarDiaSemana;
         vm.setarRepeticaoMensal = setarRepeticaoMensal;
+        vm.cancelar = cancelar;
         
         activate();
 
@@ -68,8 +69,9 @@
                     receita: JSON.parse(JSON.stringify(vm.dados))
                 };
                 transf.despesa.tipoMovimentacao = 1;
-                transf.receita.contaContabilId = vm.contaDestinoId;
+                transf.receita.contaContabilId = vm.contaDestino.id;
                 transf.receita.tipoMovimentacao = 0;
+                transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
 
                 $http({
                     url: api.url() + 'Movimentacoes/Transferencia/',
@@ -109,8 +111,9 @@
                 transf.despesa.id = transferenciaOriginal.despesa.id;
                 transf.despesa.tipoMovimentacao = 1;
                 transf.receita.id = transferenciaOriginal.receita.id;
-                transf.receita.contaContabilId = vm.contaDestinoId;
+                transf.receita.contaContabilId = vm.contaDestino.id;
                 transf.receita.tipoMovimentacao = 0;
+                transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
 
                 $http({
                     url: api.url() + 'Movimentacoes/Transferencia/' + transf.id,
@@ -145,19 +148,38 @@
                 title: 'Excluir movimentação',
                 template: 'Tem certeza que deseja excluir a movimentação ' + vm.dados.descricao + '?'
             }).then(function (res) {
-                if (res)
-                    $http({
-                        method: 'DELETE',
-                        url: api.url() + 'Movimentacoes/' + vm.dados.id,
-                        headers: auth.header
-                    }).success(function () {
-                        history.back();
-                        $ionicPopup.alert({
-                            title: 'Sucesso!',
-                            template: 'Movimentação excluída.'
-                        });
-                    }).error(utilities.apiError);
+                if (res) {
+                    if (vm.dados.tipoMovimentacao == 2) {
+                        $http({
+                            method: 'DELETE',
+                            url: api.url() + '/Movimentacoes/Transferencia/' + vm.dados.id,
+                            headers: auth.header
+                        }).success(function () {
+                            history.back();
+                            $ionicPopup.alert({
+                                title: 'Sucesso!',
+                                template: 'Movimentação excluída.'
+                            });
+                        }).error(utilities.apiError);
+                    } else {
+                        $http({
+                            method: 'DELETE',
+                            url: api.url() + 'Movimentacoes/' + vm.dados.id,
+                            headers: auth.header
+                        }).success(function () {
+                            history.back();
+                            $ionicPopup.alert({
+                                title: 'Sucesso!',
+                                template: 'Movimentação excluída.'
+                            });
+                        }).error(utilities.apiError);
+                    }
+                }
             });
+        }
+
+        function cancelar() {
+            history.back();
         }
 
         function listaContaTransf() {
@@ -169,7 +191,7 @@
                         vm.contasTransf.push(conta);
                 }, this);
                 if (vm.contasTransf.length > 0)
-                    vm.contaDestinoId = vm.contasTransf[0].id;
+                    vm.contaDestino = vm.contasTransf[0];
             }
         }
 
@@ -250,8 +272,8 @@
                 }).success(function (data) {
                     vm.dados = data.despesa;
                     transferenciaOriginal = data;
+                    vm.originalTransf = true;
                     vm.dados.tipoMovimentacao = 2;
-                    vm.contaDestinoId = data.receita.contaContabilId;
                     vm.dados.data = new Date(vm.dados.data);
                     associaConta();
                     listaContaTransf();
@@ -287,13 +309,6 @@
                 if (vm.grupos && vm.grupos.length > 0 && !$stateParams.id)
                     vm.dados.grupoMovimentacoesId = vm.grupos[0].id;
             }).error(utilities.apiError);
-            $http({
-                method: 'GET',
-                url: api.url() + 'Moedas',
-                headers: auth.header
-            }).success(function (data) {
-                vm.moedas = data;
-            }).error(utilities.apiError);
         }
 
         function associaConta() {
@@ -301,6 +316,10 @@
                 vm.contaSelecionada = vm.contas.find(function (conta) {
                     return conta.id == vm.dados.contaContabilId;
                 });
+                if ($stateParams.transf == 'true')
+                    vm.contaDestino = vm.contas.find(function (conta) {
+                        return conta.id == transferenciaOriginal.receita.contaContabilId;
+                    });
             }
         }
     }
