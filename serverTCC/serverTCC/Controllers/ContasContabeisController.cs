@@ -11,7 +11,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/ContasContabeis")]
-    [Authorize]
+    //[Authorize]
     public class ContasContabeisController : Controller
     {
         private JarbasContext context;
@@ -34,7 +34,7 @@ namespace serverTCC.Controllers
 
                 if (usuarioExists)
                 {
-                    bool contaExists = await context.ContaContabil.AnyAsync(c => c.Nome.Equals(contaContabil.Nome));
+                    bool contaExists = await context.ContaContabil.AnyAsync(c => c.Nome.Equals(contaContabil.Nome) && c.UsuarioId.Equals(contaContabil.UsuarioId));
 
                     if (!contaExists)
                     {
