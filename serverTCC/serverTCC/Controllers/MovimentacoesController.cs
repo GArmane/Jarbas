@@ -96,10 +96,13 @@ namespace serverTCC.Controllers
             {
                 var contas = context.ContaContabil.Where(c => c.UsuarioId.Equals(userId));
 
-                var movimentacoes = context.Movimentacao.Where(m => m.ContaContabil.UsuarioId.Equals(userId));
+                var movimentacoes = context.Movimentacao
+                    .Include(m => m.Agendamento)
+                    .Where(m => m.ContaContabil.UsuarioId.Equals(userId));
 
                 var transferencias = context.Transferencia
                     .Include(t => t.Despesa)
+                        .ThenInclude(m => m.Agendamento)
                     .Include(t => t.Receita)
                     .Where(t => t.Receita.ContaContabil.UsuarioId.Equals(userId));
 
@@ -125,7 +128,9 @@ namespace serverTCC.Controllers
         {
             try
             {
-                var movimentacao = await context.Movimentacao.FirstOrDefaultAsync(m => m.Id.Equals(id));
+                var movimentacao = await context.Movimentacao
+                    .Include(m => m.Agendamento)
+                    .FirstOrDefaultAsync(m => m.Id.Equals(id));
 
                 if (movimentacao != null)
                 {
@@ -339,6 +344,7 @@ namespace serverTCC.Controllers
             {
                 var transferencia = await context.Transferencia
                     .Include(t => t.Despesa)
+                        .ThenInclude(m => m.Agendamento)
                     .Include(t => t.Receita)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(t => t.Id.Equals(id));
