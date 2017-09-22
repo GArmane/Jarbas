@@ -26,7 +26,8 @@ namespace IdentityServer
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.Development.json")
+                .AddJsonFile("appsettings.Production.json")
                 .Build();
         }
 
