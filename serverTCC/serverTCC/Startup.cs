@@ -76,7 +76,7 @@ namespace serverTCC
             //para realizar a autenticação
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                Authority = "http://localhost:5000",
+                Authority = "http://identityservertcc.azurewebsites.net",
                 RequireHttpsMetadata = false,
 
                 ApiName = "jarbasApi"

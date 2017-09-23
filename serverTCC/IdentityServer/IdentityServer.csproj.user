@@ -5,6 +5,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>IdentityServer</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>IdentityServerJarbas - Web Deploy</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>IdentityServerTCC - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

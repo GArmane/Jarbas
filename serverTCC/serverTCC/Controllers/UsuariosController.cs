@@ -129,10 +129,7 @@ namespace serverTCC.Controllers
 
                     if (aux != null)
                     {
-                        //Fazer o request do token
-                        var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
-
-                        var tokenClient = new TokenClient(disco.TokenEndpoint, "jarbasApp", "secret");
+                        var tokenClient = new TokenClient("http://identityservertcc.azurewebsites.net/connect/token", "jarbasApp", "secret");
                         var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(model.Email, model.Senha, "jarbasApi offline_access");
 
                         if (!tokenResponse.IsError)
