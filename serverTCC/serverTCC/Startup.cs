@@ -14,6 +14,7 @@ namespace serverTCC
     public class Startup
     {
         public IConfigurationRoot Configuration;
+        public IHostingEnvironment Environment;
 
         public Startup(IHostingEnvironment env)
         {
@@ -22,6 +23,8 @@ namespace serverTCC
                 .AddJsonFile("appsettings.Development.json")
                 .AddJsonFile("appsettings.Production.json")
                 .Build();
+
+            Environment = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -49,12 +52,21 @@ namespace serverTCC
             })
             .AddEntityFrameworkStores<JarbasContext>();
 
+            string connectionString;
 
+            if (Environment.IsDevelopment())
+            {
+                connectionString = Configuration.GetConnectionString("JarbasBDDev");
+            }
+            else
+            {
+                connectionString = Configuration.GetConnectionString("JarbasBD");
+            }
+            
             //Cfg Entity Framework + PostgreSQL
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<JarbasContext>(
-                    options => options.UseNpgsql(
-                        Configuration.GetConnectionString("JarbasBD")));
+                    options => options.UseNpgsql(connectionString));
 
         }
 
