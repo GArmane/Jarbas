@@ -21,6 +21,7 @@ namespace IdentityServer
     {
 
         public IConfigurationRoot Configuration;
+        public IHostingEnvironment Environment;
 
         public Startup(IHostingEnvironment env)
         {
@@ -29,6 +30,8 @@ namespace IdentityServer
                 .AddJsonFile("appsettings.Development.json")
                 .AddJsonFile("appsettings.Production.json")
                 .Build();
+
+            Environment = env;
         }
 
        
@@ -51,11 +54,21 @@ namespace IdentityServer
             services.AddIdentity<Usuario, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
 
+            string connectionString;
+
+            if (Environment.IsDevelopment())
+            {
+                connectionString = Configuration.GetConnectionString("JarbasBDDev");
+            }
+            else
+            {
+                connectionString = Configuration.GetConnectionString("JarbasBD");
+            }
+
             //Cfg Entity Framework + PostgreSQL
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<IdentityContext>(
-                    options => options.UseNpgsql(
-                        Configuration.GetConnectionString("JarbasBD")));
+                    options => options.UseNpgsql(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
