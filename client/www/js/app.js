@@ -74,6 +74,29 @@
                         }
                     }
                 })
+
+                .state('app.lista_investimentos', {
+                    url: '/lista_investimentos',
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/lista_investimentos.html',
+                            controller: 'listaContaController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_investimento', {
+                    url: '/add_investimento',
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_investimento.html',
+                            controller: 'listaContaController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
                 .state('app.grupos_movimentacoes', {
                     url: '/grupos_movimentacoes',
                     cache: false,

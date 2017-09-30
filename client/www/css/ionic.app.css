@@ -208,8 +208,14 @@ div.link {
 a.text-right {
   text-align: right; }
 
+<<<<<<< HEAD
 .popup-container .popup {
   width: 85% !important; }
+=======
+.check {
+  border: none !important;
+  background-color: transparent !important; }
+>>>>>>> Temp
 
 /*!
   Ionicons, v2.0.1

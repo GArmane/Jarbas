@@ -1,0 +1,61 @@
+<ion-view view-title="Inserir Investimento">
+	<ion-content class="padrao has-header padding">
+		<form name="investimento">
+			<span class="input-label">Tipo de investimento</span>
+			<label class="item item-input item-select">
+                <span class="item-input">Tipo</span>
+                <select>
+                    <option>Tesouro Direto</option>
+                    <option>CDB</option>
+                    <option>IPCA</option>
+                    <option>Selic</option>
+                </select>
+            </label> 
+            <br> 
+            <ion-checkbox class="check">Investimento iniciado</ion-checkbox>
+            <br>
+            <span class="input-label">Valor investido</span>
+            <div class="row row-no-padding">
+            	<div class="col col-25">
+            		<label class="item item-input item-select">
+                		<span class="item-input">Moeda</span>
+                		<select>
+                    		<option>R$</option>
+                    		<option>$</option>
+                		</select>	
+                	</label>
+            	</div>
+            	&nbsp&nbsp
+            	<div class="col">
+            		<label class="item item-input">
+        				<input type="text" placeholder="0,00">
+      	  			</label>
+            	</div>
+            </div>
+			<br>
+			<span class="input-label">Tempo de investimento</span>
+			<div class="row row-no-padding">
+            	<div class="col">
+            		<label class="item item-input">
+        				<input type="text">
+      	  			</label>
+            	</div>
+            	&nbsp&nbsp
+            	<div class="col col-33">
+            		<label class="item item-input item-select">
+                		<span class="item-input">Meses</span>
+                		<select>
+                    		<option>Meses</option>
+                    		<option>Anos</option>
+                		</select>	
+                	</label>
+            	</div>
+            </div>
+		</form>
+		<br>
+		<div class="row">
+    		<div class="col col-33"><button class="button button-block">Cancelar</button></div>
+    		<div class="col"><button class="button button-block" ng-click="vm.cadastrar()">Cadastrar</button></div>
+    	</div>
+  </ion-content>
+</ion-view>
