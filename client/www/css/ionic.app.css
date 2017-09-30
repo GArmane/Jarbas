@@ -208,6 +208,10 @@ div.link {
 a.text-right {
   text-align: right; }
 
+.check {
+  border: none !important;
+  background-color: transparent !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
