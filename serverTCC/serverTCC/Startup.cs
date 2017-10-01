@@ -62,7 +62,7 @@ namespace serverTCC
             {
                 connectionString = Configuration.GetConnectionString("JarbasBD");
             }
-            
+
             //Cfg Entity Framework + PostgreSQL
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<JarbasContext>(
@@ -85,15 +85,26 @@ namespace serverTCC
 
             app.UseResponseCompression();
 
+            string authority;
+
+            if (Environment.IsDevelopment())
+            {
+                authority = "http://localhost:5000";
+            }
+            else
+            {
+                authority = "http://identityservertcc.azurewebsites.net";
+            }
+
             //para realizar a autenticação
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                Authority = "http://identityservertcc.azurewebsites.net",
+                Authority = authority,
                 RequireHttpsMetadata = false,
 
                 ApiName = "jarbasApi"
             });
-            
+
 
             app.UseMvcWithDefaultRoute();
 
