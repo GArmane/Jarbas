@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace serverTCC.Models
 {
@@ -33,5 +34,10 @@ namespace serverTCC.Models
         public int? SemanaMes { get; set; } //Caso 2: Repete num dia da semana, de uma semana especifica do mes
         public DiaSemana? DiaSemana { get; set; }
 
+        
+        public int MovimentacaoId { get; set; }
+
+        [ForeignKey("MovimentacaoId")]
+        public Movimentacao Movimentacao { get; set; }
     }
 }

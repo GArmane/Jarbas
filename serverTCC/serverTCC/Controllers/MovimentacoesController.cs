@@ -229,6 +229,7 @@ namespace serverTCC.Controllers
             {
                 var movimentacao = await context.Movimentacao
                     .Include(m => m.ContaContabil)
+                    .Include(m => m.Agendamento)
                     .FirstOrDefaultAsync(m => m.Id.Equals(id));
 
                 if (movimentacao != null)

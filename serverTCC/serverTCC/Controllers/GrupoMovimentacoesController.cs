@@ -34,7 +34,7 @@ namespace serverTCC.Controllers
 
                 if (usuarioExists)
                 {
-                    var nomeExists = await context.GrupoMovimentacoes.AnyAsync(g => g.Nome.Equals(grupo.Nome));
+                    var nomeExists = await context.GrupoMovimentacoes.AnyAsync(g => g.Nome.Equals(grupo.Nome) && g.UsuarioId.Equals(grupo.UsuarioId));
 
                     if (!nomeExists)
                     {
