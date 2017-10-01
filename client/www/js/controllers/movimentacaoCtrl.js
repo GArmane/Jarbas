@@ -1,11 +1,12 @@
-(function() {
-'use strict';
+(function () {
+    'use strict';
 
     angular
         .module('starter.controllers')
         .controller('movimentacaoController', movimentacaoController);
 
     movimentacaoController.$inject = ['auth', '$state', '$stateParams', 'api', '$http', '$ionicPopup', 'utilities', '$scope'];
+
     function movimentacaoController(auth, $state, $stateParams, api, $http, $ionicPopup, utilities, $scope) {
         var vm = this;
 
@@ -19,13 +20,19 @@
         vm.originalTransf = false;
         vm.contaDestino = {};
         vm.contaSelecionada = {};
-        vm.escalaTempo = {
-            diario: '0',
-            semanal: '1',
-            quinzenal: '2',
-            mensal: '3',
-            anual: '4',
-            personalizado: '5'
+        vm.escalaTempo = [
+            { name: 'Diário', id: 0 },
+            { name: 'Semanal', id: 1 },
+            { name: 'Mensal', id: 3 },
+            { name: 'Anual', id: 4 },
+            { name: 'Personalizado', id: 5 }
+        ];
+        vm.escalaEnum = {
+            diario: 0,
+            semanal: 1,
+            mensal: 3,
+            anual: 4,
+            personalizado: 5
         };
         vm.diaSemana = {
             domingo: '0',
@@ -34,8 +41,9 @@
             quarta: '3',
             quinta: '4',
             sexta: '5',
-            sabado: '6'            
+            sabado: '6'
         };
+        vm.escalaPersonalizada = 0;
 
         var transferenciaOriginal = {};
 
@@ -48,7 +56,7 @@
         vm.selecionarDiaSemana = selecionarDiaSemana;
         vm.setarRepeticaoMensal = setarRepeticaoMensal;
         vm.cancelar = cancelar;
-        
+
         activate();
 
         ////////////////
@@ -63,6 +71,7 @@
         //////////////// Public
 
         function salvar() {
+            agendamentoSalvar();
             if (vm.dados.tipoMovimentacao == 2) {
                 var transf = {
                     despesa: JSON.parse(JSON.stringify(vm.dados)),
@@ -84,12 +93,15 @@
                         title: 'Sucesso!',
                         template: 'Movimentação inserida.'
                     });
-                }).error(utilities.apiError);
+                }).error(function (data) {
+                    utilities.apiError(data);
+                    agendamentoCarregado();
+                });
             } else {
                 $http({
                     url: api.url() + 'Movimentacoes/',
                     method: 'POST',
-                    data: vm.dados,
+                       data: vm.dados,
                     headers: auth.header
                 }).success(function (data) {
                     history.back();
@@ -97,11 +109,15 @@
                         title: 'Sucesso!',
                         template: 'Movimentação inserida.'
                     });
-                }).error(utilities.apiError);
+                }).error(function (data) {
+                    agendamentoCarregado();
+                    utilities.apiError(data);
+                });
             }
         }
 
         function alterar() {
+            agendamentoSalvar();
             if (vm.dados.tipoMovimentacao == 2) {
                 var transf = {
                     despesa: JSON.parse(JSON.stringify(vm.dados)),
@@ -126,7 +142,10 @@
                         title: 'Sucesso!',
                         template: 'Movimentação alterada.'
                     });
-                }).error(utilities.apiError);
+                }).error(function (data) {
+                    agendamentoCarregado();
+                    utilities.apiError(data);
+                });
             } else {
                 $http({
                     url: api.url() + 'Movimentacoes/' + vm.dados.id,
@@ -139,7 +158,10 @@
                         title: 'Sucesso!',
                         template: 'Movimentação alterada.'
                     });
-                }).error(utilities.apiError);
+                }).error(function (data) {
+                    agendamentoCarregado();
+                    utilities.apiError(data);
+                });
             }
         }
 
@@ -186,7 +208,7 @@
             vm.contasTransf = [];
             if (vm.contaSelecionada.id) {
                 vm.dados.contaContabilId = vm.contaSelecionada.id;
-                vm.contas.forEach(function(conta) {
+                vm.contas.forEach(function (conta) {
                     if (conta.id != vm.dados.contaContabilId)
                         vm.contasTransf.push(conta);
                 }, this);
@@ -196,9 +218,9 @@
         }
 
         function personalizar() {
-            if (vm.dados.agendamento.escalaTempo == vm.escalaTempo.personalizado) {
+            if (vm.dados.agendamento.escalaTempo == vm.escalaTempo[vm.escalaTempo.length - 1].id) {
                 vm.dados.agendamento.qtdTempo = 1;
-                vm.dados.agendamento.escalaTempo = vm.escalaTempo.diario;
+                vm.escalaPersonalizada = vm.escalaTempo[0];
                 $ionicPopup.confirm({
                     title: 'Repetição personalizada',
                     templateUrl: 'templates/personalizado.html',
@@ -207,24 +229,22 @@
                         text: 'Cancelar',
                         type: 'button-default',
                         onTap: function () {
-                            vm.dados.agendamento = {
-                                escalaTempo: vm.dados.agendamento.escalaTempo,
-                                qtdTempo: 0
-                            };
+                            vm.dados.agendamento = null;
+                            agendamentoCarregado();
                             return false;
                         }
                     }, {
                         text: 'OK',
                         type: 'button-positive',
                         onTap: function (e) {
-                            return true;//validar(e); /// TODO: faz a validação
+                            return true; //validar(e); /// TODO: faz a validação
                         }
                     }]
-                }).then(function (salvar) {
-                    if (!salvar)
-                        return;
-
-                });
+                })
+                // .then(function (salvar) {
+                //     if (!salvar)
+                //         return;
+                // });
             } else {
                 vm.dados.agendamento = {
                     escalaTempo: vm.dados.agendamento.escalaTempo,
@@ -276,6 +296,7 @@
                     vm.dados.tipoMovimentacao = 2;
                     vm.dados.data = new Date(vm.dados.data);
                     associaConta();
+                    agendamentoCarregado();
                     listaContaTransf();
                 }).error(utilities.apiError);
             else if ($stateParams.id)
@@ -299,6 +320,7 @@
                     vm.dados.contaContabilId = vm.contaSelecionada.id;
                 } else
                     associaConta();
+                agendamentoCarregado();
             }).error(utilities.apiError);
             $http({
                 url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
@@ -320,6 +342,31 @@
                     vm.contaDestino = vm.contas.find(function (conta) {
                         return conta.id == transferenciaOriginal.receita.contaContabilId;
                     });
+            }
+        }
+
+        /// 2 casos especiais do agendamento: não tem agendamento e agendamento personalizado
+
+        function agendamentoCarregado() {
+            if (!vm.dados.agendamento) { // não tem agendamento
+                vm.dados.agendamento = {};
+                vm.dados.agendamento.diasSemana = [];
+            } else if (vm.dados.agendamento.escalaTempo && vm.dados.agendamento.qtdTempo != 0) { // agendamento personalizado
+                vm.escalaPersonalizada = vm.dados.agendamento.escalaTempo;
+                vm.dados.agendamento.escalaTempo = vm.escalaTempo[vm.escalaTempo.length - 1];
+            }
+        }
+
+        function agendamentoSalvar() {
+            if (!vm.dados.agendamento.escalaTempo) { // não tem agendamento
+                vm.dados.agendamentoId = null;
+                vm.dados.agendamento = null;
+            } else if (vm.dados.agendamento.escalaTempo == vm.escalaTempo[vm.escalaTempo.length - 1]) { // agendamento personalizado
+                vm.dados.agendamento.escalaTempo = vm.escalaPersonalizada;
+            } else { // se for normal, normaliza
+                vm.dados.agendamento = {
+                    escalaTempo: vm.dados.agendamento.escalaTempo
+                };
             }
         }
     }

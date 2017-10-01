@@ -11,12 +11,7 @@
         <div class="col">
             <label class="item item-input item-select">
                 <span class="item-input">Repetir</span>
-                <select ng-model="vm.dados.agendamento.escalaTempo">
-                    <option ng-value="vm.escalaTempo.diario">Diário</option>
-                    <option ng-value="vm.escalaTempo.semanal">Semanal</option>
-                    <option ng-value="vm.escalaTempo.mensal">Mensal</option>
-                    <option ng-value="vm.escalaTempo.anual">Anual</option>
-                </select>
+                <select ng-model="vm.escalaPersonalizada" ng-options="escala.id as escala.name for escala in vm.escalaTempo.slice(0, vm.escalaTempo.length - 1)"></select>
             </label>
         </div>
         <div class="col col-25"></div>
@@ -33,17 +28,17 @@
         </div>
         <div class="col">
             <center><span style="font-size: 15px; position: relative; top: 6px !important;">
-                <span ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.diario">dia</span><span ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.semanal">semana</span><span ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.anual">ano</span><span ng-show="vm.dados.agendamento.qtdTempo > 1 && vm.dados.agendamento.escalaTempo != vm.escalaTempo.mensal">s</span>
+                <span ng-show="vm.escalaPersonalizada == vm.escalaEnum.diario">dia</span><span ng-show="vm.escalaPersonalizada == vm.escalaEnum.semanal">semana</span><span ng-show="vm.escalaPersonalizada == vm.escalaEnum.anual">ano</span><span ng-show="vm.dados.agendamento.qtdTempo > 1 && vm.escalaPersonalizada != vm.escalaEnum.mensal">s</span>
                 
                 <!-- mês é especial, um caso a parte, não dá pra só colocar um S no final -->
-                <span ng-show="!(vm.dados.agendamento.qtdTempo > 1) && vm.dados.agendamento.escalaTempo == vm.escalaTempo.mensal">mês</span>
-                <span ng-show="vm.dados.agendamento.qtdTempo > 1 && vm.dados.agendamento.escalaTempo == vm.escalaTempo.mensal">meses</span>
+                <span ng-show="!(vm.dados.agendamento.qtdTempo > 1) && vm.escalaPersonalizada == vm.escalaEnum.mensal">mês</span>
+                <span ng-show="vm.dados.agendamento.qtdTempo > 1 && vm.escalaPersonalizada == vm.escalaEnum.mensal">meses</span>
             </span></center>
         </div>
     </div>
 
     <br>
-    <div ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.semanal" class="semanas">
+    <div ng-show="vm.escalaPersonalizada == vm.escalaEnum.semanal" class="semanas">
         <div class="row row-no-padding">
             <div class="col col-10">
                 <span style="font-size: 15px; position: relative; top: 5px !important;">De</span>
@@ -79,7 +74,7 @@
         <br>
     </div>
 
-    <div ng-show="vm.dados.agendamento.escalaTempo == vm.escalaTempo.mensal" style="border: 1px solid !important;" class="mes">
+    <div ng-show="vm.escalaPersonalizada == vm.escalaEnum.mensal" style="border: 1px solid !important;" class="mes">
         <div style="border-bottom: 1px solid;" class="row row-no-padding" ng-click="vm.setarRepeticaoMensal(1)">
             <div class="col col-33">
                 <ion-radio style="background-color: transparent !important; border: 1px solid;" ng-checked="vm.dados.agendamento.diaMes">No dia</ion-radio>

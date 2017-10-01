@@ -15,7 +15,7 @@
       </div>
       <br>
 
-      <span class="input-label">Conta</span>
+      <span class="input-label">Conta <span ng-show="vm.contaSelecionada">(Saldo: {{ vm.contaSelecionada.saldo | currency: vm.contaSelecionada.moeda.simbolo + ' ' }})</span></span>
       <label class="item item-input item-select">
           <div class="input-label">Conta</div>
           <select ng-model="vm.contaSelecionada" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
@@ -61,14 +61,8 @@
     <span class="input-label">Repetir movimentação</span>
     <label class="item item-input item-select">
         <div class="input-label">Repetir</div>
-            <select ng-model="vm.dados.agendamento.escalaTempo" ng-change="vm.personalizar()">
+            <select ng-model="vm.dados.agendamento.escalaTempo" ng-options="escala.id as escala.name for escala in vm.escalaTempo" ng-change="vm.personalizar()">
                 <option value="">Não repetir</option>
-                <option ng-value="vm.escalaTempo.diario">Diário</option>
-                <option ng-value="vm.escalaTempo.semanal">Semanal</option>
-                <option ng-value="vm.escalaTempo.quinzenal">Quinzenal</option>
-                <option ng-value="vm.escalaTempo.mensal">Mensal</option>
-                <option ng-value="vm.escalaTempo.anual">Anual</option>
-                <option ng-value="vm.escalaTempo.personalizado" ng-selected="vm.dados.agendamento.qtdTempo != 0 && vm.dados.agendamento.escalaTempo">Personalizado</option>
             </select>
     </label>
     <br>
