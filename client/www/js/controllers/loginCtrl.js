@@ -18,6 +18,7 @@
         };
         vm.erro = false;
         vm.erroMsg = '';
+        vm.api = api;
         
         vm.fazerLogin = fazerLogin;
         vm.loginGoogle = loginGoogle;

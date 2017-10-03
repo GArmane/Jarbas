@@ -71,7 +71,7 @@
                 // alert('exibiu o gdialog');
                 $http({
                     url: api.url() + 'Usuarios/Google/',
-                    data: '"' + auth.serverAuthCode + '"',
+                    data: '"' + (utilities.isApp() ? auth.serverAuthCode : auth.code) + '"',
                     // data: '"' + auth.idToken + '"',
                     method: 'POST',
                 }).success(function (data) {
