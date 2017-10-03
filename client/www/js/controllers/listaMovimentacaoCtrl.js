@@ -17,19 +17,24 @@
         vm.filtro1 = {
             semFiltro: { nome: 'Sem filtro', id: 0 },
             conta: { nome: 'Conta', id: 1 },
-            grupo: { nome: 'Grupo', id: 2 }
+            grupo: { nome: 'Grupo', id: 2 },
+            data: { nome: 'Data', id: 3 }
         };
         vm.filtro1Lista = [
             vm.filtro1.semFiltro,
             vm.filtro1.conta,
-            vm.filtro1.grupo
+            vm.filtro1.grupo,
+            vm.filtro1.data
         ];
         vm.filtro1Selected = vm.filtro1Lista[0];
         vm.filtro2Lista = [];
         vm.filtro2Selected = null;
+        vm.filtro2DataInicio = null;
+        vm.filtro2DataFim = null;
 
         vm.filtro1Changed = filtro1Changed;
         vm.filtro2Changed = filtro2Changed;
+        vm.filtro2DataChanged = filtro2DataChanged;
 
         activate();
 
@@ -49,6 +54,8 @@
             } else if (vm.filtro1Selected == vm.filtro1.grupo) {
                 vm.filtro2Lista = vm.grupos;
                 vm.filtro2Selected = vm.filtro2Lista[0];
+            } else if (vm.filtro1Selected == vm.filtro1.data) {
+
             }
         }
 
@@ -69,6 +76,30 @@
                             vm.dados.push(mov);
                     });
                 }
+            }
+        }
+
+        function filtro2DataChanged() {
+            if (!(vm.filtro2DataInicio instanceof Date) && !(vm.filtro2DataFim instanceof Date))
+                vm.dados = vm.movimentacoes;
+            else if (vm.filtro2DataInicio instanceof Date && !(vm.filtro2DataFim instanceof Date)) {
+                vm.dados = [];
+                vm.movimentacoes.forEach(function(mov) {
+                    if (mov.data.getTime() >= vm.filtro2DataInicio.getTime())
+                        vm.dados.push(mov);
+                });
+            } else if (!(vm.filtro2DataInicio instanceof Date) && vm.filtro2DataFim instanceof Date) {
+                vm.dados = [];
+                vm.movimentacoes.forEach(function(mov) {
+                    if (mov.data.getTime() <= vm.filtro2DataFim.getTime())
+                        vm.dados.push(mov);
+                });
+            } else {
+                vm.dados = [];
+                vm.movimentacoes.forEach(function(mov) {
+                    if (mov.data.getTime() >= vm.filtro2DataInicio.getTime() && mov.data.getTime() <= vm.filtro2DataFim.getTime())
+                        vm.dados.push(mov);
+                });
             }
         }
 
