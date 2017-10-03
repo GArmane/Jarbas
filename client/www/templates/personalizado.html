@@ -43,32 +43,36 @@
             <div class="col col-10">
                 <span style="font-size: 15px; position: relative; top: 5px !important;">De</span>
             </div>
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.domingo)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.domingo)">Domingo</ion-checkbox>
+            <div class="col">
+                <ul class="list">
+                    <li>
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.domingo)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.domingo)">Domingo
+                        </ion-checkbox>
+                    </li>
+                    <li>
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.segunda)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.segunda)">Segunda
+                        </ion-checkbox>
+                    </li>
+                    <li>
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.terca)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.terca)">Terça</ion-checkbox>
+                    </li>
+                    <li>
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.quarta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.quarta)">Quarta</ion-checkbox>
+                    </li>
+                </ul>
             </div>
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.segunda)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.segunda)">Segunda</ion-checkbox>
-            </div>
-        </div>
-        <br>
-        <div class="row row-no-padding">
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.terca)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.terca)">Terça</ion-checkbox>
-            </div>
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.quarta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.quarta)">Quarta</ion-checkbox>
-            </div>
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.quinta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.quinta)">Quinta</ion-checkbox>
-            </div>
-        </div>
-        <br>
-        <div class="row row-no-padding">
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sexta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.sexta)">Sexta</ion-checkbox>
-            </div>
-            <div class="col col-33">
-                <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sabado)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.sabado)">Sábado</ion-checkbox>
+            <div class="col">
+                <ul>
+                    <li>
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sexta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.quinta)">Quinta</ion-checkbox>
+                    </li>
+                    <li>
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sexta)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.sexta)">Sexta</ion-checkbox>
+                    </li>
+                    <li>    
+                        <ion-checkbox style="font-size: 13px;" ng-checked="vm.diaSemanaSelecionado(vm.diaSemana.sabado)" ng-click="vm.selecionarDiaSemana(vm.diaSemana.sabado)">Sábado</ion-checkbox>
+                    </li>
+                </ul>
             </div>
         </div>
         <br>
@@ -76,58 +80,62 @@
 
     <div ng-show="vm.escalaPersonalizada == vm.escalaEnum.mensal" style="border: 1px solid !important;" class="mes">
         <div style="border-bottom: 1px solid;" class="row row-no-padding" ng-click="vm.setarRepeticaoMensal(1)">
-            <div class="col col-33">
+            <div class="col">
                 <ion-radio style="background-color: transparent !important; border: 1px solid;" ng-checked="vm.dados.agendamento.diaMes">No dia</ion-radio>
             </div>
             &nbsp
-            <div class="col">
+            <div class="col col-20">
                 <input style="position: relative; top: 10px;" ng-model="vm.dados.agendamento.diaMes" type="number">
             </div>
-            <div class="col">
+            <div class="col col-33">
                 <span style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
             </div>
         </div>
 
-        <div class="row" ng-click="vm.setarRepeticaoMensal(2)">
-            <br>
-            <div class="col col-20" ng-click="">
-                <ion-radio style="margin: 7px 0 5px 0;background-color: transparent !important; border: 1px solid;" ng-checked="vm.dados.agendamento.semanaMes && vm.dados.agendamento.diaSemana">Na</ion-radio>
+        <div ng-click="vm.setarRepeticaoMensal(2)">
+            <div class="row row-no-padding" style="margin: 1px;">
+                <br>
+                <div class="col col-33" ng-click="">
+                    <ion-radio ng-checked="vm.dados.agendamento.semanaMes && vm.dados.agendamento.diaSemana">Na</ion-radio>
+                </div>
+                &nbsp
+                <div class="col">
+                    <label class="item item-input item-select">
+                        <span class="item-input">a</span>
+                        <select ng-model="vm.dados.agendamento.semanaMes">
+                            <option value="1">1ª</option>
+                            <option value="2">2ª</option>
+                            <option value="3">3ª</option>
+                            <option value="4">4ª</option>
+                        </select>
+                    </label>
+                </div>
             </div>
-            &nbsp
-            <div class="col col-20">
-                <label class="item item-input item-select">
-                    <span class="item-input">a</span>
-                    <select ng-model="vm.dados.agendamento.semanaMes">
-                        <option value="1">1ª</option>
-                        <option value="2">2ª</option>
-                        <option value="3">3ª</option>
-                        <option value="4">4ª</option>
-                    </select>
-                </label>
+            <div class="row row-no-padding" style="margin: 2px">
+                <div class="col">
+                    <label class="item item-input item-select">
+                        <span class="item-input">a</span>
+                        <select ng-model="vm.dados.agendamento.diaSemana">
+                            <option ng-value="vm.diaSemana.domingo">Domingo</option>
+                            <option ng-value="vm.diaSemana.segunda">Segunda-feira</option>
+                            <option ng-value="vm.diaSemana.terca">Terça-feira</option>
+                            <option ng-value="vm.diaSemana.quarta">Quarta-feira</option>
+                            <option ng-value="vm.diaSemana.quinta">Quinta-feira</option>
+                            <option ng-value="vm.diaSemana.sexta">Sexta-feira</option>
+                            <option ng-value="vm.diaSemana.sabado">Sábado</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col col-33">
+                    <span style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
+                </div>
+                <br>
             </div>
-            <div class="col col-33">
-                <label class="item item-input item-select">
-                    <span class="item-input">a</span>
-                    <select ng-model="vm.dados.agendamento.diaSemana">
-                        <option ng-value="vm.diaSemana.domingo">Domingo</option>
-                        <option ng-value="vm.diaSemana.segunda">Segunda-feira</option>
-                        <option ng-value="vm.diaSemana.terca">Terça-feira</option>
-                        <option ng-value="vm.diaSemana.quarta">Quarta-feira</option>
-                        <option ng-value="vm.diaSemana.quinta">Quinta-feira</option>
-                        <option ng-value="vm.diaSemana.sexta">Sexta-feira</option>
-                        <option ng-value="vm.diaSemana.sabado">Sábado</option>
-                    </select>
-                </label>
-            </div>
-            <div class="col">
-                <span style="position: relative; top: 15px !important; font-size: 15px;"><center>de cada mês</center></span>
-            </div>
-            <br>
         </div>
     </div>
 
 
-
+    <br>
     <div class="row row-no-padding">
         <div class="col col-50">
             <label class="item item-input item-select">

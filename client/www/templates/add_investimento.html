@@ -1,7 +1,7 @@
 <ion-view view-title="Inserir Investimento">
 	<ion-content class="padrao has-header padding">
 		<form name="investimento">
-			<span class="input-label">Tipo de investimento</span>
+			<span class="input-label texto-input">Tipo de investimento</span>
 			<label class="item item-input item-select">
                 <span class="item-input">Tipo</span>
                 <select>
@@ -12,9 +12,18 @@
                 </select>
             </label> 
             <br> 
-            <ion-checkbox class="check">Investimento iniciado</ion-checkbox>
-            <br>
-            <span class="input-label">Valor investido</span>
+            <ion-checkbox class="check texto-input">Investimento iniciado</ion-checkbox>
+            
+            <div ng-hide="">
+            	<br>
+            	<span class="input-label">Data de inicio</span>
+   				<label class="item item-input">
+        			<input type="date" ng-model="vm.dados.data">
+    			</label>
+    			<br>
+    		</div>
+    		
+            <span class="input-label texto-input">Valor investido</span>
             <div class="row row-no-padding">
             	<div class="col col-25">
             		<label class="item item-input item-select">
@@ -32,8 +41,24 @@
       	  			</label>
             	</div>
             </div>
-			<br>
-			<span class="input-label">Tempo de investimento</span>
+			<div ng-hide="1">
+				<br>
+				<span class="input-label" ng-hide="">Valor atual</span>
+				<div class="row row-no-padding">
+            		<div class="col col-10">
+            			<label style="position: absolute; margin-left: 15px; margin-top: 12px;">R$</label>
+            		</div>
+            		&nbsp&nbsp
+            		<div class="col">
+            			<label class="item item-input">
+        					<input type="text" placeholder="0,00">
+      	  				</label>
+            		</div>
+            	</div>
+            	<br>
+        	</div>
+        	<br>
+			<span class="input-label texto-input">Tempo de investimento</span>
 			<div class="row row-no-padding">
             	<div class="col">
             		<label class="item item-input">

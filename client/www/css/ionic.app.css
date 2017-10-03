@@ -212,6 +212,10 @@ a.text-right {
   border: none !important;
   background-color: transparent !important; }
 
+.texto-input {
+  max-width: 100% !important;
+  width: 100% !important; }
+
 .popup-container .popup {
   width: 85% !important; }
 

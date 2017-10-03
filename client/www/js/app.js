@@ -75,6 +75,18 @@
                     }
                 })
 
+                .state('app.lista_objetivos', {
+                    url: '/lista_objetivos',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/lista_objetivos.html',
+                            
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
                 .state('app.lista_investimentos', {
                     url: '/lista_investimentos',
                     views: {
@@ -91,6 +103,17 @@
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_investimento.html',
+                            controller: 'listaContaController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_objetivo', {
+                    url: '/add_objetivo',
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_objetivo.html',
                             controller: 'listaContaController',
                             controllerAs: 'vm'
                         }

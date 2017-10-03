@@ -1,0 +1,41 @@
+<ion-view view-title="Inserir Objetivo">
+	<ion-content class="padrao has-header padding">
+		<form name="objetivo">
+			<span class="input-label">Descrição</span>
+			<label class="item item-input">
+                <input type="text">
+            </label>
+            <br> 
+            
+            <span class="input-label texto-input">Valor a ser alcançado</span>
+            <div class="row row-no-padding">
+                <div class="col col-25">
+                    <label class="item item-input item-select">
+                        <span class="item-input">Moeda</span>
+                        <select>
+                            <option>R$</option>
+                            <option>$</option>
+                        </select>   
+                    </label>
+                </div>
+                &nbsp&nbsp
+                <div class="col">
+                    <label class="item item-input">
+                        <input type="text" placeholder="0,00">
+                    </label>
+                </div>
+            </div>
+            <br>
+
+            <span class="input-label texto-input">Data ideal de conclusão (opcional)</span>
+   			<label class="item item-input">
+        		<input type="date" ng-model="vm.dados.data">
+    		</label>
+		</form>
+		<br>
+		<div class="row">
+    		<div class="col col-33"><button class="button button-block">Cancelar</button></div>
+    		<div class="col"><button class="button button-block" ng-click="vm.cadastrar()">Cadastrar</button></div>
+    	</div>
+  </ion-content>
+</ion-view>

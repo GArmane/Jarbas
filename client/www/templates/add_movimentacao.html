@@ -1,7 +1,7 @@
 <ion-view view-title="{{vm.alteracao ? 'Alterar movimentação' : 'Inserir movimentação'}}">
   <ion-content class="padding padrao">
     <form name="cadastro" ng-submit="vm.cadastro()">
-    <span class="input-label">Tipo de movimentação</span>
+    <span class="input-label texto-input">Tipo de movimentação</span>
     <div class="row row-no-padding">
         <div class="col">
           <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao" ng-value="0">Receita</ion-radio> 
@@ -29,7 +29,7 @@
       </div>
 
 
-      <span class="input-label">Grupo de movimentações</span>
+      <span class="input-label texto-input">Grupo de movimentações</span>
       <label class="item item-input item-select">
           <div class="input-label">Grupo</div>
           <select ng-model="vm.dados.grupoMovimentacoesId" ng-options="grupo.id as grupo.nome for grupo in vm.grupos"></select>
@@ -64,7 +64,7 @@
     </label>
     <br>
     
-    <span class="input-label">Repetir movimentação</span>
+    <span class="input-label texto-input">Repetir movimentação</span>
     <label class="item item-input item-select">
         <div class="input-label">Repetir</div>
             <select ng-model="vm.dados.agendamento.escalaTempo" ng-options="escala.id as escala.name for escala in vm.escalaTempo" ng-change="vm.personalizar()">
