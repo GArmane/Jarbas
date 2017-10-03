@@ -11,7 +11,7 @@
         <div class="col">
             <label class="item item-input item-select">
                 <span class="item-input">Repetir</span>
-                <select ng-model="vm.escalaPersonalizada" ng-options="escala.id as escala.name for escala in vm.escalaTempo.slice(0, vm.escalaTempo.length - 1)"></select>
+                <select ng-model="vm.escalaPersonalizada" ng-init="vm.escalaPersonalizada = vm.escalaTempo[0].id" ng-change="vm.resetarAgendamento()" ng-options="escala.id as escala.name for escala in vm.escalaTempo.slice(0, vm.escalaTempo.length - 1)"></select>
             </label>
         </div>
         <div class="col col-25"></div>

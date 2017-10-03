@@ -35,13 +35,13 @@
             personalizado: 5
         };
         vm.diaSemana = {
-            domingo: '0',
-            segunda: '1',
-            terca: '2',
-            quarta: '3',
-            quinta: '4',
-            sexta: '5',
-            sabado: '6'
+            domingo: 0,
+            segunda: 1,
+            terca:   2,
+            quarta:  3,
+            quinta:  4,
+            sexta:   5,
+            sabado:  6
         };
         vm.escalaPersonalizada = 0;
 
@@ -56,6 +56,7 @@
         vm.selecionarDiaSemana = selecionarDiaSemana;
         vm.setarRepeticaoMensal = setarRepeticaoMensal;
         vm.cancelar = cancelar;
+        vm.resetarAgendamento = resetarAgendamento;
 
         activate();
 
@@ -263,7 +264,7 @@
             if (!vm.dados.agendamento.diasSemana)
                 vm.dados.agendamento.diasSemana = [];
             var index = vm.dados.agendamento.diasSemana.indexOf(dia);
-            if (index >= 0)
+            if (index < 0)
                 vm.dados.agendamento.diasSemana.push(dia);
             else
                 vm.dados.agendamento.diasSemana.splice(index, 1);
@@ -308,6 +309,7 @@
                     vm.dados = data;
                     vm.dados.data = new Date(vm.dados.data);
                     associaConta();
+                    agendamentoCarregado();
                 }).error(utilities.apiError);
             $http({
                 url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
@@ -368,6 +370,13 @@
                     escalaTempo: vm.dados.agendamento.escalaTempo
                 };
             }
+        }
+
+        function resetarAgendamento() {
+            vm.dados.agendamento = {
+                escalaTempo: vm.dados.agendamento.escalaTempo
+            };
+            vm.dados.agendamento.diasSemana = [];
         }
     }
 })();

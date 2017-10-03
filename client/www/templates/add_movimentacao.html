@@ -15,7 +15,7 @@
       </div>
       <br>
 
-      <span class="input-label">Conta <span ng-show="vm.contaSelecionada">(Saldo: {{ vm.contaSelecionada.saldo | currency: vm.contaSelecionada.moeda.simbolo + ' ' }})</span></span>
+      <span class="input-label">Conta <span ng-show="vm.contaSelecionada.id">(Saldo: {{ vm.contaSelecionada.saldo | currency: vm.contaSelecionada.moeda.simbolo + ' ' }})</span></span>
       <label class="item item-input item-select">
           <div class="input-label">Conta</div>
           <select ng-model="vm.contaSelecionada" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
