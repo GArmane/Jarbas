@@ -103,7 +103,7 @@ namespace serverTCC.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("Usuario", "Conta contábil não encontrada");
+                    ModelState.AddModelError("Conta Contabil", "Conta contábil não encontrada");
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
