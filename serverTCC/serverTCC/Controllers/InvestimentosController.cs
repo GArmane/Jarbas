@@ -11,7 +11,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Investimentos")]
-    [Authorize]
+    //[Authorize]
     public class InvestimentosController : Controller
     {
         private JarbasContext context;
@@ -55,15 +55,23 @@ namespace serverTCC.Controllers
         /// GET api/Investimentos/Usuario/userId
         /// </summary>
         [HttpGet("Usuario/{userId}")]
-        public IActionResult GetUser([FromRoute] string userId)
+        public async Task<IActionResult> GetUser([FromRoute] string userId)
         {
             try
             {
                 var investimentos = context.Investimento
                     .Include(i => i.Moeda)
                     .Include(i => i.TipoInvestimento)
-                    .Where(i => i.UsuarioId.Equals(userId))
-                    .ForEachAsync(i => AtualizarValor(i, DateTime.Now));
+                    .Where(i => i.UsuarioId.Equals(userId));
+
+                foreach(var investimento in investimentos)
+                {
+                    investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
+                }
+
+                context.Investimento.UpdateRange(investimentos);
+
+                await context.SaveChangesAsync();
 
                 return Ok(investimentos);
             }
@@ -90,7 +98,10 @@ namespace serverTCC.Controllers
 
                 if(investimento != null)
                 {
-                    return Ok(AtualizarValor(investimento, DateTime.Now));
+                    investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
+                    context.Investimento.Update(investimento);              
+                    await context.SaveChangesAsync();
+                    return Ok(investimento);
                 }
                 else
                 {
@@ -166,7 +177,41 @@ namespace serverTCC.Controllers
             }
         }
 
-        private Investimento AtualizarValor(Investimento investimento, DateTime data)
+        /// <summary>
+        /// Prevê o valor de um investimento
+        /// POST api/Investimentos/Prever/id
+        /// </summary>
+        [HttpPost("Prever/{id}")]
+        public async Task<IActionResult> PreverValor([FromRoute]int id, [FromBody]DateTime data)
+        {
+            try
+            {
+                var investimento = await context.Investimento
+                    .Include(i => i.Moeda)
+                    .Include(i => i.TipoInvestimento)
+                    .FirstOrDefaultAsync(i => i.Id.Equals(id));
+
+                if (investimento != null)
+                {
+                    //O metodo para atualizar valor pode ser usado também para a previsão,
+                    //pois ele retorna o valor em decimal referente a uma data passada por parâmetro 
+                    decimal valorFuturo = AtualizarValor(investimento, data);
+                    //Retorna o investimento e o valor futuro
+                    return Ok(new { investimento, valorFuturo});
+                }
+                else
+                {
+                    ModelState.AddModelError("Investimento", "Investimento não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        private Decimal AtualizarValor(Investimento investimento, DateTime data)
         {
             int tempo = TempoEmDias(investimento, data);
 
@@ -191,47 +236,40 @@ namespace serverTCC.Controllers
 
         private int TempoEmDias(Investimento investimento, DateTime data)
         {
-            int dias = 0;
+            int dias = (data.Date - investimento.DataInicio.Date).Days;
 
-
-            if (investimento.DataInicio.Month == data.Month)
+            /*PERGUNTAR PARA SONIA COMO BANCOS TRATAM UM ANO
+             * if (investimento.DataInicio.Year != data.Year)
             {
-                dias = data.Day - investimento.DataInicio.Day;
-            }
-            else
-            {
-                int meses = data.Month - investimento.DataInicio.Month;
-                int diasFinalMes = 0;
-                for (int i = investimento.DataInicio.Day + 1; i <= 30; i++)
-                    diasFinalMes++;
-
-                dias = 30 * (meses - 1);
-                dias += (data.Day - 1) + diasFinalMes;
-            }
+                //Desconta os dias dos anos (tirando o ano de inicio, e o de fim)
+                for (int i = investimento.DataInicio.Year + 1; i <= data.Year - 1; i++)
+                {
+                    //Tira 5 dias por ano pois bancos tratam um ano como tendo 360 dias
+                    dias -= 5;
+                }
+            }*/
 
             return dias;
         }
 
-        private Investimento CalcularValorFuturo(Investimento investimento, int tempo)
+        private Decimal CalcularValorFuturo(Investimento investimento, int tempo)
         {
             double tempoD = (double)tempo;
 
             //Formula para juros compostos
-            double auxD = (double)investimento.ValorInvestido * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
+            double valorD = (double)investimento.ValorInvestido * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
 
             //Os passos abaixo são feitos para garantir a precisão, o procedimento utilizado garante 2 digitos de precisão
-            auxD *= 100;
+            valorD *= 100;
 
             //Trunca o valor para que o mesmo não seja arredondado, causando erro no valor real
-            int auxI = (int)Math.Truncate(auxD);
+            int valorI = (int)Math.Truncate(valorD);
 
             //Passa o valor para decimal e divide por 100 para voltar ao valor certo
-            decimal auxM = new Decimal(auxI);
-            auxM = decimal.Divide(auxM, 100);
+            decimal valorM = new Decimal(valorI);
+            valorM = decimal.Divide(valorM, 100);
 
-            investimento.ValorAtual = auxM;
-
-            return investimento;
+            return valorM;
         }
     }
 }
