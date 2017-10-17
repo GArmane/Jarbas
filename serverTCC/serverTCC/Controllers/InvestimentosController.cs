@@ -11,7 +11,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Investimentos")]
-    //[Authorize]
+    [Authorize]
     public class InvestimentosController : Controller
     {
         private JarbasContext context;
