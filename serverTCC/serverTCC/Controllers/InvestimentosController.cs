@@ -55,7 +55,7 @@ namespace serverTCC.Controllers
         /// GET api/Investimentos/Usuario/userId
         /// </summary>
         [HttpGet("Usuario/{userId}")]
-        public IActionResult GetUser([FromRoute] string userId)
+        public async Task<IActionResult> GetUser([FromRoute] string userId)
         {
             try
             {
@@ -63,6 +63,15 @@ namespace serverTCC.Controllers
                     .Include(i => i.Moeda)
                     .Include(i => i.TipoInvestimento)
                     .Where(i => i.UsuarioId.Equals(userId));
+
+                foreach(var investimento in investimentos)
+                {
+                    investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
+                }
+
+                context.Investimento.UpdateRange(investimentos);
+
+                await context.SaveChangesAsync();
 
                 return Ok(investimentos);
             }
@@ -86,8 +95,12 @@ namespace serverTCC.Controllers
                     .Include(i => i.TipoInvestimento)
                     .FirstOrDefaultAsync(i => i.Id.Equals(id));
 
+
                 if(investimento != null)
                 {
+                    investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
+                    context.Investimento.Update(investimento);              
+                    await context.SaveChangesAsync();
                     return Ok(investimento);
                 }
                 else
@@ -162,6 +175,101 @@ namespace serverTCC.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        /// <summary>
+        /// Prevê o valor de um investimento
+        /// POST api/Investimentos/Prever/id
+        /// </summary>
+        [HttpPost("Prever/{id}")]
+        public async Task<IActionResult> PreverValor([FromRoute]int id, [FromBody]DateTime data)
+        {
+            try
+            {
+                var investimento = await context.Investimento
+                    .Include(i => i.Moeda)
+                    .Include(i => i.TipoInvestimento)
+                    .FirstOrDefaultAsync(i => i.Id.Equals(id));
+
+                if (investimento != null)
+                {
+                    //O metodo para atualizar valor pode ser usado também para a previsão,
+                    //pois ele retorna o valor em decimal referente a uma data passada por parâmetro 
+                    decimal valorFuturo = AtualizarValor(investimento, data);
+                    //Retorna o investimento e o valor futuro
+                    return Ok(new { investimento, valorFuturo});
+                }
+                else
+                {
+                    ModelState.AddModelError("Investimento", "Investimento não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        private Decimal AtualizarValor(Investimento investimento, DateTime data)
+        {
+            int tempo = TempoEmDias(investimento, data);
+
+            switch (investimento.EscalaTempo)
+            {
+                case EscalaTempo.Semanal:
+                    tempo = (int)(tempo / 7);
+                    break;
+                case EscalaTempo.Quinzenal:
+                    tempo = (int)(tempo / 15);
+                    break;
+                case EscalaTempo.Mensal:
+                    tempo = (int)(tempo / 30);
+                    break;
+                case EscalaTempo.Anual:
+                    tempo = (int)(tempo / 360);
+                    break;
+            }
+
+            return CalcularValorFuturo(investimento, tempo);
+        }
+
+        private int TempoEmDias(Investimento investimento, DateTime data)
+        {
+            int dias = (data.Date - investimento.DataInicio.Date).Days;
+
+            /*PERGUNTAR PARA SONIA COMO BANCOS TRATAM UM ANO
+             * if (investimento.DataInicio.Year != data.Year)
+            {
+                //Desconta os dias dos anos (tirando o ano de inicio, e o de fim)
+                for (int i = investimento.DataInicio.Year + 1; i <= data.Year - 1; i++)
+                {
+                    //Tira 5 dias por ano pois bancos tratam um ano como tendo 360 dias
+                    dias -= 5;
+                }
+            }*/
+
+            return dias;
+        }
+
+        private Decimal CalcularValorFuturo(Investimento investimento, int tempo)
+        {
+            double tempoD = (double)tempo;
+
+            //Formula para juros compostos
+            double valorD = (double)investimento.ValorInvestido * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
+
+            //Os passos abaixo são feitos para garantir a precisão, o procedimento utilizado garante 2 digitos de precisão
+            valorD *= 100;
+
+            //Trunca o valor para que o mesmo não seja arredondado, causando erro no valor real
+            int valorI = (int)Math.Truncate(valorD);
+
+            //Passa o valor para decimal e divide por 100 para voltar ao valor certo
+            decimal valorM = new Decimal(valorI);
+            valorM = decimal.Divide(valorM, 100);
+
+            return valorM;
         }
     }
 }
