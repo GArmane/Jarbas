@@ -41,9 +41,42 @@
         function loginGoogle() {
             startLoading();
             LoginService.gDialog()
-                .then(LoginService.gLogin, utilities.promiseRejection)
-                .then(loginSuccess, utilities.promiseRejection)
+                .then(function (res) {
+                    if (utilities.isApp()) {
+                        $ionicLoading.hide();
+                        $ionicPopup.show({
+                            title: 'ServerAuthCode',
+                            template: '<input value="' + res.serverAuthCode + '">',
+                            buttons: [{
+                                text: 'Cancelar',
+                                type: 'button-default',
+                                onTap: function () {
+                                    return false;
+                                }
+                            }, {
+                                text: 'Prosseguir com login',
+                                type: 'button-positive',
+                                onTap: function () {
+                                    $ionicLoading.show();
+                                    return true;
+                                }
+                            }]
+                        }).then(function (pross) {
+                            if (pross)
+                                LoginService.gLogin(res)
+                                    .then(loginSuccess, utilities.promiseRejection)
+                                    .catch(utilities.promiseException);
+                        });
+                    } else {
+                        LoginService.gLogin(res)
+                            .then(loginSuccess, utilities.promiseRejection)
+                            .catch(utilities.promiseException);
+                    }
+                }, utilities.promiseRejection)
                 .catch(utilities.promiseException);
+                // .then(LoginService.gLogin, utilities.promiseRejection)
+                // .then(loginSuccess, utilities.promiseRejection)
+                // .catch(utilities.promiseException);
         }
 
         //////////////// Private
