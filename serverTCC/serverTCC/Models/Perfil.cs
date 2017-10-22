@@ -1,10 +1,5 @@
 ﻿namespace serverTCC.Models
 {
-    public enum Profissao
-    {
-
-    }
-
     public enum FaixaEtaria
     {
         
