@@ -4878,7 +4878,7 @@
 							"showShadow": true,
 							"containerChangeable": false,
 							"containerExtending": false,
-							"left": 496,
+							"left": 480,
 							"top": 360,
 							"width": 60,
 							"height": 25,
@@ -7605,8 +7605,9 @@
 							"_parent": {
 								"$ref": "AAAAAAFdzu/YtT1SR/A="
 							},
-							"name": "MoedId",
+							"name": "MoedaId",
 							"type": "int",
+							"length": 0,
 							"primaryKey": false,
 							"foreignKey": true,
 							"nullable": true,
