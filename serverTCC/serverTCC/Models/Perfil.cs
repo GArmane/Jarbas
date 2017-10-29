@@ -2,7 +2,11 @@
 {
     public enum FaixaEtaria
     {
-        
+        ate16,
+        ate25,
+        ate40,
+        ate64,
+        mais65
     }
     
     public class Perfil
