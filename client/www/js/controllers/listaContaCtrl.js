@@ -11,7 +11,7 @@
         var vm = this;
 
         vm.dados = [];
-        vm.conta = {};
+        vm.conta = new ContaContabil();
         vm.conta.nome = '';
         vm.conta.moeda = null;
         vm.conta.moedaId = null;
@@ -40,7 +40,7 @@
                     text: 'Cancelar',
                     type: 'button-default',
                     onTap: function () {
-                        vm.conta = {};
+                        vm.conta = new ContaContabil();
                         vm.conta.nome = '';
                         return false;
                     }
@@ -58,21 +58,28 @@
                 var conta = JSON.parse(JSON.stringify(vm.conta));
                 conta.moedaId = conta.moeda.id;
                 conta.moeda = null;
-                $http({
-                    method: 'POST',
-                    url: api.url() + 'ContasContabeis/',
-                    data: conta,
-                    headers: auth.header
-                }).success(function (data) {
+                if (utilities.online())
+                    $http({
+                        method: 'POST',
+                        url: api.url() + 'ContasContabeis/',
+                        data: conta,
+                        headers: auth.header
+                    }).success(success)
+                    .error(utilities.apiError);
+                else
+                    success(conta);
+
+                function success(data) {
+                    localEntities.set(data);
                     vm.dados.push(data);
                     data.moeda = vm.conta.moeda;
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Conta contábil adicionada.'
                     });
-                    vm.conta = {};
+                    vm.conta = new ContaContabil();
                     vm.conta.nome = '';
-                }).error(utilities.apiError);
+                }
             });
         }
 
@@ -113,12 +120,19 @@
                 var conta = JSON.parse(JSON.stringify(vm.conta));
                 conta.moedaId = conta.moeda.id;
                 conta.moeda = null;
-                $http({
-                    method: 'PUT',
-                    url: api.url() + 'ContasContabeis/' + vm.conta.id,
-                    data: conta,
-                    headers: auth.header
-                }).success(function (data) {
+                if (utilities.online())
+                    $http({
+                        method: 'PUT',
+                        url: api.url() + 'ContasContabeis/' + vm.conta.id,
+                        data: conta,
+                        headers: auth.header
+                    }).success(success)
+                    .error(utilities.apiError);
+                else
+                    success(conta);
+
+                function success(data) {
+                    localEntities.set(data);
                     vm.dados[index] = data;
                     data.moeda = vm.conta.moeda;
                     $ionicPopup.alert({
@@ -127,7 +141,7 @@
                     });
                     vm.conta = {};
                     vm.conta.nome = '';
-                }).error(utilities.apiError);
+                }
             });
         }
         
@@ -149,12 +163,19 @@
                 title: 'Excluir conta contábil',
                 template: 'Tem certeza que deseja excluir a conta contábil ' + vm.conta.nome + '?'
             }).then(function (res) {
-                if (res)
-                    $http({
-                        method: 'DELETE',
-                        url: api.url() + 'ContasContabeis/' + vm.conta.id,
-                        headers: auth.header
-                    }).success(function () {
+                if (res) {
+                    if (utilities.online())
+                        $http({
+                            method: 'DELETE',
+                            url: api.url() + 'ContasContabeis/' + vm.conta.id,
+                            headers: auth.header
+                        }).success(success)
+                        .error(utilities.apiError);
+                    else
+                        success();
+                    
+                    function success() {
+                        localEntities.remove('ContaContabil', vm.conta.id);
                         vm.dados.splice(index, 1);
                         $ionicPopup.alert({
                             title: 'Sucesso!',
@@ -162,25 +183,49 @@
                         });
                         vm.conta = {};
                         vm.conta.nome = '';
-                    }).error(utilities.apiError);
+                    }
+                }
             });
         }
 
         function carregarDados() {
-            $http({
-                method: 'GET',
-                url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
-                headers: auth.header
-            }).success(function (data) {
-                vm.dados = data;
-            }).error(utilities.apiError);
-            $http({
-                method: 'GET',
-                url: api.url() + 'Moedas',
-                headers: auth.header
-            }).success(function (data) {
-                vm.moedas = data;
-            }).error(utilities.apiError);
+            if (utilities.online()) {
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
+                    headers: auth.header
+                }).success(function (data) {
+                    vm.dados = data;
+                }).error(utilities.apiError);
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'Moedas',
+                    headers: auth.header
+                }).success(function (data) {
+                    vm.moedas = data;
+                }).error(utilities.apiError);
+            } else {
+                localEntities.getAll('ContaContabil').then(function (data) {
+                    vm.dados = data;
+                    associaContaMoeda();
+                });
+                localEntities.getAll('Moeda').then(function (data) {
+                    vm.moedas = data;
+                    associaContaMoeda();
+                });
+            }
+        }
+
+        function associaContaMoeda() {
+            if (vm.dados.length == 0 || vm.moedas.length == 0)
+                return;
+            vm.dados.forEach(function(conta) {
+                for (var i = 0; i < vm.moedas.length; i++) {
+                    var moeda = vm.moedas[i];
+                    if (moeda.id == conta.moedaId)
+                        conta.moeda = moeda;
+                }
+            });
         }
     }
 })();

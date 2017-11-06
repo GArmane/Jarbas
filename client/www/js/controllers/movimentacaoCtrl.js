@@ -45,7 +45,7 @@
         };
         vm.escalaPersonalizada = 0;
 
-        var transferenciaOriginal = {};
+        var movOriginal = {};
 
         vm.salvar = salvar;
         vm.alterar = alterar;
@@ -71,140 +71,6 @@
 
         //////////////// Public
 
-        function salvar() {
-            agendamentoSalvar();
-            if (vm.dados.tipoMovimentacao == 2) {
-                var transf = {
-                    despesa: JSON.parse(JSON.stringify(vm.dados)),
-                    receita: JSON.parse(JSON.stringify(vm.dados))
-                };
-                transf.despesa.tipoMovimentacao = 1;
-                transf.receita.contaContabilId = vm.contaDestino.id;
-                transf.receita.tipoMovimentacao = 0;
-                transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
-
-                $http({
-                    url: api.url() + 'Movimentacoes/Transferencia/',
-                    method: 'POST',
-                    data: transf,
-                    headers: auth.header
-                }).success(function (data) {
-                    history.back();
-                    $ionicPopup.alert({
-                        title: 'Sucesso!',
-                        template: 'Movimentação inserida.'
-                    });
-                }).error(function (data) {
-                    utilities.apiError(data);
-                    agendamentoCarregado();
-                });
-            } else {
-                $http({
-                    url: api.url() + 'Movimentacoes/',
-                    method: 'POST',
-                       data: vm.dados,
-                    headers: auth.header
-                }).success(function (data) {
-                    history.back();
-                    $ionicPopup.alert({
-                        title: 'Sucesso!',
-                        template: 'Movimentação inserida.'
-                    });
-                }).error(function (data) {
-                    agendamentoCarregado();
-                    utilities.apiError(data);
-                });
-            }
-        }
-
-        function alterar() {
-            agendamentoSalvar();
-            if (vm.dados.tipoMovimentacao == 2) {
-                var transf = {
-                    despesa: JSON.parse(JSON.stringify(vm.dados)),
-                    receita: JSON.parse(JSON.stringify(vm.dados))
-                };
-                transf.id = transferenciaOriginal.id;
-                transf.despesa.id = transferenciaOriginal.despesa.id;
-                transf.despesa.tipoMovimentacao = 1;
-                transf.receita.id = transferenciaOriginal.receita.id;
-                transf.receita.contaContabilId = vm.contaDestino.id;
-                transf.receita.tipoMovimentacao = 0;
-                transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
-
-                $http({
-                    url: api.url() + 'Movimentacoes/Transferencia/' + transf.id,
-                    method: 'PUT',
-                    data: transf,
-                    headers: auth.header
-                }).success(function (data) {
-                    history.back();
-                    $ionicPopup.alert({
-                        title: 'Sucesso!',
-                        template: 'Movimentação alterada.'
-                    });
-                }).error(function (data) {
-                    agendamentoCarregado();
-                    utilities.apiError(data);
-                });
-            } else {
-                $http({
-                    url: api.url() + 'Movimentacoes/' + vm.dados.id,
-                    method: 'PUT',
-                    data: vm.dados,
-                    headers: auth.header
-                }).success(function (data) {
-                    history.back();
-                    $ionicPopup.alert({
-                        title: 'Sucesso!',
-                        template: 'Movimentação alterada.'
-                    });
-                }).error(function (data) {
-                    agendamentoCarregado();
-                    utilities.apiError(data);
-                });
-            }
-        }
-
-        function excluir() {
-            $ionicPopup.confirm({
-                title: 'Excluir movimentação',
-                template: 'Tem certeza que deseja excluir a movimentação ' + vm.dados.descricao + '?'
-            }).then(function (res) {
-                if (res) {
-                    if (vm.dados.tipoMovimentacao == 2) {
-                        $http({
-                            method: 'DELETE',
-                            url: api.url() + '/Movimentacoes/Transferencia/' + vm.dados.id,
-                            headers: auth.header
-                        }).success(function () {
-                            history.back();
-                            $ionicPopup.alert({
-                                title: 'Sucesso!',
-                                template: 'Movimentação excluída.'
-                            });
-                        }).error(utilities.apiError);
-                    } else {
-                        $http({
-                            method: 'DELETE',
-                            url: api.url() + 'Movimentacoes/' + vm.dados.id,
-                            headers: auth.header
-                        }).success(function () {
-                            history.back();
-                            $ionicPopup.alert({
-                                title: 'Sucesso!',
-                                template: 'Movimentação excluída.'
-                            });
-                        }).error(utilities.apiError);
-                    }
-                }
-            });
-        }
-
-        function cancelar() {
-            history.back();
-        }
-
         function listaContaTransf() {
             vm.contasTransf = [];
             if (vm.contaSelecionada.id) {
@@ -216,6 +82,208 @@
                 if (vm.contasTransf.length > 0)
                     vm.contaDestino = vm.contasTransf[0];
             }
+        }
+
+        function salvar() {
+            agendamentoSalvar();
+            vm.dados.contaContabilId = vm.contaSelecionada.id;
+            if (vm.dados.tipoMovimentacao == 2) {
+                var transf = new Transferencia();
+                transf.despesa = JSON.parse(JSON.stringify(vm.dados));
+                transf.receita = JSON.parse(JSON.stringify(vm.dados));
+                transf.despesa.tipoMovimentacao = 1;
+                transf.receita.contaContabilId = vm.contaDestino.id;
+                transf.receita.tipoMovimentacao = 0;
+                transf.receita.agendamento = null;
+                transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
+
+                if (utilities.online())
+                    $http({
+                        url: api.url() + 'Movimentacoes/Transferencia/',
+                        method: 'POST',
+                        data: transf,
+                        headers: auth.header
+                    }).success(successTransf)
+                    .error(error);
+                else
+                    successTransf(transf);
+            } else {
+                if (utilities.online())
+                    $http({
+                        url: api.url() + 'Movimentacoes/',
+                        method: 'POST',
+                        data: vm.dados,
+                        headers: auth.header
+                    }).success(successMov)
+                    .error(error);
+                else
+                    successMov(vm.dados);
+            }
+
+            function successTransf(data) {
+                localEntities.set(data);
+
+                vm.contaSelecionada.saldo -= +vm.dados.valor;
+                vm.contaDestino.saldo += +vm.dados.valor;
+                localEntities.set(vm.contaSelecionada);
+                localEntities.set(vm.contaDestino);
+                
+                history.back();
+                $ionicPopup.alert({
+                    title: 'Sucesso!',
+                    template: 'Movimentação inserida.'
+                });
+            }
+            
+            function successMov(data) {
+                localEntities.set(data);
+                
+                if (vm.dados.tipoMovimentacao == 0)
+                    vm.contaSelecionada.saldo += +vm.dados.valor;
+                else
+                    vm.contaSelecionada.saldo -= +vm.dados.valor;
+                localEntities.set(vm.contaSelecionada);
+                
+                history.back();
+                $ionicPopup.alert({
+                    title: 'Sucesso!',
+                    template: 'Movimentação inserida.'
+                });
+            }
+
+            function error(data) {
+                agendamentoCarregado();
+                utilities.apiError(data);
+            }
+        }
+
+        function alterar() {
+            agendamentoSalvar();
+            if (vm.dados.tipoMovimentacao == 2) {
+                var transf = {
+                    despesa: JSON.parse(JSON.stringify(vm.dados)),
+                    receita: JSON.parse(JSON.stringify(vm.dados))
+                };
+                transf.id = movOriginal.id;
+                transf.despesaId = movOriginal.despesa.id;
+                transf.despesa.id = movOriginal.despesa.id;
+                transf.despesa.tipoMovimentacao = 1;
+                transf.receitaId = movOriginal.receita.id;
+                transf.receita.id = movOriginal.receita.id;
+                transf.receita.contaContabilId = vm.contaDestino.id;
+                transf.receita.tipoMovimentacao = 0;
+                transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
+
+                if (utilities.online())
+                    $http({
+                        url: api.url() + 'Movimentacoes/Transferencia/' + transf.id,
+                        method: 'PUT',
+                        data: transf,
+                        headers: auth.header
+                    }).success(successTransf)
+                    .error(error);
+                else
+                    successTransf(transf);
+            } else {
+                if (utilities.online())
+                    $http({
+                        url: api.url() + 'Movimentacoes/' + vm.dados.id,
+                        method: 'PUT',
+                        data: vm.dados,
+                        headers: auth.header
+                    }).success(successMov)
+                    .error(error);
+                else
+                    successMov(vm.dados);
+            }
+
+            function successMov(data) {
+                desfazMovOriginal();
+                localEntities.set(data);
+
+                if (vm.dados.tipoMovimentacao == 0)
+                    vm.contaSelecionada.saldo += +vm.dados.valor;
+                else
+                    vm.contaSelecionada.saldo -= +vm.dados.valor;
+                localEntities.set(vm.contaSelecionada);
+
+                history.back();
+                $ionicPopup.alert({
+                    title: 'Sucesso!',
+                    template: 'Movimentação alterada.'
+                });
+            }
+
+            function successTransf(data) {
+                desfazMovOriginal();
+                localEntities.set(data);
+
+                localEntities.set(data);
+                vm.contaSelecionada.saldo -= +vm.dados.valor;
+                vm.contaDestino.saldo += +vm.dados.valor;
+                localEntities.set(vm.contaSelecionada);
+                localEntities.set(vm.contaDestino);
+
+                history.back();
+                $ionicPopup.alert({
+                    title: 'Sucesso!',
+                    template: 'Movimentação alterada.'
+                });
+            }
+
+            function error(data) {
+                agendamentoCarregado();
+                utilities.apiError(data);
+            }
+        }
+
+        function excluir() {
+            $ionicPopup.confirm({
+                title: 'Excluir movimentação',
+                template: 'Tem certeza que deseja excluir a movimentação ' + vm.dados.descricao + '?'
+            }).then(function (res) {
+                if (res) {
+                    if (utilities.online()) {
+                        if (vm.dados.tipoMovimentacao == 2) {
+                            $http({
+                                method: 'DELETE',
+                                url: api.url() + '/Movimentacoes/Transferencia/' + vm.dados.id,
+                                headers: auth.header
+                            }).success(success)
+                            .error(utilities.apiError);
+                        } else
+                            $http({
+                                method: 'DELETE',
+                                url: api.url() + 'Movimentacoes/' + vm.dados.id,
+                                headers: auth.header
+                            }).success(success)
+                            .error(utilities.apiError);
+                    } else
+                        success();
+                }
+                
+                function success() {
+                    if (vm.dados.agendamentoId)
+                    localEntities.remove('Agendamento', vm.dados.agendamentoId);
+                    if (vm.dados.tipoMovimentacao == 2) {
+                        localEntities.remove('Movimentacao', movOriginal.despesaId);
+                        localEntities.remove('Movimentacao', movOriginal.receitaId);                        
+                        localEntities.remove('Transferencia', vm.dados.id);
+                    }
+                    else
+                    localEntities.remove('Movimentacao', vm.dados.id);
+                    desfazMovOriginal();
+                    history.back();
+                    $ionicPopup.alert({
+                        title: 'Sucesso!',
+                        template: 'Movimentação excluída.'
+                    });
+                }
+            });
+        }
+
+        function cancelar() {
+            history.back();
         }
 
         function personalizar() {
@@ -285,54 +353,95 @@
         //////////////// Private
 
         function carregarDados() {
-            if ($stateParams.id && $stateParams.transf == 'true')
+            if (utilities.online()) {
+                if ($stateParams.id && $stateParams.transf == 'true')
+                    $http({
+                        url: api.url() + 'Movimentacoes/Transferencia/' + $stateParams.id,
+                        method: 'GET',
+                        headers: auth.header
+                    }).success(successTransf)
+                        .error(utilities.apiError);
+                else if ($stateParams.id)
+                    $http({
+                        url: api.url() + 'Movimentacoes/' + $stateParams.id,
+                        method: 'GET',
+                        headers: auth.header
+                    }).success(successMov)
+                        .error(utilities.apiError);
+
                 $http({
-                    url: api.url() + 'Movimentacoes/Transferencia/' + $stateParams.id,
+                    url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
                     method: 'GET',
                     headers: auth.header
-                }).success(function (data) {
-                    vm.dados = data.despesa;
-                    transferenciaOriginal = data;
-                    vm.originalTransf = true;
-                    vm.dados.tipoMovimentacao = 2;
-                    vm.dados.data = new Date(vm.dados.data);
-                    associaConta();
-                    agendamentoCarregado();
-                    listaContaTransf();
-                }).error(utilities.apiError);
-            else if ($stateParams.id)
+                }).success(successConta)
+                    .error(utilities.apiError);
+
                 $http({
-                    url: api.url() + 'Movimentacoes/' + $stateParams.id,
+                    url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
                     method: 'GET',
                     headers: auth.header
-                }).success(function (data) {
-                    vm.dados = data;
-                    vm.dados.data = new Date(vm.dados.data);
-                    associaConta();
-                    agendamentoCarregado();
-                }).error(utilities.apiError);
-            $http({
-                url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
-                method: 'GET',
-                headers: auth.header
-            }).success(function (data) {
+                }).success(successGrupo)
+                    .error(utilities.apiError);
+            } else {
+                if ($stateParams.id && $stateParams.transf == 'true')
+                    localEntities.get('Transferencia', $stateParams.id, ['receita', 'despesa.agendamento'])
+                        .then(successTransf, utilities.apiError);
+                else if ($stateParams.id)
+                    localEntities.get('Movimentacao', $stateParams.id, ['agendamento'])
+                        .then(successMov, utilities.apiError);
+
+                localEntities.getAll('ContaContabil').then(successConta, utilities.apiError);
+                localEntities.getAll('GrupoMovimentacoes').then(successGrupo, utilities.apiError);
+            }
+
+            function successTransf(data) {
+                vm.dados = data.despesa;
+                movOriginal = JSON.parse(JSON.stringify(data));
+                vm.originalTransf = true;
+                vm.dados.tipoMovimentacao = 2;
+                vm.dados.data = new Date(vm.dados.data);
+                associaConta();
+                agendamentoCarregado();
+                listaContaTransf();
+            }
+
+            function successMov(data) {
+                vm.dados = data;
+                movOriginal = JSON.parse(JSON.stringify(data));
+                vm.dados.data = new Date(vm.dados.data);
+                associaConta();
+                agendamentoCarregado();
+            }
+
+            function successConta(data) {
                 vm.contas = data;
+
+                if (vm.contas.length > 0) {
+                    localEntities.getAll('Moeda').then(function (data) {
+                        var moedaId;
+                        function findMoeda(moeda) {
+                            return moeda.id == moedaId;
+                        }
+                        vm.contas.forEach(function(conta) {
+                            moedaId = conta.moedaId;
+                            conta.moeda = data.find(findMoeda);
+                        }, this);
+                    }, utilities.apiError);
+                }
+
                 if (vm.contas && vm.contas.length > 0 && !$stateParams.id) {
                     vm.contaSelecionada = vm.contas[0];
                     vm.dados.contaContabilId = vm.contaSelecionada.id;
                 } else
                     associaConta();
                 agendamentoCarregado();
-            }).error(utilities.apiError);
-            $http({
-                url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
-                method: 'GET',
-                headers: auth.header
-            }).success(function (data) {
+            }
+
+            function successGrupo(data) {
                 vm.grupos = data;
                 if (vm.grupos && vm.grupos.length > 0 && !$stateParams.id)
                     vm.dados.grupoMovimentacoesId = vm.grupos[0].id;
-            }).error(utilities.apiError);
+            }
         }
 
         function associaConta() {
@@ -342,8 +451,38 @@
                 });
                 if ($stateParams.transf == 'true')
                     vm.contaDestino = vm.contas.find(function (conta) {
-                        return conta.id == transferenciaOriginal.receita.contaContabilId;
+                        return conta.id == movOriginal.receita.contaContabilId;
                     });
+                listaContaTransf();
+            }
+        }
+
+        function desfazMovOriginal() {
+            var contaId;
+            var contaOrigem;
+            var contaDestino;
+            function findConta(conta) {
+                return conta.id == contaId;
+            }
+            if (movOriginal.despesa) { // é transferência
+                contaId = movOriginal.despesa.contaContabilId;
+                contaOrigem = vm.contas.find(findConta);
+                contaId = movOriginal.receita.contaContabilId;
+                contaDestino = vm.contas.find(findConta);
+
+                contaOrigem.saldo += movOriginal.despesa.valor;
+                localEntities.set(contaOrigem);
+                contaDestino.saldo -= movOriginal.receita.valor;
+                localEntities.set(contaDestino);
+            } else {
+                contaId = movOriginal.contaContabilId;
+                contaOrigem = vm.contas.find(findConta);
+
+                if (movOriginal.tipoMovimentacao == 0)
+                    contaOrigem.saldo -= movOriginal.valor;
+                else
+                    contaOrigem.saldo += movOriginal.valor;
+                localEntities.set(contaOrigem);
             }
         }
 
@@ -353,17 +492,17 @@
             if (!vm.dados.agendamento) { // não tem agendamento
                 vm.dados.agendamento = {};
                 vm.dados.agendamento.diasSemana = [];
-            } else if (vm.dados.agendamento.escalaTempo && vm.dados.agendamento.qtdTempo != 0) { // agendamento personalizado
+            } else if (vm.dados.agendamento.escalaTempo != null && vm.dados.agendamento.qtdTempo != 0) { // agendamento personalizado
                 vm.escalaPersonalizada = vm.dados.agendamento.escalaTempo;
-                vm.dados.agendamento.escalaTempo = vm.escalaTempo[vm.escalaTempo.length - 1];
+                vm.dados.agendamento.escalaTempo = vm.escalaTempo[vm.escalaTempo.length - 1].id;
             }
         }
 
         function agendamentoSalvar() {
-            if (!vm.dados.agendamento.escalaTempo) { // não tem agendamento
+            if (vm.dados.agendamento.escalaTempo == null) { // não tem agendamento
                 vm.dados.agendamentoId = null;
                 vm.dados.agendamento = null;
-            } else if (vm.dados.agendamento.escalaTempo == vm.escalaTempo[vm.escalaTempo.length - 1]) { // agendamento personalizado
+            } else if (vm.dados.agendamento.escalaTempo == vm.escalaTempo[vm.escalaTempo.length - 1].id) { // agendamento personalizado
                 vm.dados.agendamento.escalaTempo = vm.escalaPersonalizada;
             } else { // se for normal, normaliza
                 vm.dados.agendamento = {

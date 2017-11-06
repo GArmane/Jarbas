@@ -11,8 +11,10 @@
         this.promiseException = promiseException;
         this.apiError = apiError;
         this.isApp = isApp;
+        this.online = online;
 
         var _isApp = false;
+        var isOnline = false;
         
         activate();
 
@@ -57,6 +59,10 @@
 
         function isApp() {
             return _isApp;
+        }
+
+        function online() {
+            return isOnline && navigator.onLine;
         }
     }
 })();
