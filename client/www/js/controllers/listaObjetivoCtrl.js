@@ -26,13 +26,18 @@
         //////////////// Private
 
         function carregarDados() {
-            $http({
-                method: 'GET',
-                url: api.url() + 'Objetivos/Usuario/' + auth.id,
-                headers: auth.header
-            }).success(function (data) {
+            if (utilities.online())
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'Objetivos/Usuario/' + auth.id,
+                    headers: auth.header
+                }).success(success).error(utilities.apiError);
+            else
+                localEntities.getAll('Objetivo').then(success);
+
+            function success(data) {
                 vm.dados = data;
-            }).error(utilities.apiError);
+            }
         }
     }
 })();

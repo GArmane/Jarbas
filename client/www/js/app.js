@@ -85,7 +85,7 @@
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/lista_objetivos.html',
-                            
+                            controller: 'listaObjetivoController',
                             controllerAs: 'vm'
                         }
                     }
@@ -118,7 +118,18 @@
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_objetivo.html',
-                            controller: 'listaContaController',
+                            controller: 'objetivoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_objetivo_param', {
+                    url: '/add_objetivo/:id',
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_objetivo.html',
+                            controller: 'objetivoController',
                             controllerAs: 'vm'
                         }
                     }
