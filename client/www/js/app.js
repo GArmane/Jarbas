@@ -2,8 +2,11 @@
     'use strict';
 
     angular.module('starter')
+        .run(run)
+        .config(config);
 
-        .run(function ($ionicPlatform) {
+        run.$inject = ['$ionicPlatform'];
+        function run($ionicPlatform) {
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -16,9 +19,10 @@
                     StatusBar.styleDefault();
                 }
             });
-        })
+        }
 
-        .config(function ($stateProvider, $urlRouterProvider) {
+        config.$inject = ['$stateProvider', '$urlRouterProvider'];
+        function config($stateProvider, $urlRouterProvider, auth) {
             $stateProvider
                 .state('app', {
                     url: '/app',
@@ -187,6 +191,8 @@
                 })*/;
             
             // Rota default
-            $urlRouterProvider.otherwise('/login');
-        });
+            $urlRouterProvider.otherwise(function () {
+                return window.authDone ? '/app/tela_inicial' : '/login';
+            });
+        }
 })();

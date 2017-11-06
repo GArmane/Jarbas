@@ -18,34 +18,96 @@
         this.verify = function () {
             if (!this.done)
                 $state.go('login');
+            window.authDone = this.done;
             return this.done;
         };
     }
 
-    LoginService.$inject = ['api', '$http', 'auth', 'utilities'];
-    function LoginService(api, $http, auth, utilities) {
+    LoginService.$inject = ['api', '$http', 'auth', 'utilities', '$rootScope'];
+    function LoginService(api, $http, auth, utilities, $rootScope) {
         this.defineAuth = defineAuth;
         this.doLogin = doLogin;
         this.sendRecoverCode = sendRecoverCode;
         this.recoverChangePswd = recoverChangePswd;
         this.gDialog = gDialog;
         this.gLogin = gLogin;
+        this.silentLogin = silentLogin;
+        this.logout = logout;
 
         var auth2 = {};
         var googleLoaded = false;
-        
-        activate();
 
+        $rootScope.logout = logout;
+        
         ////////////////
 
-        function activate() { }
+        function silentLogin() {
+            return new Promise(function (resolve, reject) {
+                try {
+                    localforage.getItem('auth').then(function (value) {
+                        if (!value) {
+                            reject();
+                            return;
+                        }
+
+                        // Verifica se o token venceu (ou se está próximo disso)
+                        if ((value.date.getTime() + ((value.expiration - 1800) * 1000)) <= new Date().getTime())
+                            $http({
+                                method: 'POST',
+                                url: api.token(),
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                transformRequest: formUrlEncode,
+                                data: {
+                                    'client_id': 'jarbasApp',
+                                    'client_secret': 'secret',
+                                    'grant_type': 'refresh_token',
+                                    'scope': 'jarbasApi offline_access',
+                                    'refresh_token': value.refresh
+                                }
+                            }).success(function (data) {
+                                auth.done = true;
+                                auth.date = new Date();
+                                auth.token = data.access_token;
+                                auth.expiration = data.expires_in;
+                                auth.refresh = data.refresh_token;
+                                auth.header = { 'Authorization': 'Bearer ' + auth.token };
+                                auth.id = value.id;
+                                localforage.setItem('auth', new Auth(auth));
+                                auth.verify();
+                                resolve();
+                            }).error(function (data) {
+                                reject();
+                            });
+                        else {
+                            auth.done = value.done;
+                            auth.data = value.data;
+                            auth.token = value.token;
+                            auth.expiration = value.expiration;
+                            auth.refresh = value.refresh;
+                            auth.header = value.header;
+                            auth.id = value.id;
+                            auth.verify();
+                            resolve();
+                        }
+                    });
+                } catch (ex) {
+                    reject(ex);
+                }
+            });
+        }
+
+        function logout() {
+            localforage.removeItem('auth');
+            auth.done = false;
+            auth.verify();
+        }
         
         function defineAuth(authResult, email) {
             return new Promise(function (resolve, reject) {
                 try {
                     if (authResult) {
                         auth.done = true;
-                        auth.data = authResult;
+                        auth.date = new Date();
                         auth.token = authResult.access_token;
                         auth.expiration = authResult.expires_in;
                         auth.refresh = authResult.refresh_token;
@@ -58,6 +120,7 @@
                         }).success(function (data) {
                             try {
                                 auth.id = data.id;
+                                localforage.setItem('auth', new Auth(auth));
                                 resolve(data);
                             } catch (error) {
                                 utilities.promiseException(error);
@@ -197,15 +260,13 @@
                 return new Promise(function (resolve, reject) {
                     try {
                         window.plugins.googleplus.login({
-                            'scopes': '',
+                            'scopes': 'email',
                             'webClientId': '646057312978-8voqfqkpn4aicqnamtdl7o2pj0k4qkp4.apps.googleusercontent.com',
                             'offline': true,
                         }, function (authRes) {
                             resolve(authRes);
-                            // alert(JSON.stringify(obj)); // do something useful instead of alerting
                         }, function (msg) {
                             reject('Ocorreu uma falha no processo de autenticação com Google: ' + msg);
-                            // alert('error: ' + msg);
                         });
                     } catch (error) {
                         utilities.promiseException(error);
