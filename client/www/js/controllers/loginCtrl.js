@@ -28,7 +28,10 @@
         //////////////// Public
 
         function activate() {
-            // alert(document.URL);
+            $ionicLoading.show();
+            LoginService.silentLogin().then(loginSuccess, function () {
+                $ionicLoading.hide();
+            });
         }
 
         function fazerLogin() {

@@ -11,7 +11,7 @@
         var vm = this;
 
         vm.dados = [];
-        vm.grupo = {};
+        vm.grupo = new GrupoMovimentacoes();
         vm.grupo.nome = '';
 
         vm.add = add;
@@ -36,7 +36,7 @@
                     text: 'Cancelar',
                     type: 'button-default',
                     onTap: function () {
-                        vm.grupo = {};
+                        vm.grupo = new GrupoMovimentacoes();
                         vm.grupo.nome = '';
                         return false;
                     }
@@ -51,20 +51,27 @@
                 if (!salvar)
                     return;
                 vm.grupo.usuarioId = auth.id;
-                $http({
-                    method: 'POST',
-                    url: api.url() + 'GrupoMovimentacoes/',
-                    data: vm.grupo,
-                    headers: auth.header
-                }).success(function (data) {
+                if (utilities.online())
+                    $http({
+                        method: 'POST',
+                        url: api.url() + 'GrupoMovimentacoes/',
+                        data: vm.grupo,
+                        headers: auth.header
+                    }).success(success)
+                    .error(utilities.apiError);
+                else
+                    success(vm.grupo);
+
+                function success(data) {
+                    localEntities.set(data);
                     vm.dados.push(data);
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Grupo adicionado.'
                     });
-                    vm.grupo = {};
+                    vm.grupo = new GrupoMovimentacoes();
                     vm.grupo.nome = '';
-                }).error(utilities.apiError);
+                }
             });
         }
 
@@ -99,20 +106,28 @@
             }).then(function (salvar) {
                 if (!salvar)
                     return;
-                $http({
-                    method: 'PUT',
-                    url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
-                    data: vm.grupo,
-                    headers: auth.header
-                }).success(function (data) {
+                
+                if (utilities.online())
+                    $http({
+                        method: 'PUT',
+                        url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
+                        data: vm.grupo,
+                        headers: auth.header
+                    }).success(success)
+                    .error(utilities.apiError);
+                else
+                    success(vm.grupo);
+
+                function success(data) {
+                    localEntities.set(data);
                     vm.dados[index] = data;
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Grupo alterado.'
                     });
-                    vm.grupo = {};
+                    vm.grupo = new GrupoMovimentacoes();
                     vm.grupo.nome = '';
-                }).error(utilities.apiError);
+                }
             });
         }
         
@@ -134,31 +149,46 @@
                 title: 'Excluir grupo',
                 template: 'Tem certeza que deseja excluir o grupo ' + vm.grupo.nome + '?'
             }).then(function (res) {
-                if (res)
+                if (!res)
+                    return;
+
+                if (utilities.online())
                     $http({
                         method: 'DELETE',
                         url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
                         headers: auth.header
-                    }).success(function () {
-                        vm.dados.splice(index, 1);
-                        $ionicPopup.alert({
-                            title: 'Sucesso!',
-                            template: 'Grupo excluído.'
-                        });
-                        vm.grupo = {};
-                        vm.grupo.nome = '';
-                    }).error(utilities.apiError);
+                    }).success(success)
+                    .error(utilities.apiError);
+                else
+                    success();
+
+                function success() {
+                    localEntities.remove('GrupoMovimentacoes', vm.grupo.id);
+                    vm.dados.splice(index, 1);
+                    $ionicPopup.alert({
+                        title: 'Sucesso!',
+                        template: 'Grupo excluído.'
+                    });
+                    vm.grupo = new GrupoMovimentacoes();
+                    vm.grupo.nome = '';
+                }
             });
         }
 
         function carregarDados() {
-            $http({
-                method: 'GET',
-                url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
-                headers: auth.header
-            }).success(function (data) {
+            if (utilities.online())
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
+                    headers: auth.header
+                }).success(success)
+                .error(utilities.apiError);
+            else
+                localEntities.getAll('GrupoMovimentacoes').then(success);
+
+            function success(data) {
                 vm.dados = data;
-            }).error(utilities.apiError);
+            }
         }
     }
 })();

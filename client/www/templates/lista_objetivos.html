@@ -1,10 +1,10 @@
 <ion-view view-title="Objetivos">
 	<ion-content class="padrao has-header">
 		<div class="list">
-			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
-    			{{conta.nome}}
+			<a class="item" ng-repeat="obj in vm.dados" href="#/app/add_objetivo/{{obj.id}}">
+    			{{obj.descricao}}
     			<span class="item-note">
-					{{conta.saldo | currency: conta.moeda.simbolo + ' '}}
+					{{obj.valor | currency: obj.moeda.simbolo + ' '}}
     			</span>
   			</a>
 		</div>
