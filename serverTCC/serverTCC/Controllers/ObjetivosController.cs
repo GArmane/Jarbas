@@ -11,7 +11,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Objetivos")]
-    [Authorize]
+    //[Authorize]
     public class ObjetivosController : Controller
     {
         private JarbasContext context;
@@ -73,6 +73,35 @@ namespace serverTCC.Controllers
                     .Where(o => o.UsuarioId == userId);
 
                 return Ok(objetivos);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Retorna um objetivos do usuário
+        /// GET api/Objetivos/Usuario/{userId}
+        /// </summary>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            try
+            {
+                var objetivo = await context.Objetivo
+                    .Include(o => o.HistoricoObjetivo)
+                    .FirstOrDefaultAsync(o => o.Id == id);
+
+                if (objetivo != null)
+                {
+                    return Ok(objetivo);
+                }
+                else
+                {
+                    ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
             }
             catch (Exception e)
             {
