@@ -36,6 +36,8 @@
         vm.filtro2Changed = filtro2Changed;
         vm.filtro2DataChanged = filtro2DataChanged;
 
+        var moedas = [];
+
         activate();
 
         function activate() {
@@ -106,41 +108,107 @@
         //////////////// Private
 
         function carregarDados() {
-            $http({
-                url: api.url() + 'Movimentacoes/Usuario/' + auth.id,
-                method: 'GET',
-                headers: auth.header
-            }).success(function (data) {
-                vm.dados = data.movimentacoes;
-                vm.movimentacoes = data;
-                transformaMov();
-                associaContaMov();
-                associaGrupoMov();
-            }).error(utilities.apiError);
-            $http({
-                url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
-                method: 'GET',
-                headers: auth.header
-            }).success(function (data) {
-                vm.contas = data;
-                vm.contas.unshift({ nome: 'Sem filtro' });
-                associaContaMov();
-            }).error(utilities.apiError);
-            $http({
-                url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
-                method: 'GET',
-                headers: auth.header
-            }).success(function (data) {
-                vm.grupos = data;
-                vm.grupos.unshift({ nome: 'Sem filtro' });
-                associaGrupoMov();
-            }).error(utilities.apiError);
+            if (utilities.online()) {
+                $http({
+                    url: api.url() + 'Movimentacoes/Usuario/' + auth.id,
+                    method: 'GET',
+                    headers: auth.header
+                }).success(function (data) {
+                    vm.movimentacoes = data;
+                    transformaMov();
+                    associaContaMov();
+                    associaGrupoMov();
+                }).error(utilities.apiError);
+                $http({
+                    url: api.url() + 'ContasContabeis/Usuario/' + auth.id,
+                    method: 'GET',
+                    headers: auth.header
+                }).success(function (data) {
+                    vm.contas = data;
+                    vm.contas.unshift({ nome: 'Sem filtro' });
+                    associaContaMov();
+                }).error(utilities.apiError);
+                $http({
+                    url: api.url() + 'GrupoMovimentacoes/Usuario/' + auth.id,
+                    method: 'GET',
+                    headers: auth.header
+                }).success(function (data) {
+                    vm.grupos = data;
+                    vm.grupos.unshift({ nome: 'Sem filtro' });
+                    associaGrupoMov();
+                }).error(utilities.apiError);
+            } else {
+                localEntities.getAll('ContaContabil').then(function (data) {
+                    vm.contas = data;
+                    vm.contas.unshift({ nome: 'Sem filtro' });
+                    associaContaMov();
+                    associaContaMoeda();
+                });
+                localEntities.getAll('Moeda').then(function (data) {
+                    moedas = data;
+                    associaContaMoeda();
+                });
+                localEntities.getAll('Movimentacao').then(function (data) {
+                    vm.dados = data;
+                    vm.movimentacoes = {
+                        movimentacoes: data
+                    };
+                    localEntities.getAll('Transferencia').then(function (data) {
+                        var movId;
+                        function findMov(mov) {
+                            return mov.id == movId;
+                        }
+
+                        data.forEach(function(transf) {
+                            movId = transf.receitaId;
+                            var recIdx = vm.dados.findIndex(findMov);
+                            movId = transf.despesaId;
+                            var despIdx = vm.dados.findIndex(findMov);
+
+                            var despesa = vm.dados[despIdx];
+                            var receita = vm.dados[recIdx];
+                            despesa.contaDestinoId = receita.contaContabilId;
+                            despesa.tipoMovimentacao = 2;
+                            despesa.id = transf.id;
+                            vm.dados.splice(recIdx, 1);
+                        }, this);
+
+                        vm.dados.forEach(function (mov) {
+                            mov.data = new Date(mov.data);
+                        });
+                        vm.dados.sort(function (a, b) {
+                            a.data.getTime() - b.data.getTime();
+                        });
+                        vm.movimentacoes = vm.dados;
+
+                        associaContaMov();
+                        associaGrupoMov();
+                    });
+                });
+                localEntities.getAll('GrupoMovimentacoes').then(function (data) {
+                    vm.grupos = data;
+                    vm.grupos.unshift({ nome: 'Sem filtro' });
+                    associaGrupoMov();
+                });
+            }
+        }
+
+        function associaContaMoeda() {
+            if (vm.contas.length == 0 || moedas.length == 0)
+                return;
+            vm.contas.forEach(function(conta) {
+                for (var i = 0; i < moedas.length; i++) {
+                    var moeda = moedas[i];
+                    if (moeda.id == conta.moedaId)
+                        conta.moeda = moeda;
+                }
+            });
         }
 
         function associaGrupoMov() {
-            if (vm.movimentacoes.length == 0 || vm.grupos.length == 0)
+            if (vm.dados.length == 0 || vm.grupos.length == 0)
                 return;
-            vm.movimentacoes.forEach(function(mov) {
+            vm.dados.forEach(function(mov) {
                 for (var i = 0; i < vm.grupos.length; i++) {
                     var grupo = vm.grupos[i];
                     if (grupo.id == mov.grupoMovimentacoesId)
@@ -150,9 +218,9 @@
         }
 
         function associaContaMov() {
-            if (vm.movimentacoes.length == 0 || vm.contas.length == 0)
+            if (vm.dados.length == 0 || vm.contas.length == 0)
                 return;
-            vm.movimentacoes.forEach(function(mov) {
+            vm.dados.forEach(function(mov) {
                 for (var i = 0; i < vm.contas.length; i++) {
                     var conta = vm.contas[i];
                     if (conta.id == mov.contaContabilId)
@@ -179,6 +247,7 @@
             vm.movimentacoes.sort(function (a, b) {
                 a.data.getTime() - b.data.getTime();
             });
+            vm.dados = vm.movimentacoes;
         }
     }
 })();
