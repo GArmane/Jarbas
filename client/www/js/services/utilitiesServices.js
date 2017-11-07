@@ -14,7 +14,7 @@
         this.online = online;
 
         var _isApp = false;
-        var isOnline = false;
+        var isOnline = true;
         
         activate();
 
