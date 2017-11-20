@@ -44,7 +44,7 @@ namespace serverTCC.Controllers
                     return NotFound(ModelState.Values.SelectMany(e => e.Errors));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -64,7 +64,7 @@ namespace serverTCC.Controllers
                     .Include(i => i.TipoInvestimento)
                     .Where(i => i.UsuarioId.Equals(userId));
 
-                foreach(var investimento in investimentos)
+                foreach (var investimento in investimentos)
                 {
                     investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
                 }
@@ -75,9 +75,9 @@ namespace serverTCC.Controllers
 
                 return Ok(investimentos);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return BadRequest(e.Message); 
+                return BadRequest(e.Message);
             }
         }
 
@@ -96,10 +96,10 @@ namespace serverTCC.Controllers
                     .FirstOrDefaultAsync(i => i.Id.Equals(id));
 
 
-                if(investimento != null)
+                if (investimento != null)
                 {
                     investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
-                    context.Investimento.Update(investimento);              
+                    context.Investimento.Update(investimento);
                     await context.SaveChangesAsync();
                     return Ok(investimento);
                 }
@@ -140,7 +140,7 @@ namespace serverTCC.Controllers
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -157,7 +157,7 @@ namespace serverTCC.Controllers
             {
                 var investimento = await context.Investimento.FirstOrDefaultAsync(i => i.Id.Equals(id));
 
-                if(investimento != null)
+                if (investimento != null)
                 {
                     context.Investimento.Remove(investimento);
 
@@ -169,9 +169,9 @@ namespace serverTCC.Controllers
                 {
                     ModelState.AddModelError("Investimento", "Investimento não encontrado");
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
-                } 
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -197,7 +197,7 @@ namespace serverTCC.Controllers
                     //pois ele retorna o valor em decimal referente a uma data passada por parâmetro 
                     decimal valorFuturo = AtualizarValor(investimento, data);
                     //Retorna o investimento e o valor futuro
-                    return Ok(new { investimento, valorFuturo});
+                    return Ok(new { investimento, valorFuturo });
                 }
                 else
                 {
@@ -225,7 +225,7 @@ namespace serverTCC.Controllers
                     .Include(i => i.TipoInvestimento)
                     .FirstOrDefaultAsync(i => i.Id == id);
 
-                if(investimento == null)
+                if (investimento == null)
                 {
                     ModelState.AddModelError("Investimento", "Investimento não encontrado");
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
@@ -233,6 +233,52 @@ namespace serverTCC.Controllers
 
                 investimento.ValorAtual += valor;
 
+                context.Investimento.Update(investimento);
+                await context.SaveChangesAsync();
+                return Ok(investimento);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Transfere dinheiro de uma conta para um investimento
+        /// POST api/Investimentos/TransferirFromConta/{contaId}/{investimentoId}
+        /// </summary>
+        [HttpPost("TransferirFromConta/{contaId}/{investimentoId}")]
+        public async Task<IActionResult> TransferirFromConta([FromRoute] int contaId, [FromRoute] int investimentoId, [FromBody] decimal valor)
+        {
+            try
+            {
+                var contaController = new ContasContabeisController(context);
+                var movController = new MovimentacoesController(context);
+
+                var aux = await contaController.Get(contaId);
+                if(!(aux is OkObjectResult contaObject))
+                {
+                    return aux;
+                }
+                var conta = contaObject.Value as ContaContabil;
+
+                aux = await Get(investimentoId);
+                if(!(aux is OkObjectResult investimentoObject))
+                {
+                    return aux;
+                }
+                var investimento = investimentoObject.Value as Investimento;
+
+                if (!movController.VerificarSaldo(conta, valor))
+                {
+                    ModelState.AddModelError("Conta", "Saldo insuficiente.");
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+
+                conta.Saldo -= valor;
+                investimento.ValorAtual += valor;
+
+                context.ContaContabil.Update(conta);
                 context.Investimento.Update(investimento);
                 await context.SaveChangesAsync();
                 return Ok(investimento);
@@ -271,13 +317,21 @@ namespace serverTCC.Controllers
             return (data.Date - investimento.DataInicio.Date).Days;
         }
 
-        private Decimal CalcularValorFuturo(Investimento investimento, int tempo)
+        private Decimal CalcularValorFuturo(Investimento investimento, int tempo, bool isGet = false)
         {
             double tempoD = (double)tempo;
 
             //Formula para juros compostos
-            double valorD = (double)investimento.ValorInvestido * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
-
+            double valorD;
+            /*if (isGet)
+            {
+                valorD = (double)investimento.ValorAtual * (1 + investimento.TipoInvestimento.Taxa);
+            }
+            else
+            {*/
+                valorD = (double)investimento.ValorAtual * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
+            //}
+               
             //Os passos abaixo são feitos para garantir a precisão, o procedimento utilizado garante 2 digitos de precisão
             valorD *= 100;
 

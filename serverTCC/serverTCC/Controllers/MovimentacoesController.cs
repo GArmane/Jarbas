@@ -44,7 +44,7 @@ namespace serverTCC.Controllers
                         }
                         else if (movimentacao.TipoMovimentacao == TipoMovimentacao.Despesa)
                         {
-                            if (VerificarSaldo(conta, movimentacao))
+                            if (VerificarSaldo(conta, movimentacao.Valor))
                             {
                                 conta.Saldo -= movimentacao.Valor;
                             }
@@ -184,7 +184,7 @@ namespace serverTCC.Controllers
                         conta.Saldo += movimentacaoAux.Valor;
 
                         //verifica se existe saldo suficiente para a edição da despesa
-                        if(!VerificarSaldo(conta, movimentacao))
+                        if(!VerificarSaldo(conta, movimentacao.Valor))
                         {
                             ModelState.AddModelError("Conta", "Saldo insuficiente.");
                             return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
@@ -275,9 +275,9 @@ namespace serverTCC.Controllers
         /// <summary>
         /// Verifica o saldo de uma conta
         /// </summary>
-        private bool VerificarSaldo(ContaContabil conta, Movimentacao movimentacao)
+        public bool VerificarSaldo(ContaContabil conta, decimal valor)
         {
-            if ((conta.Saldo - movimentacao.Valor) < 0)
+            if ((conta.Saldo - valor) < 0)
             {
                 return false;
             }
