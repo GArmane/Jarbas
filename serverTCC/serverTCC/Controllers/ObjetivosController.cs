@@ -155,7 +155,7 @@ namespace serverTCC.Controllers
             {
                 var objetivo = await context.Objetivo.FirstOrDefaultAsync(o => o.Id == id);
 
-                if(objetivo == null)
+                if (objetivo == null)
                 {
                     ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
@@ -165,7 +165,7 @@ namespace serverTCC.Controllers
                 await context.SaveChangesAsync();
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -182,7 +182,7 @@ namespace serverTCC.Controllers
             {
                 var objetivo = await context.Objetivo.FirstOrDefaultAsync(o => o.Id == id);
 
-                if(objetivo == null)
+                if (objetivo == null)
                 {
                     ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
@@ -275,6 +275,66 @@ namespace serverTCC.Controllers
             {
                 return BadRequest(e.StackTrace);
             }
+        }
+
+
+        /// <summary>
+        /// Transfere dinheiro de um objetivo para uma conta
+        /// POST api/Objetivos/TransferirToConta/{contaId}/{objetivoId}
+        /// </summary>
+        [HttpPost("TransferirToConta/{contaId}/{objetivoId}")]
+        public async Task<IActionResult> TransferirToConta([FromRoute] int contaId, [FromRoute] int objetivoId, [FromBody] decimal valor)
+        {
+            try
+            {
+                var contaController = new ContasContabeisController(context);
+                var movController = new MovimentacoesController(context);
+
+                var aux = await contaController.Get(contaId);
+                if (!(aux is OkObjectResult contaObject))
+                {
+                    return aux;
+                }
+                var conta = contaObject.Value as ContaContabil;
+
+                aux = await Get(objetivoId);
+                if (!(aux is OkObjectResult objetivoObject))
+                {
+                    return aux;
+                }
+                var objetivo = objetivoObject.Value as Objetivo;
+
+                if (!VerificarSaldo(objetivo, valor))
+                {
+                    ModelState.AddModelError("Objetivo", "Saldo insuficiente.");
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+
+                conta.Saldo += valor;
+                objetivo.Valor -= valor;
+
+                context.ContaContabil.Update(conta);
+                context.Objetivo.Update(objetivo);
+                await context.SaveChangesAsync();
+                return Ok(new { objetivo, conta });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Verifica o saldo de um objetivo
+        /// </summary>
+        public bool VerificarSaldo(Objetivo objetivo, decimal valor)
+        {
+            if ((objetivo.Valor - valor) < 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

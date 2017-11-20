@@ -289,6 +289,52 @@ namespace serverTCC.Controllers
             }
         }
 
+        /// <summary>
+        /// Transfere dinheiro de uminvestimento para uma conta
+        /// POST api/Investimentos/TransferirToConta/{contaId}/{investimentoId}
+        /// </summary>
+        [HttpPost("TransferirToConta/{contaId}/{investimentoId}")]
+        public async Task<IActionResult> TransferirToConta([FromRoute] int contaId, [FromRoute] int investimentoId, [FromBody] decimal valor)
+        {
+            try
+            {
+                var contaController = new ContasContabeisController(context);
+                var movController = new MovimentacoesController(context);
+
+                var aux = await contaController.Get(contaId);
+                if (!(aux is OkObjectResult contaObject))
+                {
+                    return aux;
+                }
+                var conta = contaObject.Value as ContaContabil;
+
+                aux = await Get(investimentoId);
+                if (!(aux is OkObjectResult investimentoObject))
+                {
+                    return aux;
+                }
+                var investimento = investimentoObject.Value as Investimento;
+
+                if (!VerificarSaldo(investimento, valor))
+                {
+                    ModelState.AddModelError("Conta", "Saldo insuficiente.");
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+
+                conta.Saldo += valor;
+                investimento.ValorAtual -= valor;
+
+                context.ContaContabil.Update(conta);
+                context.Investimento.Update(investimento);
+                await context.SaveChangesAsync();
+                return Ok(new { Investimento = investimento, Conta = conta });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
         private Decimal AtualizarValor(Investimento investimento, DateTime data)
         {
             int tempo = TempoEmDias(investimento, data);
@@ -343,6 +389,19 @@ namespace serverTCC.Controllers
             valorM = decimal.Divide(valorM, 100);
 
             return valorM;
+        }
+
+        /// <summary>
+        /// Verifica o saldo de um investimento
+        /// </summary>
+        public bool VerificarSaldo(Investimento investimento, decimal valor)
+        {
+            if ((investimento.ValorAtual - valor) < 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
