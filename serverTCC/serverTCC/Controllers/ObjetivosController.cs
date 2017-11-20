@@ -199,5 +199,36 @@ namespace serverTCC.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        /// <summary>
+        /// Adiciona mais dinheiro a um objetivo
+        /// POST api/Objetivos/Inserir/id
+        /// </summary>
+        [HttpPost("Inserir/{id}")]
+        public async Task<IActionResult> InserirDinheiro([FromRoute]int id, [FromBody]Decimal valor)
+        {
+            try
+            {
+                var objetivo = await context.Objetivo
+                    .Include(o => o.HistoricoObjetivo)
+                    .FirstOrDefaultAsync(o => o.Id == id);
+
+                if (objetivo == null)
+                {
+                    ModelState.AddModelError("Objetivo", "Objetivo não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                objetivo.Valor += valor;
+
+                context.Objetivo.Update(objetivo);
+                await context.SaveChangesAsync();
+                return Ok(objetivo);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
     }
 }
