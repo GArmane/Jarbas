@@ -11,7 +11,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Investimentos")]
-    [Authorize]
+    //[Authorize]
     public class InvestimentosController : Controller
     {
         private JarbasContext context;
@@ -211,6 +211,38 @@ namespace serverTCC.Controllers
             }
         }
 
+        /// <summary>
+        /// Adiciona mais dinheiro a um investimento
+        /// POST api/Investimentos/Inserir/id
+        /// </summary>
+        [HttpPost("Inserir/{id}")]
+        public async Task<IActionResult> InserirDinheiro([FromRoute]int id, [FromBody]Decimal valor)
+        {
+            try
+            {
+                var investimento = await context.Investimento
+                    .Include(i => i.Moeda)
+                    .Include(i => i.TipoInvestimento)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
+                if(investimento == null)
+                {
+                    ModelState.AddModelError("Investimento", "Investimento não encontrado");
+                    return NotFound(ModelState.Values.SelectMany(v => v.Errors));
+                }
+
+                investimento.ValorAtual += valor;
+
+                context.Investimento.Update(investimento);
+                await context.SaveChangesAsync();
+                return Ok(investimento);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
+
         private Decimal AtualizarValor(Investimento investimento, DateTime data)
         {
             int tempo = TempoEmDias(investimento, data);
@@ -236,20 +268,7 @@ namespace serverTCC.Controllers
 
         private int TempoEmDias(Investimento investimento, DateTime data)
         {
-            int dias = (data.Date - investimento.DataInicio.Date).Days;
-
-            /*PERGUNTAR PARA SONIA COMO BANCOS TRATAM UM ANO
-             * if (investimento.DataInicio.Year != data.Year)
-            {
-                //Desconta os dias dos anos (tirando o ano de inicio, e o de fim)
-                for (int i = investimento.DataInicio.Year + 1; i <= data.Year - 1; i++)
-                {
-                    //Tira 5 dias por ano pois bancos tratam um ano como tendo 360 dias
-                    dias -= 5;
-                }
-            }*/
-
-            return dias;
+            return (data.Date - investimento.DataInicio.Date).Days;
         }
 
         private Decimal CalcularValorFuturo(Investimento investimento, int tempo)
