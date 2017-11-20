@@ -281,7 +281,7 @@ namespace serverTCC.Controllers
                 context.ContaContabil.Update(conta);
                 context.Investimento.Update(investimento);
                 await context.SaveChangesAsync();
-                return Ok(investimento);
+                return Ok(new { Investimento = investimento, Conta = conta });
             }
             catch (Exception e)
             {
@@ -329,7 +329,7 @@ namespace serverTCC.Controllers
             }
             else
             {*/
-                valorD = (double)investimento.ValorAtual * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
+                valorD = (double)investimento.ValorInvestido * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
             //}
                
             //Os passos abaixo são feitos para garantir a precisão, o procedimento utilizado garante 2 digitos de precisão

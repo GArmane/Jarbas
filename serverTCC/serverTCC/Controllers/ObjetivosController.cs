@@ -230,5 +230,51 @@ namespace serverTCC.Controllers
                 return BadRequest(e.StackTrace);
             }
         }
+
+        /// <summary>
+        /// Transfere dinheiro de uma conta para um objetivo
+        /// POST api/Objetivos/TransferirFromConta/{contaId}/{objetivoId}
+        /// </summary>
+        [HttpPost("TransferirFromConta/{contaId}/{objetivoId}")]
+        public async Task<IActionResult> TransferirFromConta([FromRoute] int contaId, [FromRoute] int objetivoId, [FromBody] decimal valor)
+        {
+            try
+            {
+                var contaController = new ContasContabeisController(context);
+                var movController = new MovimentacoesController(context);
+
+                var aux = await contaController.Get(contaId);
+                if (!(aux is OkObjectResult contaObject))
+                {
+                    return aux;
+                }
+                var conta = contaObject.Value as ContaContabil;
+
+                aux = await Get(objetivoId);
+                if (!(aux is OkObjectResult objetivoObject))
+                {
+                    return aux;
+                }
+                var objetivo = objetivoObject.Value as Objetivo;
+
+                if (!movController.VerificarSaldo(conta, valor))
+                {
+                    ModelState.AddModelError("Conta", "Saldo insuficiente.");
+                    return BadRequest(ModelState.Values.SelectMany(e => e.Errors));
+                }
+
+                conta.Saldo -= valor;
+                objetivo.Valor += valor;
+
+                context.ContaContabil.Update(conta);
+                context.Objetivo.Update(objetivo);
+                await context.SaveChangesAsync();
+                return Ok(new { objetivo, conta });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.StackTrace);
+            }
+        }
     }
 }
