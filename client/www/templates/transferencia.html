@@ -1,0 +1,31 @@
+<form name="cadastro">
+    <button type="submit" style="position: absolute; top: -5000px" id="hiddenSubmitTransf">sub</button>
+    <span class="input-label">Valor</span>
+    <div class="row row-no-padding">
+        <div class="col col-50">
+            <label class="item item-input item-select">
+                <select ng-model="vm.dados.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" disabled>
+                </select>
+            </label>
+        </div>
+        &nbsp&nbsp
+        <div class="col">
+            <label class="item item-input">
+                <input ng-model="vm.transf.valor" type="number" placeholder="0,00" required ng-change="vm.atualizaConvertido()">
+            </label>
+        </div>
+    </div>
+
+    <span class="input-label">Conta de {{vm.tipoTransf}}</span>
+    <div class="row row-no-padding">
+        <div class="col">
+            <label class="item item-input item-select" style="height: 43px;">
+                <select ng-model="vm.transf.conta" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.atualizaConvertido()">
+                    <option value="" selected>Sem conta</option>
+                </select>
+            </label>
+        </div>
+    </div>
+    <span ng-show="vm.transf.conta && vm.transf.valor && vm.transf.conta.moeda.id != vm.dados.moeda.id">Da conta será {{vm.tipoTransf == 'origem' ? 'debitado' : 'creditado'}} {{vm.valorConvertido | currency: vm.transf.conta.moeda.simbolo + ' '}}</span><br>
+    <span ng-show="vm.transf.conta && vm.transf.conta.saldo < vm.valorConvertido" style="color: red;">O saldo da conta não é suficiente.</span>
+</form>

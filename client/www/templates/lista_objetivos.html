@@ -1,12 +1,22 @@
 <ion-view view-title="Objetivos">
 	<ion-content class="padrao has-header">
 		<div class="list">
-			<a class="item" ng-repeat="obj in vm.dados" href="#/app/add_objetivo/{{obj.id}}">
-    			{{obj.descricao}}
-    			<span class="item-note">
-					{{obj.valor | currency: obj.moeda.simbolo + ' '}}
-    			</span>
-  			</a>
+			<a class="item" ng-repeat="obj in vm.dados.filter(vm.ocultaArq)" href="#/app/add_objetivo/{{obj.id}}">
+				<div class="row">
+					<div class="col col-75">
+						<h2>{{obj.descricao}}</h2>
+						<p ng-show="obj.dataInicial || obj.arquivar">
+							<span ng-show="obj.dataInicial">Conclusão: {{obj.dataInicial | date: 'dd/MM/yy'}}</span><span ng-show="obj.arquivar"> (Arquivado)</span>
+						</p>
+					</div>
+					<div class="col col-25">{{obj.valor | currency: obj.moeda.simbolo + ' '}}</div>
+				</div>
+			</a>
+		</div>
+		<div class="row" ng-show="vm.temArq">
+			<div class="col">
+				<button class="button button-block" ng-click="vm.showArq = !vm.showArq">{{vm.showArq ? 'Ocultar' : 'Exibir'}} objetivos arquivados</button>
+			</div>
 		</div>
 		<a href="#/app/add_objetivo" class="button button-icon icon ion-plus-round"></a>
   </ion-content>

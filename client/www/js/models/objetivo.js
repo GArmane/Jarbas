@@ -13,9 +13,11 @@ function Objetivo(data) {
         this.usuario = new Usuario(data.usuario);
     if (data.moeda)
         this.moeda = new Moeda(data.moeda);
-    if (data.historicoObjetivo)
+    if (data.historicoObjetivo) {
+        this.historicoObjetivo = [];
         for (var i = 0; i < data.historicoObjetivo.length; i++) 
-            data.historicoObjetivo[i] = new HistoricoObjetivo(data.historicoObjetivo[i]);
+            this.historicoObjetivo.push(new HistoricoObjetivo(data.historicoObjetivo[i]));
+    }
 }
 
 localEntities.register(Objetivo, {

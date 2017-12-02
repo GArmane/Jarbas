@@ -1,49 +1,106 @@
-<ion-view view-title="Inserir Objetivo">
+<ion-view view-title="{{ vm.visualizacao ? 'Visualizar' : ''}}{{ vm.alteracao ? 'Alterar' : ''}} Objetivo">
     <ion-content class="padrao has-header padding">
+
         <form name="objetivo">
             <span class="input-label">Descrição</span>
             <label class="item item-input">
-                <input type="text" placeholder="Descrição" ng-model="vm.dados.descricao">
+                <input type="text" ng-disabled="vm.visualizacao" placeholder="Descrição" ng-model="vm.dados.descricao">
             </label>
             <br>
 
-
-
-            <span class="input-label">Valor</span>
+            <span class="input-label">Valor objetivo</span>
             <div class="row row-no-padding">
                 <div class="col col-33">
                     <label class="item item-input item-select">
-                        <select ng-model="vm.dados.moedaId" ng-options="moeda.id as moeda.simbolo for moeda in vm.moedas"></select>
+                        <select ng-disabled="vm.visualizacao" ng-model="vm.dados.moedaId" ng-options="moeda.id as moeda.simbolo for moeda in vm.moedas"></select>
                     </label>
                 </div>
                 &nbsp&nbsp
                 <div class="col">
                     <label class="item item-input">
-                        <input ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
+                        <input ng-disabled="vm.visualizacao" ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
                     </label>
                 </div>
             </div>
             <br>
 
-
-
-            <span class="input-label texto-input">Data ideal de conclusão (opcional)</span>
-            <label class="item item-input">
-                <input type="date" ng-model="vm.dados.dataInicial">
-            </label>
-            <br>
-            <br>
-            <div class="row">
-                <div class="col col-33">
-                    <button class="button button-block" ng-click="vm.cancelar()">Cancelar</button>
-                </div>
-                <div class="col" ng-if="vm.alteracao">
-                    <button class="button button-block" ng-click="vm.excluir()">Excluir</button>
-                </div>
-                <div class="col">
-                    <button class="button button-block" ng-click="vm.alteracao ? vm.alterar() : vm.salvar()">{{vm.alteracao ? 'Alterar' : 'Cadastrar'}}</button>
+            <div ng-show="vm.visualizacao">
+                <span class="input-label">Valor acumulado</span>
+                <div class="row row-no-padding">
+                    <div class="col col-33">
+                        <label class="item item-input item-select">
+                            <select ng-disabled="vm.visualizacao" ng-model="vm.dados.moedaId" ng-options="moeda.id as moeda.simbolo for moeda in vm.moedas"></select>
+                        </label>
+                    </div>
+                    &nbsp&nbsp
+                    <div class="col">
+                        <label class="item item-input">
+                            <input ng-disabled="vm.visualizacao" ng-model="vm.dados.historicoObjetivo[vm.dados.historicoObjetivo.length - 1].valorFinal" type="number" placeholder="0,00" required>
+                        </label>
+                    </div>
                 </div>
             </div>
+            <br>
+
+            <div ng-show="vm.dados.dataInicial || !vm.visualizacao">
+                <span class="input-label texto-input">Data ideal de conclusão (opcional)</span>
+                <label class="item item-input">
+                    <input ng-disabled="vm.visualizacao" type="date" ng-model="vm.dados.dataInicial">
+                </label>
+            </div>
         </form>
+
+        <div class="list list-inset" ng-show="vm.visualizacao && vm.dados.historicoObjetivo.length > 0">
+            <div class="item item-divider">
+                Histórico do objetivo
+            </div>
+
+            <a class="item" ng-repeat="hist in vm.dados.historicoObjetivo">
+                <div class="row">
+                    <div class="col col-75">
+                        <h2>{{hist.dataFinal | date: 'dd/MM/yy'}}</h2>
+                    </div>
+                    <div class="col">{{hist.valorFinal | currency: vm.dados.moeda.simbolo + ' '}}</div>
+                </div>
+            </a>
+        </div>
+
+        <br>
+        <div ng-show="vm.visualizacao">
+            <div class="row">
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.cancelar()">Voltar</button>
+                </div>
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.excluir()">Excluir</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.arquivar()">{{vm.dados.arquivar ? 'Desarquivar' : 'Arquivar'}}</button>
+                </div>
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.visualizacao = false; vm.alteracao = true">Alterar</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.addDinheiro()">Adicionar dinheiro</button>
+                </div>
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.removeDinheiro()">Remover dinheiro</button>
+                </div>
+            </div>
+        </div>
+        <div ng-hide="vm.visualizacao">
+            <div class="row">
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.cancelar()">Voltar</button>
+                </div>
+                <div class="col">
+                    <button class="button button-block" style="margin: 0" ng-click="vm.alteracao ? vm.alterar() : vm.salvar()">{{vm.alteracao ? 'Alterar' : 'Cadastrar'}}</button>
+                </div>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
