@@ -54,15 +54,18 @@
             <div class="item item-divider">
                 Histórico do objetivo
             </div>
+            <div>
+                <canvas id="graficoHistorico" width="400" height="400"></canvas>
+            </div>
 
-            <a class="item" ng-repeat="hist in vm.dados.historicoObjetivo">
+            <!-- <a class="item" ng-repeat="hist in vm.dados.historicoObjetivo">
                 <div class="row">
                     <div class="col col-75">
                         <h2>{{hist.dataFinal | date: 'dd/MM/yy'}}</h2>
                     </div>
                     <div class="col">{{hist.valorFinal | currency: vm.dados.moeda.simbolo + ' '}}</div>
                 </div>
-            </a>
+            </a> -->
         </div>
 
         <br>

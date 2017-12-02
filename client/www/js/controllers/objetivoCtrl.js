@@ -26,6 +26,7 @@
         vm.removeDinheiro = removeDinheiro;
 
         var original;
+        var grafico;
         
         activate();
 
@@ -337,6 +338,7 @@
                 original = JSON.parse(JSON.stringify(data));
                 vm.dados.dataInicial = new Date(vm.dados.dataInicial);
                 successMoedas();
+                criarGrafico();
             }
 
             function successContas(data) {
@@ -367,6 +369,59 @@
                     });
                 }
             }
+        }
+
+        function criarGrafico() {
+            var ctx = document.getElementById("graficoHistorico");
+            grafico = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [
+                        vm.dados.historicoObjetivo.map(function (hist) {
+                            return new Date(hist.dataFinal).toLocaleDateString();
+                        })
+                    ],
+                    datasets: [{
+                        label: 'Valor acumulado',
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        fill: false,
+                        data: [
+                            vm.dados.historicoObjetivo.map(function (hist) {
+                                return hist.valorFinal;
+                            })
+                        ]
+                    },
+                ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            // scaleLabel: {
+                            //     display: true,
+                            //     labelString: 'Month'
+                            // }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            // scaleLabel: {
+                            //     display: true,
+                            //     labelString: 'Value'
+                            // }
+                            min: 0
+                        }]
+                    }
+                }
+            });
+        }
+
+        function atualizarGrafico() {
+            
         }
     }
 })();
