@@ -279,7 +279,14 @@
                     console.log('Logando com Google...');
                     function cb() {
                         try {
-                            auth2.grantOfflineAccess().then(function(authRes) {
+                            auth2.grantOfflineAccess().then(then, function (err) {
+                                if (err.error == 'popup_closed_by_user')
+                                    auth2.grantOfflineAccess().then(then, reject);
+                                else
+                                    reject();
+                            });
+
+                            function then(authRes) {
                                 try {
                                     console.log('Objeto de auth obtido:');
                                     console.log(authRes);
@@ -292,7 +299,8 @@
                                 } catch (error) {
                                     utilities.promiseException(error);
                                 }
-                            }, reject);
+                            }
+
                         } catch (error) {
                             utilities.promiseException(error);
                         }
