@@ -5,17 +5,19 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using serverTCC.Data;
 using serverTCC.Models;
+using System.Collections.Generic;
 
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20171203211809_edicaoPerfil")]
+    partial class edicaoPerfil
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "1.1.4");
+                .HasAnnotation("ProductVersion", "1.1.2");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
@@ -355,6 +357,8 @@ namespace serverTCC.Migrations
                     b.Property<int?>("Profissao");
 
                     b.Property<bool>("RendaFixa");
+
+                    b.Property<List<Nullable<TipoGastos>>>("TipoGastos");
 
                     b.Property<decimal?>("Valor");
 

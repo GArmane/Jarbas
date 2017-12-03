@@ -9,13 +9,14 @@ using serverTCC.Models;
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20171203213935_edicaoPerfilArray")]
+    partial class edicaoPerfilArray
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "1.1.4");
+                .HasAnnotation("ProductVersion", "1.1.2");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
@@ -355,6 +356,8 @@ namespace serverTCC.Migrations
                     b.Property<int?>("Profissao");
 
                     b.Property<bool>("RendaFixa");
+
+                    b.Property<TipoGastos[]>("TipoGastos");
 
                     b.Property<decimal?>("Valor");
 
