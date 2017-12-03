@@ -37,6 +37,7 @@
         vm.filtro2DataChanged = filtro2DataChanged;
 
         var moedas = [];
+        var grafico;
 
         activate();
 
@@ -106,6 +107,81 @@
         }
 
         //////////////// Private
+
+        function criarGrafico() {
+            var labels = [];
+            var receitas = [];
+            var despesas = [];
+
+            var dataPesquisa;
+            vm.dados.forEach(function (mov) {
+                var data = new Date(mov.data);
+                data = data.getMonth() + 1 + '/' + data.getFullYear();
+                dataPesquisa = data;
+                var i = labels.findIndex(temData);
+                if (i == -1) {
+                    labels.push(dataPesquisa);
+                    i = labels.length - 1;
+                }
+                if (receitas[i] == null) {
+                    receitas[i] = 0;
+                    despesas[i] = 0;
+                }
+
+                if (mov.tipoMovimentacao == 0)
+                    receitas[i] += mov.valor;
+                else
+                    despesas[i] += mov.valor;
+            });
+
+            function temData(data) {
+                return dataPesquisa == data;
+            }
+
+            var ctx = document.getElementById("graficoRecVsDesp");
+            grafico = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Receitas',
+                        backgroundColor: utilities.getColor(0, false),
+                        borderColor: utilities.getColor(0, false),
+                        fill: false,
+                        data: receitas
+                    }, {
+                        label: 'Despesas',
+                        backgroundColor: utilities.getColor(1, false),
+                        borderColor: utilities.getColor(1, false),
+                        fill: false,
+                        data: despesas
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            // scaleLabel: {
+                            //     display: true,
+                            //     labelString: 'Month'
+                            // }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            // scaleLabel: {
+                            //     display: true,
+                            //     labelString: 'Value'
+                            // }
+                            min: 0
+                        }]
+                    }
+                }
+            });
+        }
 
         function carregarDados() {
             if (utilities.online()) {
@@ -215,6 +291,7 @@
                         mov.grupoMovimentacoes = grupo;
                 }
             });
+            criarGrafico();
         }
 
         function associaContaMov() {
@@ -245,7 +322,7 @@
                 mov.data = new Date(mov.data);
             });
             vm.movimentacoes.sort(function (a, b) {
-                a.data.getTime() - b.data.getTime();
+                return a.data.getTime() - b.data.getTime();
             });
             vm.dados = vm.movimentacoes;
         }

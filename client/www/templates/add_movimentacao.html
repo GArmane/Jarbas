@@ -54,14 +54,15 @@
 
             <span class="input-label">Valor</span>
             <div class="row row-no-padding">
-                <div class="col col-33">
+                <!-- <div class="col col-33">
                     <label class="item item-input item-select">
                         {{vm.contaSelecionada.moeda.simbolo}}
                     </label>
-                </div>
+                </div> -->
                 &nbsp&nbsp
                 <div class="col">
                     <label class="item item-input">
+                        <span class="item-input">{{vm.contaSelecionada.moeda.simbolo}}&nbsp;</span>                            
                         <input ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
                     </label>
                 </div>
