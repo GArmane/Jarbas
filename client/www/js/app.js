@@ -93,10 +93,11 @@
 
                 .state('app.lista_investimentos', {
                     url: '/lista_investimentos',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/lista_investimentos.html',
-                            controller: 'listaContaController',
+                            controller: 'listaInvestimentoController',
                             controllerAs: 'vm'
                         }
                     }
@@ -104,10 +105,23 @@
 
                 .state('app.add_investimento', {
                     url: '/add_investimento',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_investimento.html',
-                            controller: 'listaContaController',
+                            controller: 'investimentoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_investimento_param', {
+                    url: '/add_investimento/:id',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_investimento.html',
+                            controller: 'investimentoController',
                             controllerAs: 'vm'
                         }
                     }
@@ -115,6 +129,7 @@
 
                 .state('app.add_objetivo', {
                     url: '/add_objetivo',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_objetivo.html',
@@ -126,6 +141,7 @@
 
                 .state('app.add_objetivo_param', {
                     url: '/add_objetivo/:id',
+                    cache: false,
                     views: {
                         'menuContent': {
                             templateUrl: 'templates/add_objetivo.html',

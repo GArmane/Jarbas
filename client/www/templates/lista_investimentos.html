@@ -1,13 +1,32 @@
 <ion-view view-title="Investimentos">
-	<ion-content class="padrao has-header">
-		<div class="list">
-			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
-    			{{conta.nome}}
-    			<span class="item-note">
-					{{conta.saldo | currency: conta.moeda.simbolo + ' '}}
-    			</span>
-  			</a>
+    <ion-content class="padrao has-header">
+        <div class="list">
+			<a class="item" ng-repeat="inv in vm.dados" href="#/app/add_investimento/{{inv.id}}">
+				<div class="row">
+					<div class="col col-75">
+						<h2>{{inv.descricao}}</h2>
+						<p>
+							{{inv.tipoInvestimento.nome}} - rendimento: {{(inv.valorAtual - inv.valorInvestido) / inv.valorInvestido * 100}}%
+						</p>
+					</div>
+					<div class="col">{{inv.valorAtual | currency: inv.moeda.simbolo + ' '}}</div>
+
+<!-- 
+					<div class="col col-67">
+						<h2>{{mov.descricao}}</h2>
+						<p>
+							{{mov.grupoMovimentacoes.nome}} - {{mov.data | date: 'dd/MM/yy'}} <span ng-hide="mov.tipoMovimentacao == 2">em {{mov.contaContabil.nome}}</span>
+							<span ng-show="mov.tipoMovimentacao == 2">de {{mov.contaContabil.nome}} para {{mov.contaDestino.nome}}</span>
+						</p>
+					</div>
+					<div class="col col-10">						
+						{{mov.tipoMovimentacao == 1 ? '-' : ''}} {{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}
+					</div> -->
+
+
+				</div>
+			</a>
 		</div>
-		<a href="#/app/add_investimento" class="button button-icon icon ion-plus-round"></a>
-  </ion-content>
+        <a href="#/app/add_investimento" class="button button-icon icon ion-plus-round"></a>
+    </ion-content>
 </ion-view>

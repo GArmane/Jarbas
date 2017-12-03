@@ -30,7 +30,7 @@ localEntities.register(Investimento, {
         relationKey: 'usuarioId'
     },
     usuarioId: {
-        type: 'number',
+        type: 'string',
         fk: true,
     },
     tipoInvestimento: {
