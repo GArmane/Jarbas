@@ -336,6 +336,8 @@ namespace serverTCC.Controllers
                     usuario.Perfil.Profissao = perfil.Profissao;
                     usuario.Perfil.FaixaEtaria = perfil.FaixaEtaria;
                     usuario.Perfil.EscalaTempo = perfil.EscalaTempo;
+                    usuario.Perfil.Escolaridade = perfil.Escolaridade;
+                    usuario.Perfil.Filhos = perfil.Filhos;
 
                     context.Usuario.Update(usuario);
 
