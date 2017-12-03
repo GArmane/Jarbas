@@ -10,7 +10,10 @@
         var vm = this;
 
         vm.dados = {};
+        vm.dados.historicoObjetivo = [];
+
         vm.moedas = [];
+        vm.contas = [];
         vm.transf = {};
         vm.alteracao = false;
         vm.visualizacao = false;
@@ -22,15 +25,15 @@
         vm.cancelar = cancelar;
         vm.arquivar = arquivar;
         vm.addDinheiro = addDinheiro;
-        vm.atualizaConvertido = atualizaConvertido;
         vm.removeDinheiro = removeDinheiro;
+        vm.atualizaConvertido = atualizaConvertido;
 
         var original;
         var grafico;
         
         activate();
 
-        ////////////////
+        //////////////// Public
 
         function activate() {
             if (!auth.verify())
@@ -112,7 +115,6 @@
                         success(vm.dados);
                 }
             });
-
                     
             function success(data) {
                 localEntities.remove('Objetivo', vm.dados.id);
@@ -214,14 +216,15 @@
                 }
 
                 function success(data) {
-                    if (vm.transf.conta) {
+                    if (data.conta) {
                         vm.transf.conta.saldo = data.conta.saldo;
                         localEntities.set(data.conta);
                         original = data.objetivo;
                     } else
                         original = data;
+                    vm.dados = new Objetivo(JSON.parse(JSON.stringify(original)));
                     localEntities.set(original);
-                    vm.dados = JSON.parse(JSON.stringify(original));
+                    original = JSON.parse(JSON.stringify(vm.dados));
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Dinheiro adicionado.'
@@ -276,13 +279,12 @@
                 }
 
                 function success(data) {
-                    if (vm.transf.conta) {
-                        localEntities.set(data.conta);
-                        original = data.objetivo;
-                    } else
-                        original = data;
+                    localEntities.set(data.conta);
+                    original = data.objetivo;
+                    original = data;
+                    vm.dados = new Objetivo(JSON.parse(JSON.stringify(original)));
                     localEntities.set(original);
-                    vm.dados = JSON.parse(JSON.stringify(original));
+                    original = JSON.parse(JSON.stringify(vm.dados));
                     $ionicPopup.alert({
                         title: 'Sucesso!',
                         template: 'Dinheiro removido.'
@@ -295,9 +297,11 @@
             if (vm.transf.conta)
                 vm.valorConvertido = (vm.transf.valor * vm.dados.moeda.cotacaoComercial) / vm.transf.conta.moeda.cotacaoComercial;
         }
+        
+        //////////////// Private
 
         function validar(e) {
-            if (!vm.transf.valor || (vm.tipoTransf != 'origem' && !vm.transf.conta) || (vm.transf.conta.saldo < vm.valorConvertido)) {
+            if (!vm.transf.valor || (vm.tipoTransf != 'origem' && !vm.transf.conta) || (vm.transf.conta && vm.transf.conta.saldo < vm.valorConvertido && vm.tipoTransf == 'origem')) {
                 e.preventDefault();
                 $timeout(function () {
                     document.getElementById('hiddenSubmitTransf').click();
@@ -356,17 +360,18 @@
                             return moeda.id == vm.dados.moedaId;
                         });
 
-                    localEntities.getAll('ContaContabil').then(function (data) {
-                        var contaId;
-                        data.forEach(function (conta) {
-                            contaId = conta.id;
-                            conta.moeda = vm.moedas.find(findMoeda);
+                    if (!utilities.online())
+                        localEntities.getAll('ContaContabil').then(function (data) {
+                            var contaId;
+                            data.forEach(function (conta) {
+                                contaId = conta.id;
+                                conta.moeda = vm.moedas.find(findMoeda);
+                            });
+                            function findMoeda(moeda) {
+                                return moeda.id == contaId;
+                            }
+                            successContas(data);
                         });
-                        function findMoeda(moeda) {
-                            return moeda.id == contaId;
-                        }
-                        successContas(data);
-                    });
                 }
             }
         }
@@ -376,21 +381,17 @@
             grafico = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: [
-                        vm.dados.historicoObjetivo.map(function (hist) {
-                            return new Date(hist.dataFinal).toLocaleDateString();
-                        })
-                    ],
+                    labels: vm.dados.historicoObjetivo.map(function (hist) {
+                        return new Date(hist.dataFinal).toLocaleDateString();
+                    }),
                     datasets: [{
                         label: 'Valor acumulado',
                         backgroundColor: 'rgb(54, 162, 235)',
                         borderColor: 'rgb(54, 162, 235)',
                         fill: false,
-                        data: [
-                            vm.dados.historicoObjetivo.map(function (hist) {
-                                return hist.valorFinal;
-                            })
-                        ]
+                        data: vm.dados.historicoObjetivo.map(function (hist) {
+                            return hist.valorFinal;
+                        })
                     },
                 ]
                 },
@@ -418,10 +419,6 @@
                     }
                 }
             });
-        }
-
-        function atualizarGrafico() {
-            
         }
     }
 })();
