@@ -329,10 +329,10 @@ namespace serverTCC.Controllers
         /// </summary>
         public bool VerificarSaldo(Objetivo objetivo, decimal valor)
         {
-            if ((objetivo.Valor - valor) < 0)
+            /*if ((objetivo.Valor - valor) < 0)
             {
                 return false;
-            }
+            }*/
 
             return true;
         }

@@ -277,10 +277,10 @@ namespace serverTCC.Controllers
         /// </summary>
         public bool VerificarSaldo(ContaContabil conta, decimal valor)
         {
-            if ((conta.Saldo - valor) < 0)
+            /*if ((conta.Saldo - valor) < 0)
             {
                 return false;
-            }
+            }*/
 
             return true;
         }
