@@ -54,7 +54,7 @@
                     method: 'POST',
                     url: api.url() + 'Objetivos',
                     data: vm.dados,
-                    header: auth.header
+                    headers: auth.header
                 }).success(success)
                 .error(utilities.apiError);
             else
@@ -81,7 +81,7 @@
                     method: 'PUT',
                     url: api.url() + 'Objetivos/' + vm.dados.id,
                     data: vm.dados,
-                    header: auth.header
+                    headers: auth.header
                 }).success(success)
                 .error(utilities.apiError);
             else
@@ -108,7 +108,7 @@
                         $http({
                             method: 'DELETE',
                             url: api.url() + 'Objetivos/' + vm.dados.id,
-                            header: auth.header
+                            headers: auth.header
                         }).success(success)
                         .error(utilities.apiError);
                     else
@@ -143,7 +143,7 @@
                     method: 'PUT',
                     url: api.url() + 'Objetivos/' + vm.dados.id,
                     data: original,
-                    header: auth.header
+                    headers: auth.header
                 }).success(success)
                 .error(utilities.apiError);
             else
@@ -378,6 +378,36 @@
 
         function criarGrafico() {
             var ctx = document.getElementById("graficoHistorico");
+            // vm.dados.historicoObjetivo = [
+            //     {
+            //         dataFinal: new Date('12/01/2017'),
+            //         valorFinal: 7500000
+            //     },
+            //     {
+            //         dataFinal: new Date('12/02/2017'),
+            //         valorFinal: 10000000
+            //     },
+            //     {
+            //         dataFinal: new Date('12/03/2017'),
+            //         valorFinal: 15000000
+            //     },
+            //     {
+            //         dataFinal: new Date('12/04/2017'),
+            //         valorFinal: 12500000
+            //     },
+            //     {
+            //         dataFinal: new Date('12/05/2017'),
+            //         valorFinal: 17500000
+            //     },
+            //     {
+            //         dataFinal: new Date('12/06/2017'),
+            //         valorFinal: 16000000
+            //     },
+            //     {
+            //         dataFinal: new Date('12/07/2017'),
+            //         valorFinal: 20000000
+            //     }
+            // ]
             grafico = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -403,18 +433,26 @@
                     scales: {
                         xAxes: [{
                             display: true,
-                            // scaleLabel: {
-                            //     display: true,
-                            //     labelString: 'Month'
-                            // }
+                            scaleLabel: {
+                                display: false,
+                                labelString: 'Data'
+                            }
                         }],
                         yAxes: [{
                             display: true,
-                            // scaleLabel: {
-                            //     display: true,
-                            //     labelString: 'Value'
-                            // }
-                            min: 0
+                            scaleLabel: {
+                                display: false
+                            },
+                            ticks: {
+                                suggestedMin: 0,
+                                suggestedMax: vm.dados.valor,
+                                userCallback: function(value, index, values) {
+                                    value = value.toString();
+                                    value = value.split(/(?=(?:...)*$)/);
+                                    value = value.join('.');
+                                    return vm.dados.moeda.simbolo + ' ' + value;
+                                }
+                            },
                         }]
                     }
                 }

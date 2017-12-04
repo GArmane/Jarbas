@@ -53,17 +53,14 @@
             }).success(function (data) {
                 LoginService.doLogin(vm.dados.email, vm.dados.senha)
                     .then(function () {
-                        $state.go('app.tela_inicial');
-                        $ionicPopup.alert({
-                            title: 'Bem-vindo ao Jarbas!'
-                        });
+                        $state.go('app.complete_cad');
                     }, utilities.promiseRejection)
                     .catch(utilities.promiseException);
             }).error(utilities.apiError);
         }
 
         function tooltipSenha() {
-            // tooltipAjuda.create();
+            $ionicPopup.alert({ template: 'Uma senha forte tem pelo menos 8 caracteres' });
         }
 
         function cadastroGoogle() {
@@ -77,11 +74,7 @@
                 }).success(function (data) {
                     // alert('sucesso na request de cadastro');
                     LoginService.defineAuth(data.token, data.usuario.email).then(function () {
-                        $state.go('app.tela_inicial');
-                        $ionicPopup.alert({
-                            title: 'Sucesso!',
-                            template: 'Seu cadastro foi realizado. Bem-vindo ao Jarbas!'
-                        });
+                        $state.go('app.complete_cad');
                     }, utilities.promiseRejection).catch(utilities.promiseException);
                 }).error(function (data) {
                     // alert('erro na request de cadastro');

@@ -14,8 +14,11 @@
         vm.dados.movimentacoes = [];
         vm.movimentacoes = [];
         vm.grupos = [];
+        vm.dadosGrafico = [];
+        vm.statusSync = '10/10';
 
         var moedas = [];
+        var grafico;
         
         vm.tooltipAjuda = tooltipAjuda;
 
@@ -25,7 +28,44 @@
             $ionicLoading.hide();
             if (!auth.verify())
                 return;
-            carregarDados();
+
+            if (utilities.online())
+                localEntities.getAll('Sync').then(function (data) {
+                    if (data.length > 0) {
+                        $ionicPopup.alert({
+                            title: 'Sincronização em andamento',
+                            template: 'Aguarde enquanto seus dados são sincronizados com o servidor.'
+                        }).then(function () {
+                            var total = data.length;
+                            var restante = total;
+                            $ionicLoading.show({
+                                template: '<ion-spinner></ion-spinner><br><br>{{vm.statusSync}}',
+                                scope: $scope
+                            });
+                            data.forEach(function (sync, i) {
+                                vm.statusSync = i + 1 + ' / ' + total;
+                                var id = sync.id;
+                                delete sync.id;
+                                sync = JSON.parse(sync.data);
+                                sync.headers = auth.header;
+                                console.log(sync);
+                                $http(sync).success(finaliza).error(finaliza);
+
+                                function finaliza() {
+                                    restante--;
+                                    if (restante == 0)
+                                        $ionicLoading.hide();
+                                    localEntities.remove('Sync', id);
+                                    carregarDados();
+                                }
+                            });
+                        });
+                        
+                    } else
+                        carregarDados();
+                });
+            else
+                carregarDados();
 
             $ionicHistory.nextViewOptions({
                 historyRoot: true
@@ -73,6 +113,28 @@
                     vm.grupos = data;
                     associaGrupoMov();
                 }).error(utilities.apiError);
+                // Só refresh
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'Moedas',
+                    headers: auth.header
+                }).success(function (data) {
+                    localEntities.refresh(data);
+                });
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'Investimentos/Usuario/' + auth.id,
+                    headers: auth.header
+                }).success(function (data) {
+                    localEntities.refresh(data);
+                });
+                $http({
+                    method: 'GET',
+                    url: api.url() + 'Objetivos/Usuario/' + auth.id,
+                    headers: auth.header
+                }).success(function (data) {
+                    localEntities.refresh(data);
+                });
             } else {
                 localEntities.getAll('ContaContabil').then(function (data) {
                     vm.dados.contas = data;
@@ -150,6 +212,7 @@
                         mov.contaDestino = conta;
                 }
             });
+            criarGrafico();
         }
 
         function transformaMov() {
@@ -162,11 +225,56 @@
                 transf.tipoMovimentacao = 2;
                 vm.dados.movimentacoes.push(transf);
             });
-            vm.dados.movimentacoes.forEach(function (mov) {
-                mov.data = new Date(mov.data);
-            });
-            vm.dados.movimentacoes.sort(function (a, b) {
-                a.data.getTime() - b.data.getTime();
+            if (vm.dados.movimentacoes.length > 0) {
+                vm.dados.movimentacoes.forEach(function (mov) {
+                    mov.data = new Date(mov.data);
+                });
+                vm.dados.movimentacoes.sort(function (a, b) {
+                    return b.data.getTime() - a.data.getTime();
+                });
+            }
+        }
+
+        function criarGrafico() {
+            var ctx = document.getElementById("graficoPizzaRecDesp");
+            vm.dadosGrafico = vm.dados.movimentacoes.reduce(function (result, item) {
+                if (item.tipoMovimentacao != 2)
+                    result[item.tipoMovimentacao] += (item.valor * item.contaContabil.moeda.cotacaoComercial);
+                return result;
+            }, [0, 0]);
+            grafico = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        label: 'Valor acumulado',
+                        backgroundColor: [utilities.getColor(0, true), utilities.getColor(1, true)],
+                        borderColor: [utilities.getColor(0, false), utilities.getColor(1, false)],
+                        data: vm.dadosGrafico,
+                        borderWidth: [4, 4]
+                    }],
+                    labels: ['Receitas', 'Despesas']
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: false
+                    },
+                    layout: {
+                        padding: {
+                            left: 30,
+                            right: 10,
+                            top: 10,
+                            bottom: 10
+                        }
+                    },
+                    legend: {
+                        position: 'right',
+                        display: false,
+                        labels: {
+                            boxWidth: 12
+                        }
+                    }
+                }
             });
         }
     }

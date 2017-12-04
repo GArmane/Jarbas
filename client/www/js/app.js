@@ -52,7 +52,9 @@
                     url: '/complete_cad',
                     views: {
                         'menuContent': {
-                            templateUrl: 'templates/complete_cad.html'
+                            templateUrl: 'templates/complete_cad.html',
+                            controller: 'perfilController',
+                            controllerAs: 'vm'
                         }
                     }
                 })

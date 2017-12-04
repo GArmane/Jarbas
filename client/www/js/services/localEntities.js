@@ -13,6 +13,7 @@ function LocalEntities() {
         var regReqs = []; // Requisições de registro (tem que aguardar pegar o ledb no localStorage antes)
         var getAllReqs = []; // Requisições de getAll  " "
         var ledb_lastIds = {};
+        var ledb_unsynced = {};
 
         instance.isRegistered = isRegistered;
         instance.register = register;
@@ -32,6 +33,11 @@ function LocalEntities() {
             ledb_lastIds = localforage.createInstance({
                 name: 'LocalEntitiesDB',
                 storeName: 'LastIds'
+            });
+
+            ledb_unsynced = localforage.createInstance({
+                name: 'LocalEntitiesDB',
+                storeName: 'Unsynced'
             });
 
             ledb_lastIds.iterate(function (value, key) {
@@ -61,7 +67,7 @@ function LocalEntities() {
             else
                 _register(constr, mapping);
         }
-        
+
         function get(type, id, include) {
             return new Promise(function (resolve, reject) {
                 try {

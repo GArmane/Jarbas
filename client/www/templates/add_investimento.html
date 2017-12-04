@@ -1,4 +1,4 @@
-<ion-view view-title="Inserir Investimento">
+<ion-view view-title="{{ vm.visualizacao ? 'Visualizar' : (vm.alteracao ? 'Alterar' : 'Inserir')}} Investimento">
     <ion-content class="padrao has-header padding">
         <form name="investimento">
 			<span class="input-label texto-input">Descrição</span>
@@ -18,13 +18,13 @@
             </label>
             <br>
 
-            <ion-checkbox ng-model="vm.iniciado" class="check texto-input">Investimento iniciado</ion-checkbox>
+            <ion-checkbox ng-model="vm.iniciado" class="check texto-input" ng-hide="vm.visualizacao">Investimento iniciado</ion-checkbox>
 
-            <div ng-hide="!vm.iniciado">
+            <div ng-hide="!vm.iniciado && !vm.visualizacao">
                 <br>
                 <span class="input-label">Data de inicio</span>
                 <label class="item item-input">
-                    <input type="date" ng-model="vm.dados.data" ng-disabled="vm.visualizacao">
+                    <input type="date" ng-model="vm.dados.dataInicio" ng-disabled="vm.visualizacao">
                 </label>
                 <br>
             </div>

@@ -14,6 +14,10 @@
         vm.movimentacoes = [];
         vm.grupo = new GrupoMovimentacoes();
         vm.grupo.nome = '';
+        vm.coresFundo = [];
+        vm.coresBorda = [];
+        vm.dadosGrafico = [];
+        vm.labels = [];
         
         vm.add = add;
         vm.alterar = alterar;
@@ -67,6 +71,7 @@
 
                 function success(data) {
                     localEntities.set(data);
+                    data.valor = 0;
                     vm.dados.push(data);
                     $ionicPopup.alert({
                         title: 'Sucesso!',
@@ -74,6 +79,7 @@
                     });
                     vm.grupo = new GrupoMovimentacoes();
                     vm.grupo.nome = '';
+                    criarGrafico();
                 }
             });
         }
@@ -130,6 +136,7 @@
                     });
                     vm.grupo = new GrupoMovimentacoes();
                     vm.grupo.nome = '';
+                    criarGrafico();
                 }
             });
         }
@@ -174,33 +181,36 @@
                     });
                     vm.grupo = new GrupoMovimentacoes();
                     vm.grupo.nome = '';
+                    criarGrafico();
                 }
             });
         }
 
         function criarGrafico() {
             var ctx = document.getElementById("graficoGrupos");
+            vm.coresFundo = vm.dados.map(function (grupo, i) {
+                return utilities.getColor(i, true);
+            });
+            vm.coresBorda = vm.dados.map(function (grupo, i) {
+                return utilities.getColor(i, false);
+            });
+            vm.dadosGrafico = vm.dados.map(function (grupo) {
+                return grupo.valor;
+            });
+            vm.labels = vm.dados.map(function (grupo) {
+                return grupo.nome;
+            });
             grafico = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     datasets: [{
                         label: 'Valor acumulado',
-                        backgroundColor: vm.dados.map(function (grupo, i) {
-                            return utilities.getColor(i, true);
-                        }),
-                        borderColor:  vm.dados.map(function (grupo, i) {
-                            return utilities.getColor(i, false);
-                        }),
-                        data: vm.dados.map(function (grupo) {
-                            return grupo.valor;
-                        }),
-                        borderWidth: vm.dados.map(function (grupo) {
-                            return 4;
-                        })
+                        backgroundColor: vm.coresFundo,
+                        borderColor: vm.coresBorda,
+                        data: vm.dadosGrafico,
+                        borderWidth: 4
                     }],
-                    labels: vm.dados.map(function (grupo) {
-                        return grupo.nome;
-                    })
+                    labels: vm.labels
                 },
                 options: {
                     responsive: true,
@@ -208,12 +218,15 @@
                         display: false
                     },
                     layout: {
-                        padding: {
-                            left: 50,
-                            right: 50,
-                            top: 50,
-                            bottom: 50
-                        }
+                        padding: 10
+                    },
+                    legend: {
+                        display: false,
+                        // position: 'right',
+                        // labels: {
+                        //     boxWidth: 12,
+                        //     fontSize: 16
+                        // }
                     }
                 }
             });
@@ -261,6 +274,9 @@
         function associaGrupoMov() {
             if (vm.movimentacoes.length == 0 || vm.dados.length == 0)
                 return;
+            vm.dados.forEach(function (grupo) {
+                grupo.valor = 0;
+            })
             for (var i = 0; i < vm.movimentacoes.length; i++) {
                 var mov = vm.movimentacoes[i];
                 if (mov.tipoMovimentacao == 0)
@@ -268,11 +284,8 @@
                 else
                     for (var j = 0; j < vm.dados.length; j++) {
                         var grupo = vm.dados[j];
-                        if (grupo.id == mov.grupoMovimentacoesId) {
-                            if (!grupo.valor)
-                                grupo.valor = 0;
+                        if (grupo.id == mov.grupoMovimentacoesId)
                             grupo.valor += mov.valor;
-                        }
                     }
             }
             criarGrafico();

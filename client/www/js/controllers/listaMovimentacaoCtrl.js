@@ -116,7 +116,7 @@
             var dataPesquisa;
             vm.dados.forEach(function (mov) {
                 var data = new Date(mov.data);
-                data = data.getMonth() + 1 + '/' + data.getFullYear();
+                data = { mes: data.getMonth() + 1, ano: data.getFullYear() };
                 dataPesquisa = data;
                 var i = labels.findIndex(temData);
                 if (i == -1) {
@@ -134,8 +134,30 @@
                     despesas[i] += mov.valor;
             });
 
+            var first = JSON.parse(JSON.stringify(labels[0])), last = labels[labels.length - 1];
+            var lastFound = 0;
+            while (first.mes < last.mes || first.ano < last.ano) {
+                dataPesquisa = first;
+                var index = labels.findIndex(temData);
+                if (index == -1) {
+                    labels.splice(lastFound, 0, JSON.parse(JSON.stringify(first)));
+                    receitas.splice(lastFound, 0, 0);
+                    despesas.splice(lastFound, 0, 0);
+                }
+                lastFound++;
+                if (first.mes == 12) {
+                    first.mes = 1;
+                    first.ano++;
+                } else
+                    first.mes++;
+            }
+
+            for (var i = 0; i < labels.length; i++) {
+                labels[i] = labels[i].mes + '/' + labels[i].ano;
+            }
+
             function temData(data) {
-                return dataPesquisa == data;
+                return dataPesquisa.mes == data.mes && dataPesquisa.ano == data.ano;
             }
 
             var ctx = document.getElementById("graficoRecVsDesp");

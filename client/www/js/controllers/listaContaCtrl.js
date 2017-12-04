@@ -58,16 +58,19 @@
                 var conta = JSON.parse(JSON.stringify(vm.conta));
                 conta.moedaId = conta.moeda.id;
                 conta.moeda = null;
+                var req = {
+                    method: 'POST',
+                    url: api.url() + 'ContasContabeis/',
+                    data: conta,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'POST',
-                        url: api.url() + 'ContasContabeis/',
-                        data: conta,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     success(conta);
+                }
 
                 function success(data) {
                     localEntities.set(data);

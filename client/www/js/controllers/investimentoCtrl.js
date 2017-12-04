@@ -63,14 +63,16 @@
             vm.dados.usuarioId = auth.id;
             vm.dados.moedaId = vm.dados.moeda.id;
             vm.dados.moeda = null;
-            if (!vm.iniciado)
+            if (!vm.iniciado) {
                 vm.dados.valorAtual = vm.dados.valorInvestido;
+                vm.dados.dataInicio = new Date();
+            }
             if (utilities.online())
                 $http({
                     method: 'POST',
                     url: api.url() + 'Investimentos',
                     data: vm.dados,
-                    header: auth.header
+                    headers: auth.header
                 }).success(success)
                 .error(utilities.apiError);
             else
@@ -93,7 +95,7 @@
                     method: 'PUT',
                     url: api.url() + 'Investimentos/' + vm.dados.id,
                     data: vm.dados,
-                    header: auth.header
+                    headers: auth.header
                 }).success(success)
                 .error(utilities.apiError);
             else
@@ -120,7 +122,7 @@
                         $http({
                             method: 'DELETE',
                             url: api.url() + 'Investimentos/' + vm.dados.id,
-                            header: auth.header
+                            headers: auth.header
                         }).success(success)
                         .error(utilities.apiError);
                     else
