@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Objetivos")]
-    //[Authorize]
+    [Authorize]
     public class ObjetivosController : Controller
     {
         private JarbasContext context;
@@ -221,8 +222,21 @@ namespace serverTCC.Controllers
 
                 objetivo.Valor += valor;
 
+                var historico = new HistoricoObjetivo
+                {
+                    DataFinal = DateTime.Now,
+                    ValorFinal = objetivo.Valor,
+                    ObjetivoId = objetivo.Id
+                };
+
+                context.HistoricoObjetivo.Add(historico);
                 context.Objetivo.Update(objetivo);
                 await context.SaveChangesAsync();
+
+                objetivo = await context.Objetivo
+                    .Include(o => o.HistoricoObjetivo)
+                    .FirstOrDefaultAsync(o => o.Id == id);
+
                 return Ok(objetivo);
             }
             catch (Exception e)
@@ -266,9 +280,22 @@ namespace serverTCC.Controllers
                 conta.Saldo -= valor;
                 objetivo.Valor += valor;
 
+                var historico = new HistoricoObjetivo
+                {
+                    DataFinal = DateTime.Now,
+                    ValorFinal = objetivo.Valor,
+                    ObjetivoId = objetivo.Id
+                };
+
                 context.ContaContabil.Update(conta);
+                context.HistoricoObjetivo.Add(historico);
                 context.Objetivo.Update(objetivo);
                 await context.SaveChangesAsync();
+
+                objetivo = await context.Objetivo
+                    .Include(o => o.HistoricoObjetivo)
+                    .FirstOrDefaultAsync(o => o.Id == objetivoId);
+
                 return Ok(new { objetivo, conta });
             }
             catch (Exception e)
@@ -313,9 +340,23 @@ namespace serverTCC.Controllers
                 conta.Saldo += valor;
                 objetivo.Valor -= valor;
 
+
+                var historico = new HistoricoObjetivo
+                {
+                    DataFinal = DateTime.Now,
+                    ValorFinal = objetivo.Valor,
+                    ObjetivoId = objetivo.Id
+                };
+
                 context.ContaContabil.Update(conta);
+                context.HistoricoObjetivo.Add(historico);
                 context.Objetivo.Update(objetivo);
                 await context.SaveChangesAsync();
+
+                objetivo = await context.Objetivo
+                    .Include(o => o.HistoricoObjetivo)
+                    .FirstOrDefaultAsync(o => o.Id == objetivoId);
+
                 return Ok(new { objetivo, conta });
             }
             catch (Exception e)
