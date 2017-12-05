@@ -29,9 +29,13 @@
         //////////////// Public
 
         function activate() {
-            $ionicLoading.show();
+            // window.loadingScreen.avoid = true;
+            window.loadingScreen.loadingService = $ionicLoading;
+            window.loadingScreen.ready = true;
+
+            // $ionicLoading.show();
             LoginService.silentLogin().then(loginSuccess, function () {
-                $ionicLoading.hide();
+                // $ionicLoading.hide();
             });
         }
 
@@ -66,14 +70,14 @@
                 
                 $http({
                     method: 'POST',
-                    url: 'api/Usuarios/Enviar/' + vm.dados.email
+                    url: api.url() + 'Usuarios/Enviar/' + vm.dados.email
                 }).success(function (data) {
                     $ionicPopup.show({
                         title: 'Recuperar senha',
                         template: '<span style="font-size:16px">Enviamos uma mensagem de e-mail para ' + vm.dados.email + ' com um código de recuperação.</span><br><br>' +
-                                '<span style="font-size:16px">Digite o código:</span><label class="item item-input"><input type="email" ng-model="vm.dados.codigo"></label>' + 
-                                '<span style="font-size:16px">Digite sua nova senha:</span><label class="item item-input"><input type="email" ng-model="vm.dados.novaSenha"></label>' +
-                                '<span style="font-size:16px">Confirme sua nova senha:</span><label class="item item-input"><input type="email" ng-model="vm.dados.confirmaSenha"></label>',
+                                '<span style="font-size:16px">Digite o código:</span><label class="item item-input"><input type="text" ng-model="vm.dados.codigo"></label>' + 
+                                '<span style="font-size:16px">Digite sua nova senha:</span><label class="item item-input"><input type="password" ng-model="vm.dados.novaSenha"></label>' +
+                                '<span style="font-size:16px">Confirme sua nova senha:</span><label class="item item-input"><input type="password" ng-model="vm.dados.confirmaSenha"></label>',
                         scope: $scope,
                         buttons: [{
                             text: 'Cancelar',
@@ -98,7 +102,7 @@
                         
                         $http({
                             method: 'POST',
-                            url: 'api/Usuarios/Recuperar/',
+                            url: api.url() + 'Usuarios/Recuperar/',
                             data: {
                                 email: vm.dados.email,
                                 codigo: vm.dados.codigo,
