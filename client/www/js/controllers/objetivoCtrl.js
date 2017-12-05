@@ -49,16 +49,20 @@
             hist.dataFinal = vm.dados.dataInicial;
             hist.valorFinal = 0;
             vm.dados.historicoObjetivo.push(hist);
+
+            var req = {
+                method: 'POST',
+                url: api.url() + 'Objetivos',
+                data: vm.dados,
+                headers: auth.header
+            };
             if (utilities.online())
-                $http({
-                    method: 'POST',
-                    url: api.url() + 'Objetivos',
-                    data: vm.dados,
-                    headers: auth.header
-                }).success(success)
+                $http(req).success(success)
                 .error(utilities.apiError);
-            else
+            else {
+                localEntities.set(new Sync(req));
                 success(vm.dados);
+            }
 
             function success(data) {
                 localEntities.set(data);
@@ -76,16 +80,19 @@
             hist.dataFinal = vm.dados.dataInicial;
             hist.valorFinal = vm.dados.valor;
             vm.dados.historicoObjetivo.push(hist);
+            var req = {
+                method: 'PUT',
+                url: api.url() + 'Objetivos/' + vm.dados.id,
+                data: vm.dados,
+                headers: auth.header
+            };
             if (utilities.online())
-                $http({
-                    method: 'PUT',
-                    url: api.url() + 'Objetivos/' + vm.dados.id,
-                    data: vm.dados,
-                    headers: auth.header
-                }).success(success)
+                $http(req).success(success)
                 .error(utilities.apiError);
-            else
+            else {
+                localEntities.set(new Sync(req));
                 success(vm.dados);
+            }
 
             function success(data) {
                 localEntities.set(data);
@@ -104,15 +111,18 @@
                 template: 'Tem certeza que deseja excluir o objetivo ' + vm.dados.descricao + '?'
             }).then(function (res) {
                 if (res) {
+                    var req = {
+                        method: 'DELETE',
+                        url: api.url() + 'Objetivos/' + vm.dados.id,
+                        headers: auth.header
+                    };
                     if (utilities.online())
-                        $http({
-                            method: 'DELETE',
-                            url: api.url() + 'Objetivos/' + vm.dados.id,
-                            headers: auth.header
-                        }).success(success)
+                        $http(req).success(success)
                         .error(utilities.apiError);
-                    else
+                    else {
+                        localEntities.set(new Sync(req));
                         success(vm.dados);
+                    }
                 }
             });
                     
@@ -138,16 +148,19 @@
 
         function arquivar() {
             original.arquivar = !original.arquivar;
+            var req = {
+                method: 'PUT',
+                url: api.url() + 'Objetivos/' + vm.dados.id,
+                data: original,
+                headers: auth.header
+            };
             if (utilities.online())
-                $http({
-                    method: 'PUT',
-                    url: api.url() + 'Objetivos/' + vm.dados.id,
-                    data: original,
-                    headers: auth.header
-                }).success(success)
+                $http(req).success(success)
                 .error(utilities.apiError);
-            else
+            else {
+                localEntities.set(new Sync(req));
                 success(vm.dados);
+            }
 
             function success(data) {
                 localEntities.set(data);
@@ -192,16 +205,18 @@
                 else
                     url = 'Objetivos/Inserir/' + vm.dados.id;
 
+                var req = {
+                    method: 'POST',
+                    url: api.url() + url,
+                    // params: params,
+                    data: vm.transf.valor,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'POST',
-                        url: api.url() + url,
-                        // params: params,
-                        data: vm.transf.valor,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
                 else {
+                    localEntities.set(new Sync(req));
                     var conta = vm.transf.conta, objetivo = original;
                     if (vm.transf.conta) {
                         if (vm.transf.conta.moeda.id != vm.dados.moeda.id)
@@ -258,15 +273,17 @@
                 if (!salvar)
                     return;
                 
+                var req = {
+                    method: 'POST',
+                    url: api.url() + 'Objetivos/TransferirToConta/' + vm.transf.conta.id + '/' + vm.dados.id,
+                    data: vm.transf.valor,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'POST',
-                        url: api.url() + 'Objetivos/TransferirToConta/' + vm.transf.conta.id + '/' + vm.dados.id,
-                        data: vm.transf.valor,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
                 else {
+                    localEntities.set(new Sync(req));
                     var conta = vm.transf.conta, objetivo = original;
                     if (conta.moeda.id != vm.dados.moeda.id)
                         conta.saldo += (vm.transf.valor * vm.dados.moeda.cotacaoComercial) / conta.moeda.cotacaoComercial;

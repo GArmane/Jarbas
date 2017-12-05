@@ -67,16 +67,19 @@
                 vm.dados.valorAtual = vm.dados.valorInvestido;
                 vm.dados.dataInicio = new Date();
             }
+            var req = {
+                method: 'POST',
+                url: api.url() + 'Investimentos',
+                data: vm.dados,
+                headers: auth.header
+            };
             if (utilities.online())
-                $http({
-                    method: 'POST',
-                    url: api.url() + 'Investimentos',
-                    data: vm.dados,
-                    headers: auth.header
-                }).success(success)
+                $http(req).success(success)
                 .error(utilities.apiError);
-            else
+            else {
+                localEntities.set(new Sync(req));
                 success(vm.dados);
+            }
 
             function success(data) {
                 localEntities.set(data);
@@ -90,16 +93,19 @@
         }
 
         function alterar() {
+            var req = {
+                method: 'PUT',
+                url: api.url() + 'Investimentos/' + vm.dados.id,
+                data: vm.dados,
+                headers: auth.header
+            };
             if (utilities.online())
-                $http({
-                    method: 'PUT',
-                    url: api.url() + 'Investimentos/' + vm.dados.id,
-                    data: vm.dados,
-                    headers: auth.header
-                }).success(success)
+                $http(req).success(success)
                 .error(utilities.apiError);
-            else
+            else {
+                localEntities.set(new Sync(req));
                 success(vm.dados);
+            }
 
             function success(data) {
                 localEntities.set(data);
@@ -118,15 +124,18 @@
                 template: 'Tem certeza que deseja excluir o investimento ' + vm.dados.descricao + '?'
             }).then(function (res) {
                 if (res) {
+                    var req = {
+                        method: 'DELETE',
+                        url: api.url() + 'Investimentos/' + vm.dados.id,
+                        headers: auth.header
+                    };
                     if (utilities.online())
-                        $http({
-                            method: 'DELETE',
-                            url: api.url() + 'Investimentos/' + vm.dados.id,
-                            headers: auth.header
-                        }).success(success)
+                        $http(req).success(success)
                         .error(utilities.apiError);
-                    else
+                    else {
+                        localEntities.set(new Sync(req));
                         success(vm.dados);
+                    }
                 }
             });
                     
@@ -181,15 +190,17 @@
                 else
                     url = 'Investimentos/Inserir/' + vm.dados.id;
 
-                if (utilities.online())
-                    $http({
-                        method: 'POST',
-                        url: api.url() + url,
-                        data: vm.transf.valor,
-                        headers: auth.header
-                    }).success(success)
+                var req = {
+                    method: 'POST',
+                    url: api.url() + url,
+                    data: vm.transf.valor,
+                    headers: auth.header
+                };
+                if (utilities.online(req))
+                    $http(req).success(success)
                     .error(utilities.apiError);
                 else {
+                    localEntities.set(new Sync(req));
                     var conta = vm.transf.conta, investimento = original;
                     if (vm.transf.conta) {
                         if (vm.transf.conta.moeda.id != vm.dados.moeda.id)
@@ -246,15 +257,17 @@
                 if (!salvar)
                     return;
                 
+                var req = {
+                    method: 'POST',
+                    url: api.url() + 'Investimentos/TransferirToConta/' + vm.transf.conta.id + '/' + vm.dados.id,
+                    data: vm.transf.valor,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'POST',
-                        url: api.url() + 'Investimentos/TransferirToConta/' + vm.transf.conta.id + '/' + vm.dados.id,
-                        data: vm.transf.valor,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
                 else {
+                    localEntities.set(new Sync(req));
                     var conta = vm.transf.conta, investimento = original;
                     if (conta.moeda.id != vm.dados.moeda.id)
                         conta.saldo += (vm.transf.valor * vm.dados.moeda.cotacaoComercial) / conta.moeda.cotacaoComercial;
@@ -286,6 +299,13 @@
         }
         
         function prever() {
+            if (!utilities.online()) {
+                $ionicPopup.alert({
+                    title: 'Ops!',
+                    template: 'A previsão só funciona com conexão à internet.'
+                });
+                return;
+            }
             $ionicPopup.show({
                 title: 'Prever valor futuro',
                 template: '<span class="input-label">Data futura</span>' + 

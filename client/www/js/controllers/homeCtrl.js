@@ -25,43 +25,49 @@
         activate();
 
         function activate() {
-            $ionicLoading.hide();
             if (!auth.verify())
                 return;
 
             if (utilities.online())
                 localEntities.getAll('Sync').then(function (data) {
-                    if (data.length > 0) {
+                    if (data.length > 0)
                         $ionicPopup.alert({
                             title: 'Sincronização em andamento',
                             template: 'Aguarde enquanto seus dados são sincronizados com o servidor.'
-                        }).then(function () {
-                            var total = data.length;
-                            var restante = total;
+                        }).then(function start() {
+                            loadingScreen.avoid = true;
+                            
                             $ionicLoading.show({
                                 template: '<ion-spinner></ion-spinner><br><br>{{vm.statusSync}}',
                                 scope: $scope
                             });
-                            data.forEach(function (sync, i) {
+                            
+                            var total = data.length;
+                            var restante = total;
+                            var i = -1;
+                            
+                            function success() {
+                                var sync = data[++i];
                                 vm.statusSync = i + 1 + ' / ' + total;
-                                var id = sync.id;
-                                delete sync.id;
                                 sync = JSON.parse(sync.data);
                                 sync.headers = auth.header;
-                                console.log(sync);
                                 $http(sync).success(finaliza).error(finaliza);
-
-                                function finaliza() {
-                                    restante--;
-                                    if (restante == 0)
-                                        $ionicLoading.hide();
-                                    localEntities.remove('Sync', id);
+                            }
+                            
+                            function finaliza() {
+                                restante--;
+                                if (restante == 0) {
+                                    localEntities.clear('Sync');
+                                    $ionicLoading.hide();
+                                    loadingScreen.avoid = false;
                                     carregarDados();
-                                }
-                            });
+                                } else
+                                    success();
+                            }
+
+                            success();
                         });
-                        
-                    } else
+                    else
                         carregarDados();
                 });
             else

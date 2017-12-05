@@ -123,16 +123,20 @@
                 var conta = JSON.parse(JSON.stringify(vm.conta));
                 conta.moedaId = conta.moeda.id;
                 conta.moeda = null;
+
+                var req = {
+                    method: 'PUT',
+                    url: api.url() + 'ContasContabeis/' + vm.conta.id,
+                    data: conta,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'PUT',
-                        url: api.url() + 'ContasContabeis/' + vm.conta.id,
-                        data: conta,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     success(conta);
+                }
 
                 function success(data) {
                     localEntities.set(data);
@@ -167,15 +171,18 @@
                 template: 'Tem certeza que deseja excluir a conta contábil ' + vm.conta.nome + '?'
             }).then(function (res) {
                 if (res) {
+                    var req = {
+                        method: 'DELETE',
+                        url: api.url() + 'ContasContabeis/' + vm.conta.id,
+                        headers: auth.header
+                    };
                     if (utilities.online())
-                        $http({
-                            method: 'DELETE',
-                            url: api.url() + 'ContasContabeis/' + vm.conta.id,
-                            headers: auth.header
-                        }).success(success)
+                        $http(req).success(success)
                         .error(utilities.apiError);
-                    else
+                    else {
+                        localEntities.set(new Sync(req));
                         success();
+                    }
                     
                     function success() {
                         localEntities.remove('ContaContabil', vm.conta.id);

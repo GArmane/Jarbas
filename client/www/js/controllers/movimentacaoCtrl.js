@@ -97,27 +97,33 @@
                 transf.receita.agendamento = null;
                 transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
 
+                var req = {
+                    url: api.url() + 'Movimentacoes/Transferencia/',
+                    method: 'POST',
+                    data: transf,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        url: api.url() + 'Movimentacoes/Transferencia/',
-                        method: 'POST',
-                        data: transf,
-                        headers: auth.header
-                    }).success(successTransf)
+                    $http(req).success(successTransf)
                     .error(error);
-                else
+                else {
+                    localEntities.set(new Sync(req));    
                     successTransf(transf);
+                }
             } else {
+                var req = {
+                    url: api.url() + 'Movimentacoes/',
+                    method: 'POST',
+                    data: vm.dados,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        url: api.url() + 'Movimentacoes/',
-                        method: 'POST',
-                        data: vm.dados,
-                        headers: auth.header
-                    }).success(successMov)
+                    $http(req).success(successMov)
                     .error(error);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     successMov(vm.dados);
+                }
             }
 
             function successTransf(data) {
@@ -174,27 +180,33 @@
                 transf.receita.tipoMovimentacao = 0;
                 transf.receita.valor = (transf.despesa.valor * vm.contaSelecionada.moeda.cotacaoComercial) / vm.contaDestino.moeda.cotacaoComercial;
 
+                var req = {
+                    url: api.url() + 'Movimentacoes/Transferencia/' + transf.id,
+                    method: 'PUT',
+                    data: transf,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        url: api.url() + 'Movimentacoes/Transferencia/' + transf.id,
-                        method: 'PUT',
-                        data: transf,
-                        headers: auth.header
-                    }).success(successTransf)
+                    $http(req).success(successTransf)
                     .error(error);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     successTransf(transf);
+                }
             } else {
+                var req = {
+                    url: api.url() + 'Movimentacoes/' + vm.dados.id,
+                    method: 'PUT',
+                    data: vm.dados,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        url: api.url() + 'Movimentacoes/' + vm.dados.id,
-                        method: 'PUT',
-                        data: vm.dados,
-                        headers: auth.header
-                    }).success(successMov)
+                    $http(req).success(successMov)
                     .error(error);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     successMov(vm.dados);
+                }
             }
 
             function successMov(data) {
@@ -243,23 +255,34 @@
                 template: 'Tem certeza que deseja excluir a movimentação ' + vm.dados.descricao + '?'
             }).then(function (res) {
                 if (res) {
-                    if (utilities.online()) {
-                        if (vm.dados.tipoMovimentacao == 2) {
-                            $http({
-                                method: 'DELETE',
-                                url: api.url() + '/Movimentacoes/Transferencia/' + vm.dados.id,
-                                headers: auth.header
-                            }).success(success)
+                    var req;
+                    if (vm.dados.tipoMovimentacao == 2) {
+                        req = {
+                            method: 'DELETE',
+                            url: api.url() + '/Movimentacoes/Transferencia/' + vm.dados.id,
+                            headers: auth.header
+                        };
+                        if (utilities.online())
+                            $http(req).success(success)
                             .error(utilities.apiError);
-                        } else
-                            $http({
-                                method: 'DELETE',
-                                url: api.url() + 'Movimentacoes/' + vm.dados.id,
-                                headers: auth.header
-                            }).success(success)
+                        else {
+                            localEntities.set(new Sync(req));
+                            success();
+                        }
+                    } else {
+                        req = {
+                            method: 'DELETE',
+                            url: api.url() + 'Movimentacoes/' + vm.dados.id,
+                            headers: auth.header
+                        };
+                        if (utilities.online())
+                            $http(req).success(success)
                             .error(utilities.apiError);
-                    } else
-                        success();
+                        else {
+                            localEntities.set(new Sync(req));
+                            success();
+                        }
+                    }
                 }
                 
                 function success() {

@@ -58,16 +58,19 @@
                 if (!salvar)
                     return;
                 vm.grupo.usuarioId = auth.id;
+                var req = {
+                    method: 'POST',
+                    url: api.url() + 'GrupoMovimentacoes/',
+                    data: vm.grupo,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'POST',
-                        url: api.url() + 'GrupoMovimentacoes/',
-                        data: vm.grupo,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     success(vm.grupo);
+                }
 
                 function success(data) {
                     localEntities.set(data);
@@ -116,16 +119,19 @@
                 if (!salvar)
                     return;
                 
+                var req = {
+                    method: 'PUT',
+                    url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
+                    data: vm.grupo,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'PUT',
-                        url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
-                        data: vm.grupo,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     success(vm.grupo);
+                }
 
                 function success(data) {
                     localEntities.set(data);
@@ -162,15 +168,18 @@
                 if (!res)
                     return;
 
+                var req = {
+                    method: 'DELETE',
+                    url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
+                    headers: auth.header
+                };
                 if (utilities.online())
-                    $http({
-                        method: 'DELETE',
-                        url: api.url() + 'GrupoMovimentacoes/' + vm.grupo.id,
-                        headers: auth.header
-                    }).success(success)
+                    $http(req).success(success)
                     .error(utilities.apiError);
-                else
+                else {
+                    localEntities.set(new Sync(req));
                     success();
+                }
 
                 function success() {
                     localEntities.remove('GrupoMovimentacoes', vm.grupo.id);
