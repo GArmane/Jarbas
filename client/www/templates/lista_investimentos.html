@@ -1,7 +1,7 @@
 <ion-view view-title="Investimentos">
     <ion-content class="padrao has-header">
         <div class="list">
-			<a class="item" ng-repeat="inv in vm.dados" href="#/app/add_investimento/{{inv.id}}">
+			<a class="item" ng-repeat="inv in vm.dados track by $index" href="#/app/add_investimento/{{inv.id}}">
 				<div class="row">
 					<div class="col col-75">
 						<h2>{{inv.descricao}}</h2>

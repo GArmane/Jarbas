@@ -24,7 +24,7 @@
                 Contas
             </div>
 
-            <a class="item" ng-repeat="conta in vm.dados.contas.slice(0, 3)">
+            <a class="item" ng-repeat="conta in vm.dados.contas.slice(0, 3) track by $index">
                 <div class="row">
                     <div class="col col-75">
                         <h2>{{conta.nome}}</h2>
@@ -42,7 +42,7 @@
             <div class="item item-divider">
                 Movimentações
             </div>
-            <a class="item" ng-href="#/app/add_movimentacao/{{mov.id}}/{{mov.tipoMovimentacao == 2}}" ng-repeat="mov in vm.dados.movimentacoes.slice(0, 3)">
+            <a class="item" ng-href="#/app/add_movimentacao/{{mov.id}}/{{mov.tipoMovimentacao == 2}}" ng-repeat="mov in vm.dados.movimentacoes.slice(0, 3) track by $index">
                 <div class="row">
                     <div class="col col-75">
                         <h2>{{mov.descricao}}</h2>

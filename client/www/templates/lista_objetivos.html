@@ -1,7 +1,7 @@
 <ion-view view-title="Objetivos">
 	<ion-content class="padrao has-header">
 		<div class="list">
-			<a class="item" ng-repeat="obj in vm.dados.filter(vm.ocultaArq)" href="#/app/add_objetivo/{{obj.id}}">
+			<a class="item" ng-repeat="obj in vm.dados.filter(vm.ocultaArq) track by $index" href="#/app/add_objetivo/{{obj.id}}">
 				<div class="row">
 					<div class="col col-75">
 						<h2>{{obj.descricao}}</h2>

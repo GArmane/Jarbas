@@ -1,7 +1,7 @@
 <ion-view view-title="Contas contábeis">
 	<ion-content class="padrao has-header">
 		<div class="list">
-			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
+			<a class="item" ng-repeat="conta in vm.dados track by $index" ng-click="vm.alterar($index)">
     			{{conta.nome}}
     			<span class="item-note" style="color: {{conta.saldo >= 0 ? '#3366CC' : '#DC3912'}}">
 					{{conta.saldo | currency: conta.moeda.simbolo + ' '}}

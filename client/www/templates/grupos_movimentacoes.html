@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-10"></div>
 				<div class="col">
-					<div class="row" style="margin: 5px; font-size: 16px" ng-repeat="label in vm.labels">
+					<div class="row" style="margin: 5px; font-size: 16px" ng-repeat="label in vm.labels track by $index">
 						<div class="col col-10" style="background-color: {{vm.coresFundo[$index]}}; border: 3px solid {{vm.coresBorda[$index]}}">
 							
 						</div>
@@ -25,7 +25,7 @@
 			</div>
 		</div>
 		<div class="list">
-			<a class="item" ng-repeat="grupo in vm.dados" ng-click="vm.alterar($index)">
+			<a class="item" ng-repeat="grupo in vm.dados track by $index" ng-click="vm.alterar($index)">
     			{{grupo.nome}}
     			
   			</a>
