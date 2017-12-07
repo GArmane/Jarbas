@@ -220,12 +220,12 @@ namespace serverTCC.Controllers
                     return NotFound(ModelState.Values.SelectMany(v => v.Errors));
                 }
 
-                objetivo.Valor += valor;
+                var lastValor = objetivo.HistoricoObjetivo.Last<HistoricoObjetivo>().ValorFinal;
 
                 var historico = new HistoricoObjetivo
                 {
                     DataFinal = DateTime.Now,
-                    ValorFinal = objetivo.Valor,
+                    ValorFinal = lastValor + valor,
                     ObjetivoId = objetivo.Id
                 };
 
