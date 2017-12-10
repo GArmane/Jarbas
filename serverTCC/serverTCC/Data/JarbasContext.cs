@@ -24,6 +24,7 @@ namespace serverTCC.Data
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<RecuperacaoSenha> RecuperacaoSenha { get; set; }
         public DbSet<Agendamento> Agendamento { get; set; }
+        public DbSet<ValoresInseridos> ValoresInseridos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

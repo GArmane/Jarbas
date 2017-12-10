@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace serverTCC.Models
 {
@@ -22,5 +24,19 @@ namespace serverTCC.Models
         public DateTime DataInicio { get; set; }
 
         public EscalaTempo EscalaTempo { get; set; }
+
+        [JsonIgnore]
+        public DateTime UltimaAtualizacao { get; set; }
+        [JsonIgnore]
+        public List<ValoresInseridos> ValoresInseridos { get; set; }
+    }
+
+    public class ValoresInseridos
+    {
+        public int Id { get; set; }
+        public int InvestimentoId { get; set; }
+        public Investimento Investimento { get; set; }
+        public DateTime Data { get; set; }
+        public decimal Valor { get; set; }
     }
 }

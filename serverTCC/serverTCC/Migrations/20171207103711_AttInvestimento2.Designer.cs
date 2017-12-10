@@ -9,9 +9,10 @@ using serverTCC.Models;
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20171207103711_AttInvestimento2")]
+    partial class AttInvestimento2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -244,7 +245,7 @@ namespace serverTCC.Migrations
 
                     b.Property<int>("TipoInvestimentoId");
 
-                    b.Property<DateTime>("UltimaAtualizacao");
+                    b.Property<DateTime?>("UltimaAtualizacao");
 
                     b.Property<string>("UsuarioId");
 
@@ -484,7 +485,8 @@ namespace serverTCC.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InvestimentoId");
+                    b.HasIndex("InvestimentoId")
+                        .IsUnique();
 
                     b.ToTable("ValoresInseridos");
                 });
@@ -647,8 +649,8 @@ namespace serverTCC.Migrations
             modelBuilder.Entity("serverTCC.Models.ValoresInseridos", b =>
                 {
                     b.HasOne("serverTCC.Models.Investimento", "Investimento")
-                        .WithMany("ValoresInseridos")
-                        .HasForeignKey("InvestimentoId")
+                        .WithOne("ValoresInseridos")
+                        .HasForeignKey("serverTCC.Models.ValoresInseridos", "InvestimentoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

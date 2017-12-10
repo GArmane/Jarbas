@@ -9,9 +9,10 @@ using serverTCC.Models;
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20171207103841_AttInvestimento3")]
+    partial class AttInvestimento3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -244,7 +245,7 @@ namespace serverTCC.Migrations
 
                     b.Property<int>("TipoInvestimentoId");
 
-                    b.Property<DateTime>("UltimaAtualizacao");
+                    b.Property<DateTime?>("UltimaAtualizacao");
 
                     b.Property<string>("UsuarioId");
 

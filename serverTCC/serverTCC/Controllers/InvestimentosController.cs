@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using serverTCC.Data;
 using serverTCC.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace serverTCC.Controllers
 {
     [Produces("application/json")]
     [Route("api/Investimentos")]
-    //[Authorize]
+    [Authorize]
     public class InvestimentosController : Controller
     {
         private JarbasContext context;
@@ -34,6 +35,7 @@ namespace serverTCC.Controllers
 
                 if (usuarioExists)
                 {
+                    investimento.UltimaAtualizacao = investimento.DataInicio;
                     context.Investimento.Add(investimento);
                     await context.SaveChangesAsync();
                     return CreatedAtAction("Create", investimento);
@@ -62,11 +64,13 @@ namespace serverTCC.Controllers
                 var investimentos = context.Investimento
                     .Include(i => i.Moeda)
                     .Include(i => i.TipoInvestimento)
+                    .Include(i => i.ValoresInseridos)
                     .Where(i => i.UsuarioId.Equals(userId));
 
                 foreach (var investimento in investimentos)
                 {
                     investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
+                    investimento.ValorAtual = CalcularInseridos(investimento);
                 }
 
                 context.Investimento.UpdateRange(investimentos);
@@ -93,12 +97,14 @@ namespace serverTCC.Controllers
                 var investimento = await context.Investimento
                     .Include(i => i.Moeda)
                     .Include(i => i.TipoInvestimento)
+                    .Include(i => i.ValoresInseridos)
                     .FirstOrDefaultAsync(i => i.Id.Equals(id));
 
 
                 if (investimento != null)
                 {
                     investimento.ValorAtual = AtualizarValor(investimento, DateTime.Now);
+                    investimento.ValorAtual = CalcularInseridos(investimento);
                     context.Investimento.Update(investimento);
                     await context.SaveChangesAsync();
                     return Ok(investimento);
@@ -232,7 +238,14 @@ namespace serverTCC.Controllers
                 }
 
                 investimento.ValorAtual += valor;
-
+                var aux = new ValoresInseridos
+                {
+                    InvestimentoId = investimento.Id,
+                    Data = new DateTime(2017, 07, 13),
+                    Valor = valor
+                };
+                context.ValoresInseridos.Add(aux);
+      
                 context.Investimento.Update(investimento);
                 await context.SaveChangesAsync();
                 return Ok(investimento);
@@ -241,6 +254,89 @@ namespace serverTCC.Controllers
             {
                 return BadRequest(e.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// Calcula o rendimento de valores inseridos após o inicio do investimento
+        /// </summary>
+        private decimal CalcularInseridos(Investimento investimento)
+        {
+            int dias;
+            decimal valorAux = 0m;
+            double valorD;
+            IList<ValoresInseridos> sairao = new List<ValoresInseridos>();
+            if (!investimento.ValoresInseridos.Any())
+                return investimento.ValorAtual;
+
+            if (investimento.EscalaTempo == EscalaTempo.Diario)
+            {
+                foreach(var aux in investimento.ValoresInseridos)
+                {
+                    dias = TempoEmDias(aux.Data, DateTime.Now);
+                    valorD = (double)aux.Valor * (Math.Pow(1 + investimento.TipoInvestimento.Taxa, (double)dias) - 1);
+                    valorAux += GarantirPrecisao(valorD);
+                    sairao.Add(aux);
+                }
+            }
+            else if (investimento.EscalaTempo == EscalaTempo.Semanal)
+            {
+                foreach(var aux in investimento.ValoresInseridos)
+                {
+                    dias = TempoEmDias(aux.Data, DateTime.Now);
+                    if(dias >= 7)
+                    {
+                        var semanas = (double)dias / 7.00;
+                        valorD = (double)aux.Valor * (Math.Pow(1 + investimento.TipoInvestimento.Taxa, semanas) - 1);
+                        valorAux += GarantirPrecisao(valorD);
+                        sairao.Add(aux);
+                    }
+                }
+            }
+            else if (investimento.EscalaTempo == EscalaTempo.Quinzenal)
+            {
+                foreach (var aux in investimento.ValoresInseridos)
+                {
+                    dias = TempoEmDias(aux.Data, DateTime.Now);
+                    if(dias >= 15)
+                    {
+                        var quinzenas = (double)dias / 15.00;
+                        valorD = (double)aux.Valor * (Math.Pow(1 + investimento.TipoInvestimento.Taxa, quinzenas) - 1);
+                        valorAux += GarantirPrecisao(valorD);
+                        sairao.Add(aux);
+                    }
+                }
+            }
+            else if (investimento.EscalaTempo == EscalaTempo.Mensal)
+            {
+                foreach (var aux in investimento.ValoresInseridos)
+                {
+                    dias = TempoEmDias(aux.Data, DateTime.Now);
+                    if (dias >= 30)
+                    {
+                        var meses = (double)dias / 30.00;
+                        valorD = (double)aux.Valor * (Math.Pow(1 + investimento.TipoInvestimento.Taxa, meses) - 1);
+                        valorAux += GarantirPrecisao(valorD);
+                        sairao.Add(aux);
+                    }
+                }
+            }
+            else if(investimento.EscalaTempo == EscalaTempo.Anual)
+            {
+                foreach (var aux in investimento.ValoresInseridos)
+                {
+                    dias = TempoEmDias(aux.Data, DateTime.Now);
+                    if(dias >= 360)
+                    {
+                        var anos = (double)dias / 360.00;
+                        valorD = (double)aux.Valor * (Math.Pow(1 + investimento.TipoInvestimento.Taxa, anos) - 1);
+                        valorAux += GarantirPrecisao(valorD);
+                        sairao.Add(aux);
+                    }
+                }
+            }
+            investimento.ValorAtual += valorAux;
+            context.ValoresInseridos.RemoveRange(sairao);
+            return investimento.ValorAtual;
         }
 
         /// <summary>
@@ -290,7 +386,7 @@ namespace serverTCC.Controllers
         }
 
         /// <summary>
-        /// Transfere dinheiro de uminvestimento para uma conta
+        /// Transfere dinheiro de um investimento para uma conta
         /// POST api/Investimentos/TransferirToConta/{contaId}/{investimentoId}
         /// </summary>
         [HttpPost("TransferirToConta/{contaId}/{investimentoId}")]
@@ -335,9 +431,30 @@ namespace serverTCC.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Passa o valor de double para decimal, sem perder dados
+        /// </summary>
+        private decimal GarantirPrecisao(double valorD)
+        {
+            //Os passos abaixo são feitos para garantir a precisão, o procedimento utilizado garante 2 digitos de precisão
+            valorD *= 100;
+
+            //Trunca o valor para que o mesmo não seja arredondado, causando erro no valor real
+            int valorI = (int)Math.Truncate(valorD);
+
+            //Passa o valor para decimal e divide por 100 para voltar ao valor certo
+            decimal valorM = new Decimal(valorI);
+            valorM = decimal.Divide(valorM, 100);
+            return valorM;
+        }
+
+        /// <summary>
+        /// Atualiza o valor atual de um investimento
+        /// </summary>
         private Decimal AtualizarValor(Investimento investimento, DateTime data)
         {
-            int tempo = TempoEmDias(investimento, data);
+            int tempo = TempoEmDias(investimento.UltimaAtualizacao, data);
 
             switch (investimento.EscalaTempo)
             {
@@ -355,40 +472,31 @@ namespace serverTCC.Controllers
                     break;
             }
 
-            return CalcularValorFuturo(investimento, tempo);
+            if (tempo > 0)
+            {
+                investimento.UltimaAtualizacao = DateTime.Now;
+                return CalcularValorFuturo(investimento, tempo);
+            }
+            else
+            {
+                return investimento.ValorAtual;
+            }
         }
 
-        private int TempoEmDias(Investimento investimento, DateTime data)
+        private int TempoEmDias(DateTime data1, DateTime data2)
         {
-            return (data.Date - investimento.DataInicio.Date).Days;
+            return (data2.Date - data1.Date).Days;
         }
 
+        /// <summary>
+        /// Calcula o valor do investimento para uma data especifica (é usado na previsão e na atualização dos valores do investimento)
+        /// </summary>
         private Decimal CalcularValorFuturo(Investimento investimento, int tempo, bool isGet = false)
         {
             double tempoD = (double)tempo;
-
-            //Formula para juros compostos
             double valorD;
-            /*if (isGet)
-            {
-                valorD = (double)investimento.ValorAtual * (1 + investimento.TipoInvestimento.Taxa);
-            }
-            else
-            {*/
-                valorD = (double)investimento.ValorInvestido * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
-            //}
-               
-            //Os passos abaixo são feitos para garantir a precisão, o procedimento utilizado garante 2 digitos de precisão
-            valorD *= 100;
-
-            //Trunca o valor para que o mesmo não seja arredondado, causando erro no valor real
-            int valorI = (int)Math.Truncate(valorD);
-
-            //Passa o valor para decimal e divide por 100 para voltar ao valor certo
-            decimal valorM = new Decimal(valorI);
-            valorM = decimal.Divide(valorM, 100);
-
-            return valorM;
+            valorD = (double)investimento.ValorAtual * Math.Pow(1 + investimento.TipoInvestimento.Taxa, tempoD);
+            return GarantirPrecisao(valorD);
         }
 
         /// <summary>
@@ -400,7 +508,6 @@ namespace serverTCC.Controllers
             {
                 return false;
             }
-
             return true;
         }
     }

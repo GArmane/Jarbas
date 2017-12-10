@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using serverTCC.Data;
 using serverTCC.Models;
+using System.Collections.Generic;
 
 namespace serverTCC.Migrations
 {
     [DbContext(typeof(JarbasContext))]
-    partial class JarbasContextModelSnapshot : ModelSnapshot
+    [Migration("20171207101612_AttInvestimento")]
+    partial class AttInvestimento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -244,13 +246,15 @@ namespace serverTCC.Migrations
 
                     b.Property<int>("TipoInvestimentoId");
 
-                    b.Property<DateTime>("UltimaAtualizacao");
+                    b.Property<DateTime?>("UltimaAtualizacao");
 
                     b.Property<string>("UsuarioId");
 
                     b.Property<decimal>("ValorAtual");
 
                     b.Property<decimal>("ValorInvestido");
+
+                    b.Property<List<Nullable<decimal>>>("ValoresInseridos");
 
                     b.HasKey("Id");
 
@@ -471,24 +475,6 @@ namespace serverTCC.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("serverTCC.Models.ValoresInseridos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Data");
-
-                    b.Property<int>("InvestimentoId");
-
-                    b.Property<decimal>("Valor");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvestimentoId");
-
-                    b.ToTable("ValoresInseridos");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
@@ -642,14 +628,6 @@ namespace serverTCC.Migrations
                     b.HasOne("serverTCC.Models.Perfil", "Perfil")
                         .WithMany()
                         .HasForeignKey("PerfilId");
-                });
-
-            modelBuilder.Entity("serverTCC.Models.ValoresInseridos", b =>
-                {
-                    b.HasOne("serverTCC.Models.Investimento", "Investimento")
-                        .WithMany("ValoresInseridos")
-                        .HasForeignKey("InvestimentoId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }
