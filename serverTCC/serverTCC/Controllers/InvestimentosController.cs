@@ -241,7 +241,7 @@ namespace serverTCC.Controllers
                 var aux = new ValoresInseridos
                 {
                     InvestimentoId = investimento.Id,
-                    Data = new DateTime(2017, 07, 13),
+                    Data = DateTime.Now,
                     Valor = valor
                 };
                 context.ValoresInseridos.Add(aux);
@@ -372,10 +372,8 @@ namespace serverTCC.Controllers
                 }
 
                 conta.Saldo -= valor;
-                investimento.ValorAtual += valor;
-
+                await InserirDinheiro(investimento.Id, valor);
                 context.ContaContabil.Update(conta);
-                context.Investimento.Update(investimento);
                 await context.SaveChangesAsync();
                 return Ok(new { Investimento = investimento, Conta = conta });
             }
