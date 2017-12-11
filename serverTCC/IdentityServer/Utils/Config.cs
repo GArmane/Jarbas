@@ -32,8 +32,8 @@ namespace IdentityServer.Utils
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.ReUse,
                     RefreshTokenExpiration = TokenExpiration.Sliding,
-                    SlidingRefreshTokenLifetime = 60 * 60 * 24 * 7,
-                    AccessTokenLifetime = 60 * 60 * 24 * 1,
+                    SlidingRefreshTokenLifetime = 60 * 60 * 24 * 30,
+                    AccessTokenLifetime = 60 * 60 * 24 * 20,
                     AllowedCorsOrigins = {"http://localhost:8100"}
                 },
                 new Client
