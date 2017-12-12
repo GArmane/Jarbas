@@ -14,6 +14,7 @@ using IdentityServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using System.Reflection;
 
 namespace IdentityServer
 {
@@ -43,17 +44,6 @@ namespace IdentityServer
             // Add framework services.
             services.AddMvc();
 
-            services.AddIdentityServer()
-                //.AddSigningCredential(new X509Certificate2("cert.pfx"))
-                .AddTemporarySigningCredential()
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<Usuario>()
-                .AddExtensionGrantValidator<GoogleGrantValidator>();
-
-            services.AddIdentity<Usuario, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityContext>();
-
             string connectionString;
 
             if (Environment.IsDevelopment())
@@ -64,6 +54,26 @@ namespace IdentityServer
             {
                 connectionString = Configuration.GetConnectionString("JarbasBD");
             }
+
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddIdentityServer()
+                //.AddSigningCredential(new X509Certificate2("cert.pfx"))
+                .AddTemporarySigningCredential()
+                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryClients(Config.GetClients())
+                .AddOperationalStore(options =>
+                {
+                    options.UseNpgsql(connectionString,
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddAspNetIdentity<Usuario>()
+                .AddExtensionGrantValidator<GoogleGrantValidator>();
+
+            services.AddIdentity<Usuario, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>();
+
+            
 
             //Cfg Entity Framework + PostgreSQL
             services.AddEntityFrameworkNpgsql()
