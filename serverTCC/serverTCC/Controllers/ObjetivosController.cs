@@ -278,12 +278,13 @@ namespace serverTCC.Controllers
                 }
 
                 conta.Saldo -= valor;
-                objetivo.Valor += valor;
+                
+                var valorAux = objetivo.HistoricoObjetivo.Last().ValorFinal + valor;
 
                 var historico = new HistoricoObjetivo
                 {
                     DataFinal = DateTime.Now,
-                    ValorFinal = objetivo.Valor,
+                    ValorFinal = valorAux,
                     ObjetivoId = objetivo.Id
                 };
 
@@ -338,13 +339,14 @@ namespace serverTCC.Controllers
                 }
 
                 conta.Saldo += valor;
-                objetivo.Valor -= valor;
+                
+                var valorAux = objetivo.HistoricoObjetivo.Last().ValorFinal - valor;
 
 
                 var historico = new HistoricoObjetivo
                 {
                     DataFinal = DateTime.Now,
-                    ValorFinal = objetivo.Valor,
+                    ValorFinal = valorAux,
                     ObjetivoId = objetivo.Id
                 };
 
