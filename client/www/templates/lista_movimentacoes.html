@@ -25,7 +25,7 @@
 					<i style="font-size: 20px; position: absolute; top:30px; left: 40px;" ng-show="mov.tipoMovimentacao == 1" class="icon ion-arrow-down-c row-no-padding"></i>		
 					<i style="font-size: 20px; position: absolute; top:30px; left: 40px;" ng-show="mov.tipoMovimentacao == 2" class="icon ion-arrow-swap row-no-padding"></i>		
 					
-					<div class="col col-75">
+					<div class="col col-gambiarra">
 						<h2>{{mov.descricao}}</h2>
 						<p>
 							{{mov.grupoMovimentacoes.nome}} - {{mov.data | date: 'dd/MM/yy'}} <span ng-hide="mov.tipoMovimentacao == 2">em {{mov.contaContabil.nome}}</span>
