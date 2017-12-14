@@ -23,8 +23,8 @@
         };
     }
 
-    LoginService.$inject = ['api', '$http', 'auth', 'utilities', '$rootScope'];
-    function LoginService(api, $http, auth, utilities, $rootScope) {
+    LoginService.$inject = ['api', '$http', 'auth', 'utilities', '$rootScope', '$q'];
+    function LoginService(api, $http, auth, utilities, $rootScope, $q) {
         this.defineAuth = defineAuth;
         this.doLogin = doLogin;
         this.sendRecoverCode = sendRecoverCode;
@@ -36,6 +36,9 @@
 
         var auth2 = {};
         var googleLoaded = false;
+
+        var requestingRefresh = false;
+        var waitingRequests = [];
 
         $rootScope.logout = logout;
         
@@ -52,32 +55,7 @@
 
                         // Verifica se o token venceu (ou se está próximo disso)
                         if ((value.date.getTime() + ((value.expiration - 1800) * 1000)) <= new Date().getTime())
-                            $http({
-                                method: 'POST',
-                                url: api.token(),
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                transformRequest: formUrlEncode,
-                                data: {
-                                    'client_id': 'jarbasApp',
-                                    'client_secret': 'secret',
-                                    'grant_type': 'refresh_token',
-                                    'scope': 'jarbasApi offline_access',
-                                    'refresh_token': value.refresh
-                                }
-                            }).success(function (data) {
-                                auth.done = true;
-                                auth.date = new Date();
-                                auth.token = data.access_token;
-                                auth.expiration = data.expires_in;
-                                auth.refresh = data.refresh_token;
-                                auth.header = { 'Authorization': 'Bearer ' + auth.token };
-                                auth.id = value.id;
-                                localforage.setItem('auth', new Auth(auth));
-                                auth.verify();
-                                resolve();
-                            }).error(function (data) {
-                                reject();
-                            });
+                            requestNewToken(value.refresh).then(resolve, reject);
                         else {
                             auth.done = value.done;
                             auth.data = value.data;
@@ -93,6 +71,56 @@
                 } catch (ex) {
                     reject(ex);
                 }
+            });
+        }
+
+        // Muito complexo. Esse método deve ser chamado toda vez que houver um responseError com
+        // status 401 Unauthorized. Esse método vai requisitar um novo token usando o refresh token
+        // NA PRIMEIRA VEZ QUE FOR INVOCADO. Sempre vai retornar uma promise para continuação da
+        // request. ***A primeira promise deve resolver as outras.*** Mas como?
+        // function refreshToken(httpConfig) {
+
+        //     return $q(function(resolve, reject) {
+        //         if (!requestingRefresh) {
+        //             requestingRefresh = true;
+        //             requestNewToken(auth.refresh).then(function () {
+        //                 requestingRefresh = false;
+        //                 $http(waitingRequests.shift()).success(resolve).error(reject);
+        //             });
+        //         }
+        //     });
+
+
+        // }
+
+        function requestNewToken(token) {
+            return new Promise(function (resolve, reject) {
+                $http({
+                    method: 'POST',
+                    url: api.token(),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    transformRequest: formUrlEncode,
+                    data: {
+                        'client_id': 'jarbasApp',
+                        'client_secret': 'secret',
+                        'grant_type': 'refresh_token',
+                        'scope': 'jarbasApi offline_access',
+                        'refresh_token': token
+                    }
+                }).success(function (data) {
+                    auth.done = true;
+                    auth.date = new Date();
+                    auth.token = data.access_token;
+                    auth.expiration = data.expires_in;
+                    auth.refresh = data.refresh_token;
+                    auth.header = { 'Authorization': 'Bearer ' + auth.token };
+                    auth.id = value.id;
+                    localforage.setItem('auth', new Auth(auth));
+                    auth.verify();
+                    resolve();
+                }).error(function (data) {
+                    reject();
+                });
             });
         }
 
@@ -175,7 +203,10 @@
                         try {
                             auth.done = false;
                             console.log(data);
-                            reject(data.error_description);
+                            if (data.error_description == 'invalid_username_or_password')
+                                reject('Nome de usuário e/ou senha inválidos');
+                            else
+                                reject(data.error_description);
                         } catch (error) {
                             utilities.promiseException(error);
                         }
@@ -311,39 +342,43 @@
 
         function gLogin(gAuth) {
             if (utilities.isApp()) {
-                return new Promise(function (resolve, reject) {
-                    try {
-                        var data = {
-                            'grant_type': 'googleAuth',
-                            'id_token': gAuth.serverAuthCode,
-                            // 'id_token': gAuth.idToken,
-                            'scope': 'jarbasApi offline_access',
-                            'client_id': 'jarbasApp',
-                            'client_secret': 'secret'
-                        };
-                        $http({
-                            method: 'POST',
-                            url: api.token(),
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            transformRequest: formUrlEncode,
-                            data: data
-                        }).success(function(data) {
-                            try {
-                                defineAuth(data, gAuth.email).then(resolve, reject).catch(utilities.promiseException);
-                            } catch (error) {
-                                utilities.promiseException(error);
-                            }
-                        }).error(function(data) {
-                            try {
-                                reject(data.error_description);
-                            } catch (error) {
-                                utilities.promiseException(error);
-                            }
-                        });
-                    } catch (error) {
-                        utilities.promiseException(error);
-                    }
-                });
+
+                return doLogin(gAuth.email, gAuth.userId);
+
+                // return new Promise(function (resolve, reject) {
+                //     try {
+                //         var data = {
+                //             'grant_type': 'googleAuth',
+                //             'id_token': gAuth.serverAuthCode,
+                //             // 'id_token': gAuth.idToken,
+                //             'scope': 'jarbasApi offline_access',
+                //             'client_id': 'jarbasApp',
+                //             'client_secret': 'secret'
+                //         };
+                        
+                //         $http({
+                //             method: 'POST',
+                //             url: api.token(),
+                //             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                //             transformRequest: formUrlEncode,
+                //             data: data
+                //         }).success(function(data) {
+                //             try {
+                //                 defineAuth(data, gAuth.email).then(resolve, reject).catch(utilities.promiseException);
+                //             } catch (error) {
+                //                 utilities.promiseException(error);
+                //             }
+                //         }).error(function(data) {
+                //             try {
+                //                 reject(data.error_description);
+                //             } catch (error) {
+                //                 utilities.promiseException(error);
+                //             }
+                //         });
+                //     } catch (error) {
+                //         utilities.promiseException(error);
+                //     }
+                // });
             } else {
                 return new Promise(function (resolve, reject) {
                     try {
@@ -356,6 +391,7 @@
                         };
                         console.log('Enviando dados para a API:');
                         console.log(data);
+                        
                         $http({
                             method: 'POST',
                             url: api.token(),

@@ -31,13 +31,39 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
-    <!-- global exception handler -->
-    <!-- <script src="js/services/exceptionHandling.js"></script> -->
+    <!-- gráficos -->
+    <script src="lib/Chart.bundle.min.js"></script>
+    
+    <!-- data services -->
+    <script src="lib/localforage.min.js"></script>
+    <script src="js/services/localEntities.js"></script>
 
-    <!-- modules -->
+    <!-- models -->
+    <script src="js/models/agendamento.js"></script>
+    <script src="js/models/auth.js"></script>
+    <script src="js/models/configuracoes.js"></script>
+    <script src="js/models/contaContabil.js"></script>
+    <script src="js/models/grupoMovimentacoes.js"></script>
+    <script src="js/models/historicoObjetivo.js"></script>
+    <script src="js/models/investimento.js"></script>
+    <script src="js/models/moeda.js"></script>
+    <script src="js/models/movimentacao.js"></script>
+    <script src="js/models/objetivo.js"></script>
+    <script src="js/models/perfil.js"></script>
+    <script src="js/models/tipoInvestimento.js"></script>
+    <script src="js/models/transferencia.js"></script>
+    <script src="js/models/usuario.js"></script>
+    <script src="js/models/sync.js"></script>
+    
+    <!-- modules & services -->
     <script src="js/modules.js"></script>
+    <script src="js/services/loginService.js"></script>
     <script src="js/app.js"></script>
-
+    <script src="js/services/apiService.js"></script>
+    <script src="js/services/utilitiesServices.js"></script>
+    <script src="js/services/loadingScreen.js"></script>
+    <script src="js/services/tooltipAjudaService.js"></script>
+    
     <!-- controllers -->
     <script src="js/controllers.js"></script> <!-- TODO: excluir assim que possível -->
     <script src="js/controllers/loginCtrl.js"></script>
@@ -51,14 +77,10 @@
     <script src="js/controllers/investimentoCtrl.js"></script>
     <script src="js/controllers/listaContaCtrl.js"></script>
     <script src="js/controllers/listaGrupoMovCtrl.js"></script>
+    <script src="js/controllers/listaInvestimentoCtrl.js"></script>
     <script src="js/controllers/listaMovimentacaoCtrl.js"></script>
+    <script src="js/controllers/listaObjetivoCtrl.js"></script>
     <script src="js/controllers/recuperacaoCtrl.js"></script>
-
-    <!-- services -->
-    <script src="js/services/apiService.js"></script>
-    <script src="js/services/loginService.js"></script>
-    <script src="js/services/utilitiesServices.js"></script>
-    <script src="js/services/tooltipAjudaService.js"></script>
 </head>
 
 <body ng-app="starter" class="platform-android platform-cordova platform-webview">

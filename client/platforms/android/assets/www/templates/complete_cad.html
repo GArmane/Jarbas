@@ -1,82 +1,479 @@
-<ion-view view-title="Complete seu cadastro">
-  <ion-content class="padding padrao">
-    <h4>Insira mais algumas informações sobre você, para obter uma experiência personalizada.</h4>
-      <br>
-    <form name="cadastro" ng-submit="vm.cadastro()">
-      <span class="input-label">Faixa etária</span>
-      <label class="item item-input item-select">
-        <div class="input-label">
-          Idade
+<ion-view>
+    <ion-header-bar class="custom">
+        <h1 class="title">Complete seu cadastro</h1>
+    </ion-header-bar>
+    <ion-content class="padding padrao">
+        <h4>Insira mais algumas informações sobre você, para obter uma experiência personalizada.</h4>
+        <br>
+        <form name="cadastro" ng-submit="vm.cadastro()">
+            <span class="input-label">Faixa etária</span>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Idade
+                </div>
+                <select>
+                    <option selected>10 a 15 anos</option>
+                    <option>16 a 29 anos</option>
+                    <option>30 a 59 anos</option>
+                    <option>60 ou mais anos</option>
+                </select>
+            </label>
+
+            <br>
+
+            <span class="input-label">Profissão</span>
+            <label class="item item-input item-select">
+                <div class="input-label">Profissão</div>
+                <select>
+                    <option selected>Administrador de Rede</option>
+                    <option>Administrador(a)</option>
+                    <option>Administrador(a) de Banco de Dados</option>
+                    <option>Administrador(a) de Empresas</option>
+                    <option>Administrador(a) de Recursos Humanos</option>
+                    <option>Administrador(a) Hospitalar</option>
+                    <option>Administradora de Serviços do Lar</option>
+                    <option>Advogado(a)</option>
+                    <option>Agente Ambiental</option>
+                    <option>Agricultor(a)</option>
+                    <option>Agrônomo(a)</option>
+                    <option>Agropecuarista</option>
+                    <option>Ajudante de Caminhão</option>
+                    <option>Ajudante de Composição</option>
+                    <option>Ajudante de Foguista</option>
+                    <option>Ajudante de Vidreiro</option>
+                    <option>Almoxarife</option>
+                    <option>Analista</option>
+                    <option>Analista Administrativo (a)</option>
+                    <option>Analista Contábil</option>
+                    <option>Analista de Administração de Pessoal</option>
+                    <option>Analista de Captação</option>
+                    <option>Analista de Contratos</option>
+                    <option>Analista de Controladoria</option>
+                    <option>Analista de Controle Interno</option>
+                    <option>Analista de Crédito</option>
+                    <option>Analista de Custos</option>
+                    <option>Analista de Departamento Pessoal</option>
+                    <option>Analista de Exportação</option>
+                    <option>Analista de Faturamento</option>
+                    <option>Analista de IT</option>
+                    <option>Analista de Laboratório</option>
+                    <option>Analista de Logística</option>
+                    <option>Analista de Marketing</option>
+                    <option>Analista de Negócios</option>
+                    <option>Analista de Orçamentos</option>
+                    <option>Analista de Organização e Métodos</option>
+                    <option>Analista de Pessoal</option>
+                    <option>Analista de Recursos Humanos</option>
+                    <option>Analista de Remuneração Senior</option>
+                    <option>Analista de Sistemas</option>
+                    <option>Analista de Suporte Administrativo</option>
+                    <option>Analista de Suporte Pleno</option>
+                    <option>Analista de Tecidos</option>
+                    <option>Analista de Vendas</option>
+                    <option>Analista Financeiro</option>
+                    <option>Analista Fiscal</option>
+                    <option>Analista Senior de Previdência Privada</option>
+                    <option>Analista Tributária</option>
+                    <option>Apicultor(a)</option>
+                    <option>Aposentado(a)</option>
+                    <option>Armador de Pesca</option>
+                    <option>Arquiteto(a)</option>
+                    <option>Artesão(ã)</option>
+                    <option>Assistente Administrativo</option>
+                    <option>Assistente Comercial</option>
+                    <option>Assistente Contábil</option>
+                    <option>Assistente de Contas</option>
+                    <option>Assistente de Departamento Pessoal</option>
+                    <option>Assistente de Escritório</option>
+                    <option>Assistente de Faturamento</option>
+                    <option>Assistente de Gerencia de R.H.</option>
+                    <option>Assistente de Hotelaria Hospitalar</option>
+                    <option>Assistente de Planejamento</option>
+                    <option>Assistente de Processo</option>
+                    <option>Assistente de Produção</option>
+                    <option>Assistente de Recursos Humanos</option>
+                    <option>Assistente de Suprimentos</option>
+                    <option>Assistente Financeiro</option>
+                    <option>Assistente Jurídico</option>
+                    <option>Assistente Social</option>
+                    <option>Assistente Técnico Operacional</option>
+                    <option>Atendente</option>
+                    <option>Ator</option>
+                    <option>Atriz</option>
+                    <option>Auditor(a)</option>
+                    <option>Auditor(a) Fiscal</option>
+                    <option>Autônomo(a)</option>
+                    <option>Aux. de Serviços Gerais</option>
+                    <option>Auxiliar Acadêmico</option>
+                    <option>Auxiliar Administrativo</option>
+                    <option>Auxiliar Contábil</option>
+                    <option>Auxiliar de Compras</option>
+                    <option>Auxiliar de Cozinha</option>
+                    <option>Auxiliar de Departamento de Crédito</option>
+                    <option>Auxiliar de Departamento Financeiro</option>
+                    <option>Auxiliar de Departamento Fiscal</option>
+                    <option>Auxiliar de eletricista</option>
+                    <option>Auxiliar de Enfermagem</option>
+                    <option>Auxiliar de Escritório</option>
+                    <option>Auxiliar de Inspeção de Qualidade</option>
+                    <option>Auxiliar de Laboratório</option>
+                    <option>Auxiliar de Produção</option>
+                    <option>Auxiliar de Registro de Saúde</option>
+                    <option>Auxiliar de RH</option>
+                    <option>Auxiliar de Serviços</option>
+                    <option>Auxiliar Financeiro</option>
+                    <option>Auxiliar Operacional</option>
+                    <option>Auxiliar Técnico</option>
+                    <option>Avicultor( a )</option>
+                    <option>Bailarina (o)</option>
+                    <option>Bancário(a)</option>
+                    <option>Biólogo(a)</option>
+                    <option>Biomédico (a)</option>
+                    <option>Cabeleireiro(a)</option>
+                    <option>Caminhoneiro (a)</option>
+                    <option>carregador</option>
+                    <option>Catador(a)</option>
+                    <option>Catraqueiro</option>
+                    <option>Chefe da Secretaria de Expediente</option>
+                    <option>Chefe de Recursos Humanos</option>
+                    <option>Chefe de Serviços de Transporte</option>
+                    <option>Cirurgião(ã) Dentista</option>
+                    <option>Citricultor(a)</option>
+                    <option>Coletor(a) de Material Reciclável</option>
+                    <option>Comerciante</option>
+                    <option>Comerciário(a)</option>
+                    <option>Comprador(a)</option>
+                    <option>Comunicador(a) Social</option>
+                    <option>Condutor(a) Autônomo(a)</option>
+                    <option>Condutor(a) Escolar</option>
+                    <option>Conferente</option>
+                    <option>construtor</option>
+                    <option>Consultor(a) Administrativo</option>
+                    <option>Consultor(a) de Vendas</option>
+                    <option>Contabilista</option>
+                    <option>Contador(a)</option>
+                    <option>Contramestre</option>
+                    <option>Controller</option>
+                    <option>Coordenador(a)</option>
+                    <option>Coordenador(a) Administrativo Pessoal</option>
+                    <option>Coordenador(a) de Atendimento</option>
+                    <option>Coordenador(a) de Controladoria</option>
+                    <option>Coordenador(a) de Controle de Qualidade</option>
+                    <option>Coordenador(a) de Controle Interno</option>
+                    <option>Coordenador(a) de Engenharia Industrial</option>
+                    <option>Coordenador(a) de Exportação</option>
+                    <option>Coordenador(a) de Impostos</option>
+                    <option>Coordenador(a) de Instrumentos</option>
+                    <option>Coordenador(a) de Manutenção</option>
+                    <option>Coordenador(a) de Produção</option>
+                    <option>Coordenador(a) de Projetos</option>
+                    <option>Coordenador(a) de Recursos Humanos</option>
+                    <option>Coordenador(a) de Suprimentos</option>
+                    <option>Coordenador(a) de Transportes</option>
+                    <option>Coordenador(a) de Vendas</option>
+                    <option>Coordenador(a) Pedagógico(a)</option>
+                    <option>Coreógrafo</option>
+                    <option>Corretor(a) de Imóveis</option>
+                    <option>Corretor(a) de Seguros</option>
+                    <option>Costureiro(a)</option>
+                    <option>Cozinheiro(a)</option>
+                    <option>Cronoanalista</option>
+                    <option>Cuidador(a) de idoso</option>
+                    <option>Dançarina</option>
+                    <option>Delegado</option>
+                    <option>Dentista</option>
+                    <option>Desenvolvedor de Arte</option>
+                    <option>Desenvolvedor de Produtos Texteis</option>
+                    <option>Despachante</option>
+                    <option>Digitador(a)</option>
+                    <option>Diretor</option>
+                    <option>Diretor (a) Executivo (a)</option>
+                    <option>Diretor de Escola</option>
+                    <option>Diretor de Recursos Humanos</option>
+                    <option>Diretor(a) de Assuntos Técnicos</option>
+                    <option>Diretor(a) de Criação</option>
+                    <option>Diretor(a) de Produções</option>
+                    <option>Diretor(a) de Relações Públicas</option>
+                    <option>Diretor(a) de Relações Públicas e Sociais</option>
+                    <option>Do lar</option>
+                    <option>Economista</option>
+                    <option>Eletricista</option>
+                    <option>Eletricitário</option>
+                    <option>Embalador(a)</option>
+                    <option>Embalador(a) de Produtos</option>
+                    <option>Empregada Doméstica</option>
+                    <option>Empresário(a)</option>
+                    <option>Empresário(a) Rural</option>
+                    <option>Encarregado Automotivo</option>
+                    <option>Encarregado de Controladoria</option>
+                    <option>Encarregado(a)</option>
+                    <option>Encarregado(a) de Mídia</option>
+                    <option>Enfermeiro(a)</option>
+                    <option>Engenheiro(a)</option>
+                    <option>Engenheiro(a) Administrador(a)</option>
+                    <option>Engenheiro(a) Agrônomo(a)</option>
+                    <option>Engenheiro(a) Civil</option>
+                    <option>Engenheiro(a) de Alimentos</option>
+                    <option>Engenheiro(a) de Desenvolvimento Ambiental</option>
+                    <option>Engenheiro(a) de Segurança do Trabalho</option>
+                    <option>Engenheiro(a) Eletricista</option>
+                    <option>Engenheiro(a) Florestal</option>
+                    <option>Engenheiro(a) Mecânico</option>
+                    <option>Engenheiro(a) Naval</option>
+                    <option>Engenheiro(a) Químico(a)</option>
+                    <option>Escrevente Técnico Judiciário</option>
+                    <option>Escrituraria</option>
+                    <option>Escriturario(a)</option>
+                    <option>Especialista em Banco de Dados</option>
+                    <option>Estudante</option>
+                    <option>Farmacêutica(o)</option>
+                    <option>Faturista</option>
+                    <option>faxineira (o)</option>
+                    <option>Ferramenteiro</option>
+                    <option>Ferroviário</option>
+                    <option>Fisioterapeuta</option>
+                    <option>Floricultor(a)</option>
+                    <option>Fotógrafo(a)</option>
+                    <option>Funcionário(a) Público(a)</option>
+                    <option>funileiro</option>
+                    <option>Geógrafo(a)</option>
+                    <option>Geólogo(a)</option>
+                    <option>Gerente</option>
+                    <option>Gerente de Área</option>
+                    <option>Gerente de Contabilidade</option>
+                    <option>Gerente de Crédito e Cobrança</option>
+                    <option>Gerente de Faturamento</option>
+                    <option>Gerente de Recursos Humanos</option>
+                    <option>Gerente de Serviços de Transporte</option>
+                    <option>Gerente de Sistemas</option>
+                    <option>Gerente de Tecnologa da Informação</option>
+                    <option>Gerente de Tributário</option>
+                    <option>Gerente de Vendas</option>
+                    <option>Gerente de Vendas Distribuidores</option>
+                    <option>Gerente Departamento de Compra</option>
+                    <option>Gerente Financeiro</option>
+                    <option>Gerente Operacional</option>
+                    <option>Gerente Regional de Vendas</option>
+                    <option>Gestor(a) de Logística</option>
+                    <option>Gestor(a) de Negócios</option>
+                    <option>Gestor(a) de Projetos</option>
+                    <option>Gestor(a) Financeiro</option>
+                    <option>Impressor</option>
+                    <option>Industriário(a)</option>
+                    <option>Inspetor de Qualidade</option>
+                    <option>Instrumentista</option>
+                    <option>Intérprete</option>
+                    <option>Jardineiro</option>
+                    <option>Jornalista</option>
+                    <option>Lavrador(a)</option>
+                    <option>Líder de Embalagem</option>
+                    <option>Líder de Higienização</option>
+                    <option>Líder de Recepção</option>
+                    <option>Marceneiro</option>
+                    <option>Matemático(a)</option>
+                    <option>Mecânico</option>
+                    <option>Mecânico de Manutenção</option>
+                    <option>Medico(a)</option>
+                    <option>Médico(a) Pediátrico(a)</option>
+                    <option>Médico(a) Veterinário(a)</option>
+                    <option>Metalúrgico</option>
+                    <option>Militar</option>
+                    <option>Ministro Religioso</option>
+                    <option>Motorista</option>
+                    <option>Nutricionista</option>
+                    <option>Odontólogo (a)</option>
+                    <option>Oficial de Cartório</option>
+                    <option>Oficial de Justiça</option>
+                    <option>Oficial de Promotoria</option>
+                    <option>Oleiro(a)</option>
+                    <option>Operador (a)</option>
+                    <option>Operador (a) de Crédito Rural</option>
+                    <option>Operador de Conicaleira</option>
+                    <option>Operador de Máquina</option>
+                    <option>Operador de Texturização</option>
+                    <option>Operador(a) de Caldeira</option>
+                    <option>Operador(a) de Forming</option>
+                    <option>Operador(a) de Imagem</option>
+                    <option>Operador(a) de Máquinas</option>
+                    <option>Orientador(a) Educacional</option>
+                    <option>Pecuarista</option>
+                    <option>Pedagogo(a)</option>
+                    <option>pedreiro</option>
+                    <option>Pedreiro Refratarista</option>
+                    <option>Planejador(a) de Manutenção</option>
+                    <option>Policial</option>
+                    <option>Policial Rodoviário</option>
+                    <option>Porteiro(a)</option>
+                    <option>Prensista</option>
+                    <option>Produtor (a)</option>
+                    <option>Produtor(a) Agropecuário</option>
+                    <option>Produtor(a) Rural</option>
+                    <option>Professor(a)</option>
+                    <option>Profissional Liberal</option>
+                    <option>Programador(a)</option>
+                    <option>Psicólogo(a)</option>
+                    <option>Publicitário(a)</option>
+                    <option>Químico(a)</option>
+                    <option>Reciclador(a)</option>
+                    <option>Reciclador(a) Ambiental Autônomo(a)</option>
+                    <option>Recobridor</option>
+                    <option>Representante Comercial</option>
+                    <option>Secretária Bilíngue</option>
+                    <option>Secretária de Diretoria</option>
+                    <option>Secretária Executiva</option>
+                    <option>Secretária(o)</option>
+                    <option>Securitário(a)</option>
+                    <option>Segurança</option>
+                    <option>Selecionador(a)</option>
+                    <option>Serralherio</option>
+                    <option>Servidor(a) Público(a)</option>
+                    <option>Sociólogo</option>
+                    <option>Supervisor(a)</option>
+                    <option>Supervisor(a) Administrativo</option>
+                    <option>Supervisor(a) de Adminstração de Pessoal</option>
+                    <option>Supervisor(a) de Atendimento</option>
+                    <option>Supervisor(a) de Compras</option>
+                    <option>Supervisor(a) de Custos</option>
+                    <option>Supervisor(a) de Elétrica e Instrumentação</option>
+                    <option>Supervisor(a) de Manufatura</option>
+                    <option>Supervisor(a) de Manutenção Industrial</option>
+                    <option>Supervisor(a) de Matéria-Prima</option>
+                    <option>Supervisor(a) de Operações</option>
+                    <option>Supervisor(a) de Produção</option>
+                    <option>Supervisor(a) de Recursos Humanos</option>
+                    <option>Supervisor(a) de Suprimentos</option>
+                    <option>Supervisor(a) de Tesouraria</option>
+                    <option>Supervisor(a) Financeiro</option>
+                    <option>Supervisor(a) Fiscal</option>
+                    <option>Tabelião</option>
+                    <option>Taxista</option>
+                    <option>Tecelão</option>
+                    <option>Técnico em Kaizen</option>
+                    <option>Técnica Agropecuária</option>
+                    <option>Técnico (a) Administrativo (a)</option>
+                    <option>Técnico (a) em Recursos Humanos</option>
+                    <option>Técnico Agropecuário</option>
+                    <option>Técnico de Métodos Gráficos</option>
+                    <option>Técnico de Operação de Usina Hidrelétrica</option>
+                    <option>Técnico de Tinturaria</option>
+                    <option>Técnico em Processamento</option>
+                    <option>Técnico(a) Agrícola</option>
+                    <option>Técnico(a) de Enfermagem</option>
+                    <option>Técnico(a) de Gesso</option>
+                    <option>Técnico(a) de Manutenção Elétrico</option>
+                    <option>Técnico(a) de Processos</option>
+                    <option>Técnico(a) em Contabilidade</option>
+                    <option>Técnico(a) em Edificações</option>
+                    <option>Técnico(a) em Eletrônica</option>
+                    <option>Técnico(a) em Informática</option>
+                    <option>Técnico(a) em Meio Ambiente</option>
+                    <option>Técnico(a) em Plástico</option>
+                    <option>Técnico(a) em Radiologia Médica</option>
+                    <option>Técnico(a) em Segurança do Trabalho</option>
+                    <option>Técnico(a) Mecânico(a)</option>
+                    <option>Técnico(a) Químico Industrial</option>
+                    <option>Tecnólogo do Produto Sênior</option>
+                    <option>Tecnólogo em Gestão Financeira</option>
+                    <option>Tecnólogo em Telecomunicações</option>
+                    <option>Tecnólogo(a)</option>
+                    <option>Tecnólogo(a) de Processo de Produção</option>
+                    <option>Tecnólogo(a) em Processamento de Dados</option>
+                    <option>Tecnólogo(a) Mecânico</option>
+                    <option>Telefonista</option>
+                    <option>Tintureiro</option>
+                    <option>Torneiro Mecânico</option>
+                    <option>Tradutor(a)</option>
+                    <option>Urdidor</option>
+                    <option>Vendedor(a)</option>
+                    <option>Vidreiro(a)</option>
+                    <option>Vigilante</option>
+                    <option>Web Designer</option>
+                    <option>Zootécnico(a)</option>
+                </select>
+            </label>
+
+            <br>
+
+            <span class="input-label">Renda</span>
+            <div class="row row-no-padding">
+                <div class="col col-33">
+                    <label class="item item-select input-select">
+                        <select ng-model="vm.dados.moedaId" ng-options="moeda.id as moeda.simbolo for moeda in vm.moedas">
+                        </select>
+                    </label>
+                </div>
+                &nbsp&nbsp
+                <div class="col">
+                    <label class="item item-input">
+                        <input ng-model="vm.dados.valor" type="number" placeholder="0,00">
+                    </label>
+                </div>
+            </div>
+
+            <br>
+
+            <span class="input-label">Tipo de renda</span>
+            <label class="item item-input item-select">
+                <div class="input-label">Renda</div>
+                <select>
+                    <option selected>Mensal</option>
+                    <option>Quinzenal</option>
+                    <option>Anual</option>
+                </select>
+            </label>
+            <br>
+            <div class="row row-no-padding">
+                <div class="col">
+                    <ion-radio ng-model="vm.dados.RendaFixa">Renda fixa</ion-radio>
+                </div>
+                &nbsp&nbsp
+                <div class="col">
+                    <ion-radio ng-model="vm.dados.RendaFixa">Renda variável</ion-radio>
+                </div>
+            </div>
+            <br>
+
+            <ion-checkbox>Possuo filho(s)</ion-checkbox>
+            <br>
+
+            <span class="input-label">Qual seu grau de escolaridade?</span>
+            <label class="item item-input item-select">
+                <div class="input-label">Renda</div>
+                <select>
+                    <option>Ensino fundamental incompleto</option>
+                    <option>Ensino fundamental completo</option>
+                    <option>Ensino médio incompleto</option>
+                    <option>Ensino médio completo</option>
+                    <option>Ensino superior incompleto</option>
+                    <option>Ensino superior completo</option>
+                    <option>Pós-graduação (Lato sensu) incompleto</option>
+                    <option>Pós-graduação (Lato sensu) completo</option>
+                    <option>Mestrado (Stricto sensu) incompleto</option>
+                    <option>Mestrado (Stricto sensu) completo</option>
+                    <option>Doutorado (Stricto sensu) incompleto</option>
+                    <option>Doutorado (Stricto sensu) completo</option>
+                </select>
+            </label>
+            <br>
+
+            <span class="input-label" style="max-width: initial; width: 100%">Quais são seus gastos mais frequentes?</span>
+            <ion-checkbox ng-model="item.checked" ng-repeat="item in vm.grupos">{{item.titulo}} ({{item.descricao}})</ion-checkbox>
+            <br>
+
+            <span class="input-label" style="max-width: initial; width: 100%">Como costuma pagar a maior parte de suas despesas?</span>
+            <ion-checkbox ng-model="item.checked" ng-repeat="item in vm.contas">{{item.descricao}}</ion-checkbox>
+            <br>
+
+        </form>
+        <div class="row">
+            <div class="col col-33">
+                <button class="button button-block" ng-click="vm.pular()">Pular</button>
+            </div>
+            <div class="col">
+                <button class="button button-block" ng-click="vm.cadastrar()">Prosseguir</button>
+            </div>
         </div>
-        <select ng-model="vm.dados.FaixaEtaria">
-          <option selected>5 a 10 anos</option>
-          <option>11 a 15 anos</option>
-          <option>16 a 20 anos</option>
-        </select>
-      </label>
 
-   	  <br>
 
-      <span class="input-label">Profissão</span>
-      <label class="item item-input item-select">
-        <div class="input-label">Profissão</div>
-        <select ng-model="vm.dados.Profissao">
-          <option selected>Programador</option>
-          <option>Médico</option>
-          <option>Professor</option>
-        </select>
-      </label>
-
-      <br>
-
-      <span class="input-label">Renda</span>
-      <div class="row row-no-padding">
-        <div class="col col-33">          
-            <label class="item item-select input-select">
-            <select ng-model="vm.dados.MoedaId">
-              <option selected>R$</option>
-              <option>U$</option>
-          	  <option>€</option>
-            </select>
-          </label>
-        </div>
-        &nbsp&nbsp
-        <div class="col">
-          <label class="item item-input">
-        	<input ng-model="vm.dados.Valor" type="email" placeholder="0,00" required name="email">
-      	  </label>
-        </div>
-      </div>
-          
-      <br>  
-
-      <span class="input-label">Tipo de renda</span>
-      <label class="item item-input item-select">
-        <div class="input-label">Renda</div>
-        <select ng-model="vm.dados.EscalaTempo">
-          <option selected>Mensal</option>
-          <option>Quinzenal</option>
-          <option>Anual</option>
-        </select>
-      </label>
-	  <br>	
-      <div class="row row-no-padding">
-      	<div class="col">
-      	  <ion-radio ng-model="vm.dados.RendaFixa">Renda fixa</ion-radio>	
-      	</div>
-      	&nbsp&nbsp
-      	<div class="col">
-      	  <ion-radio ng-model="vm.dados.RendaFixa">Renda variável</ion-radio>
-      	</div>
-      	<div class="col"><button style="left: 10px;" class="button button-icon icon ion-help-circled" ng-click="vm.tooltipRenda"></button></div>
-      </div>
-
-    </form>
-    <div class="row">
-    	<div class="col col-33"><button class="button button-block">Pular</button></div>
-    	<div class="col"><button class="button button-block" ng-click="vm.cadastrar()">Cadastrar</button></div>
-    </div>
-    
-
-  </ion-content>
+    </ion-content>
 </ion-view>

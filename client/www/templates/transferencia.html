@@ -2,17 +2,11 @@
     <button type="submit" style="position: absolute; top: -5000px" id="hiddenSubmitTransf">sub</button>
     <span class="input-label">Valor</span>
     <div class="row row-no-padding">
-        <!-- <div class="col col-50">
-            <label class="item item-input item-select">
-                <select ng-model="vm.dados.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" disabled>
-                </select>
-            </label>
-        </div> -->
         &nbsp&nbsp
         <div class="col">
             <label class="item item-input">
                 <span class="item-input">{{vm.dados.moeda.simbolo}}&nbsp;</span>
-                <input ng-model="vm.transf.valor" type="number" placeholder="0,00" required ng-change="vm.atualizaConvertido()">
+                <input ng-model="vm.transf.valor" type="number" placeholder="0,00" step="0.01" required ng-change="vm.atualizaConvertido()">
             </label>
         </div>
     </div>

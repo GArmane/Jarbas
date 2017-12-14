@@ -26,6 +26,7 @@
         vm.arquivar = arquivar;
         vm.addDinheiro = addDinheiro;
         vm.removeDinheiro = removeDinheiro;
+        // }
         vm.atualizaConvertido = atualizaConvertido;
 
         var original;
@@ -46,7 +47,7 @@
             vm.dados.usuarioId = auth.id;
             vm.dados.historicoObjetivo = [];
             var hist = new HistoricoObjetivo();
-            hist.dataFinal = vm.dados.dataInicial;
+            hist.dataFinal = new Date();
             hist.valorFinal = 0;
             vm.dados.historicoObjetivo.push(hist);
 
@@ -395,36 +396,6 @@
 
         function criarGrafico() {
             var ctx = document.getElementById("graficoHistorico");
-            // vm.dados.historicoObjetivo = [
-            //     {
-            //         dataFinal: new Date('12/01/2017'),
-            //         valorFinal: 7500000
-            //     },
-            //     {
-            //         dataFinal: new Date('12/02/2017'),
-            //         valorFinal: 10000000
-            //     },
-            //     {
-            //         dataFinal: new Date('12/03/2017'),
-            //         valorFinal: 15000000
-            //     },
-            //     {
-            //         dataFinal: new Date('12/04/2017'),
-            //         valorFinal: 12500000
-            //     },
-            //     {
-            //         dataFinal: new Date('12/05/2017'),
-            //         valorFinal: 17500000
-            //     },
-            //     {
-            //         dataFinal: new Date('12/06/2017'),
-            //         valorFinal: 16000000
-            //     },
-            //     {
-            //         dataFinal: new Date('12/07/2017'),
-            //         valorFinal: 20000000
-            //     }
-            // ]
             grafico = new Chart(ctx, {
                 type: 'line',
                 data: {

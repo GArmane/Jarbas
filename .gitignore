@@ -264,3 +264,6 @@ __pycache__/
 
 # Windows folder icons
 desktop.ini
+
+# Cordova build files
+platforms

@@ -1,44 +1,64 @@
 <ion-view view-title="Resumo">
-  <ion-content class="padrao has-header">
-    <div class="list list-inset">
-      <div class="item item-divider">
-        Movimentações
-      </div>
-      <a class="item" ng-href="#/app/add_movimentacao/{{mov.id}}/{{mov.tipoMovimentacao == 2}}" ng-repeat="mov in vm.dados.movimentacoes.slice(0, 3)">
-      	<div class="row">
-      	  <div class="col col-75">
-            <h2>{{mov.descricao}}</h2>
-            <p>
-							{{mov.grupoMovimentacoes.nome}} - {{mov.data | date: 'dd/MM/yy'}} <span ng-hide="mov.tipoMovimentacao == 2">em {{mov.contaContabil.nome}}</span>
-							<span ng-show="mov.tipoMovimentacao == 2">de {{mov.contaContabil.nome}} para {{mov.contaDestino.nome}}</span>
-						</p>
-          </div>
-          <div class="col">{{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}</div>
+    <ion-content class="padrao has-header">
+		<div class="list list-inset" ng-show="vm.dados.movimentacoes.length > 0">
+			<div class="item item-divider">
+				Receitas e Despesas
+            </div>
+            <div class="row row-center">
+                <div style="flex: 0 0 40%; max-width: 40%;">
+                    <div>
+                        <canvas id="graficoPizzaRecDesp" width="400" height="400"></canvas>
+                    </div>
+                </div>
+                <div class="col"></div>
+                <div class="col-50" style="font-size: 18px">
+                    <span style="color: #3366CC"><b>Receitas:</b> {{vm.dadosGrafico[0] | currency: 'R$ '}}</span><br><br>
+                    <span style="color: #DC3912"><b>Despesas:</b> {{vm.dadosGrafico[1] | currency: 'R$ '}}</span><br><br>
+                    <span style="color: {{vm.dadosGrafico[0] - vm.dadosGrafico[1] >= 0 ? '#3366CC' : '#DC3912'}}"><b>Total:</b>  {{vm.dadosGrafico[0] - vm.dadosGrafico[1] | currency: 'R$ '}}</span>
+                </div>
+            </div>
+		</div>
+
+        <div class="list list-inset">
+            <div class="item item-divider">
+                Contas
+            </div>
+
+            <a class="item" ng-repeat="conta in vm.dados.contas.slice(0, 3) track by $index">
+                <div class="row">
+                    <div class="col col-75">
+                        <h2>{{conta.nome}}</h2>
+                    </div>
+                    <div class="col" style="color: {{conta.saldo >= 0 ? '#3366CC' : '#DC3912'}}">{{conta.saldo | currency: conta.moeda.simbolo + ' '}}</div>
+                </div>
+            </a>
+            
+            <div class="item" align="right">
+                <a href="#/app/lista_contas">Ver mais</a>
+            </div>
         </div>
-      </a>
-      <div class="item" align="right">
-      	<a href="#/app/lista_movimentacoes">Ver mais</a>
-      </div>
-    </div>
 
-    <div class="list list-inset">
-      <div class="item item-divider">
-      	Contas
-      </div>
-      <a class="item">
-      	<div class="row" ng-repeat="conta in vm.dados.contas.slice(0, 3)">
-      	  <div class="col col-75">
-            <h2>{{conta.nome}}</h2>
-          </div>
-          <div class="col">{{conta.saldo | currency: conta.moeda.simbolo + ' '}}</div>
+        <div class="list list-inset">
+            <div class="item item-divider">
+                Movimentações
+            </div>
+            <a class="item" ng-href="#/app/add_movimentacao/{{mov.id}}/{{mov.tipoMovimentacao == 2}}" ng-repeat="mov in vm.dados.movimentacoes.slice(0, 3) track by $index">
+                <div class="row">
+                    <div class="col col-75">
+                        <h2>{{mov.descricao}}</h2>
+                        <p>
+                            {{mov.grupoMovimentacoes.nome}} - {{mov.data | date: 'dd/MM/yy'}}
+                            <span ng-hide="mov.tipoMovimentacao == 2">em {{mov.contaContabil.nome}}</span>
+                            <span ng-show="mov.tipoMovimentacao == 2">de {{mov.contaContabil.nome}} para {{mov.contaDestino.nome}}</span>
+                        </p>
+                    </div>
+                    <div class="col">{{mov.tipoMovimentacao == 1 ? '-' : ''}} {{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}</div>
+                </div>
+            </a>
+            <div class="item" align="right">
+                <a href="#/app/lista_movimentacoes">Ver mais</a>
+            </div>
         </div>
-      </a>
-      <div class="item" align="right">
-      	<a href="#/app/lista_contas">Ver mais</a>
-      </div>
-    </div>
-
-
-
-  </ion-content>
+        <br><br>
+    </ion-content>
 </ion-view>
