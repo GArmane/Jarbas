@@ -1,8 +1,32 @@
 <ion-view view-title="Grupos de movimentações">
 	<ion-content class="padrao has-header">
+		<div class="list list-inset" ng-show="vm.dados.length > 0 && vm.movimentacoes.length > 0">
+			<div class="item item-divider">
+				Despesas por grupo de movimentações
+			</div>
+			<div class="row row-center">
+				<div class="col-10"></div>
+				<div class="col-33">
+					<div>
+						<canvas id="graficoGrupos" width="400" height="400"></canvas>
+					</div>
+				</div>
+				<div class="col-10"></div>
+				<div class="col">
+					<div class="row" style="margin: 5px; font-size: 16px" ng-repeat="label in vm.labels track by $index">
+						<div class="col col-10" style="background-color: {{vm.coresFundo[$index]}}; border: 3px solid {{vm.coresBorda[$index]}}">
+							
+						</div>
+						<div class="col">
+							{{label}}: {{vm.dadosGrafico[$index] | currency: 'R$ '}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="list">
-			<a class="item" ng-repeat="conta in vm.dados" ng-click="vm.alterar($index)">
-    			{{conta.nome}}
+			<a class="item" ng-repeat="grupo in vm.dados track by $index" ng-click="vm.alterar($index)">
+    			{{grupo.nome}}
     			
   			</a>
 		</div>

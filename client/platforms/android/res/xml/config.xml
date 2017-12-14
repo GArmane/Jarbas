@@ -33,6 +33,8 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="http://192.168.0.12:8100" />
+    <allow-navigation href="http://192.168.11.8:8100" />
     <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
     <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
     <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -60,4 +62,5 @@
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
 </widget>

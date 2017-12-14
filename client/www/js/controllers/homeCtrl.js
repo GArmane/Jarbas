@@ -28,54 +28,64 @@
             if (!auth.verify())
                 return;
 
-            if (utilities.online())
-                localEntities.getAll('Sync').then(function (data) {
-                    if (data.length > 0)
-                        $ionicPopup.alert({
-                            title: 'Sincronização em andamento',
-                            template: 'Aguarde enquanto seus dados são sincronizados com o servidor.'
-                        }).then(function start() {
-                            loadingScreen.avoid = true;
-                            
-                            $ionicLoading.show({
-                                template: '<ion-spinner></ion-spinner><br><br>{{vm.statusSync}}',
-                                scope: $scope
-                            });
-                            
-                            var total = data.length;
-                            var restante = total;
-                            var i = -1;
-                            
-                            function success() {
-                                var sync = data[++i];
-                                vm.statusSync = i + 1 + ' / ' + total;
-                                sync = JSON.parse(sync.data);
-                                sync.headers = auth.header;
-                                $http(sync).success(finaliza).error(finaliza);
-                            }
-                            
-                            function finaliza() {
-                                restante--;
-                                if (restante == 0) {
-                                    localEntities.clear('Sync');
-                                    $ionicLoading.hide();
-                                    loadingScreen.avoid = false;
-                                    carregarDados();
-                                } else
-                                    success();
-                            }
+            if (utilities.online()) {
+                try {
+                    localEntities.getAll('Sync').then(function (data) {
+                        // alert('GOT ALL');
+                        if (data.length > 0)
+                            $ionicPopup.alert({
+                                title: 'Sincronização em andamento',
+                                template: 'Aguarde enquanto seus dados são sincronizados com o servidor.'
+                            }).then(function start() {
+                                loadingScreen.avoid = true;
+                                
+                                $ionicLoading.show({
+                                    template: '<ion-spinner></ion-spinner><br><br>{{vm.statusSync}}',
+                                    scope: $scope
+                                });
+                                
+                                var total = data.length;
+                                var restante = total;
+                                var i = -1;
+                                
+                                function success() {
+                                    var sync = data[++i];
+                                    vm.statusSync = i + 1 + ' / ' + total;
+                                    sync = JSON.parse(sync.data);
+                                    sync.headers = auth.header;
+                                    $http(sync).success(finaliza).error(finaliza);
+                                }
+                                
+                                function finaliza() {
+                                    restante--;
+                                    if (restante == 0) {
+                                        localEntities.clear('Sync');
+                                        $ionicLoading.hide();
+                                        loadingScreen.avoid = false;
+                                        carregarDados();
+                                    } else
+                                        success();
+                                }
 
-                            success();
-                        });
-                    else
-                        carregarDados();
-                });
-            else
+                                success();
+                            });
+                        else
+                            carregarDados();
+                    }, erro).catch(erro);
+                } catch (error) {
+                    erro(error);
+                }
+            } else
                 carregarDados();
 
-            $ionicHistory.nextViewOptions({
-                historyRoot: true
-            });
+            function erro(msg) {
+                carregarDados();
+                utilities.promiseRejection('Erro de sincronização. ' + msg);
+            }
+
+            // $ionicHistory.nextViewOptions({
+            //     historyRoot: true
+            // });
         }
 
         //////////////// Public

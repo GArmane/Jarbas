@@ -18,6 +18,14 @@
                     // org.apache.cordova.statusbar required
                     StatusBar.styleDefault();
                 }
+
+                // $ionicPlatform.registerBackButtonAction(function (event) {
+                //     if($state.current.name=="app.tela_inicial"){
+                //         navigator.app.exitApp(); //<-- remove this line to disable the exit
+                //     } else {
+                //         navigator.app.backHistory();
+                //     }
+                // }, 100);
             });
         }
 
@@ -38,25 +46,25 @@
                     controllerAs: 'vm'
                 })
 
-                .state('app.cadastro', {
+                .state('cadastro', {
                     url: '/cadastro',
-                    views: {
-                        'menuContent': {
+                    // views: {
+                    //     'menuContent': {
                             templateUrl: 'templates/cadastro.html',
                             controller: 'cadastroController',
                             controllerAs: 'vm'
-                        }
-                    }
+                        // }
+                    // }
                 })
-                .state('app.complete_cad', {
+                .state('complete_cad', {
                     url: '/complete_cad',
-                    views: {
-                        'menuContent': {
+                    // views: {
+                        // 'menuContent': {
                             templateUrl: 'templates/complete_cad.html',
                             controller: 'perfilController',
                             controllerAs: 'vm'
-                        }
-                    }
+                    //     }
+                    // }
                 })
                 .state('app.tela_inicial', {
                     url: '/tela_inicial',

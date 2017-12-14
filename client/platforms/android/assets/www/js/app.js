@@ -2,8 +2,11 @@
     'use strict';
 
     angular.module('starter')
+        .run(run)
+        .config(config);
 
-        .run(function ($ionicPlatform) {
+        run.$inject = ['$ionicPlatform'];
+        function run($ionicPlatform) {
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -15,10 +18,19 @@
                     // org.apache.cordova.statusbar required
                     StatusBar.styleDefault();
                 }
-            });
-        })
 
-        .config(function ($stateProvider, $urlRouterProvider) {
+                // $ionicPlatform.registerBackButtonAction(function (event) {
+                //     if($state.current.name=="app.tela_inicial"){
+                //         navigator.app.exitApp(); //<-- remove this line to disable the exit
+                //     } else {
+                //         navigator.app.backHistory();
+                //     }
+                // }, 100);
+            });
+        }
+
+        config.$inject = ['$stateProvider', '$urlRouterProvider'];
+        function config($stateProvider, $urlRouterProvider, auth) {
             $stateProvider
                 .state('app', {
                     url: '/app',
@@ -34,23 +46,25 @@
                     controllerAs: 'vm'
                 })
 
-                .state('app.cadastro', {
+                .state('cadastro', {
                     url: '/cadastro',
-                    views: {
-                        'menuContent': {
+                    // views: {
+                    //     'menuContent': {
                             templateUrl: 'templates/cadastro.html',
                             controller: 'cadastroController',
                             controllerAs: 'vm'
-                        }
-                    }
+                        // }
+                    // }
                 })
-                .state('app.complete_cad', {
+                .state('complete_cad', {
                     url: '/complete_cad',
-                    views: {
-                        'menuContent': {
-                            templateUrl: 'templates/complete_cad.html'
-                        }
-                    }
+                    // views: {
+                        // 'menuContent': {
+                            templateUrl: 'templates/complete_cad.html',
+                            controller: 'perfilController',
+                            controllerAs: 'vm'
+                    //     }
+                    // }
                 })
                 .state('app.tela_inicial', {
                     url: '/tela_inicial',
@@ -74,6 +88,79 @@
                         }
                     }
                 })
+
+                .state('app.lista_objetivos', {
+                    url: '/lista_objetivos',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/lista_objetivos.html',
+                            controller: 'listaObjetivoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.lista_investimentos', {
+                    url: '/lista_investimentos',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/lista_investimentos.html',
+                            controller: 'listaInvestimentoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_investimento', {
+                    url: '/add_investimento',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_investimento.html',
+                            controller: 'investimentoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_investimento_param', {
+                    url: '/add_investimento/:id',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_investimento.html',
+                            controller: 'investimentoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_objetivo', {
+                    url: '/add_objetivo',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_objetivo.html',
+                            controller: 'objetivoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
+                .state('app.add_objetivo_param', {
+                    url: '/add_objetivo/:id',
+                    cache: false,
+                    views: {
+                        'menuContent': {
+                            templateUrl: 'templates/add_objetivo.html',
+                            controller: 'objetivoController',
+                            controllerAs: 'vm'
+                        }
+                    }
+                })
+
                 .state('app.grupos_movimentacoes', {
                     url: '/grupos_movimentacoes',
                     cache: false,
@@ -141,6 +228,8 @@
                 })*/;
             
             // Rota default
-            $urlRouterProvider.otherwise('/login');
-        });
+            $urlRouterProvider.otherwise(function () {
+                return window.authDone ? '/app/tela_inicial' : '/login';
+            });
+        }
 })();

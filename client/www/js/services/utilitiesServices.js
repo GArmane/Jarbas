@@ -16,6 +16,7 @@
 
         var _isApp = false;
         var isOnline = true;
+        var navigatorOnline = true;
         
         var colors = [
             '#3366CC',
@@ -70,6 +71,11 @@
             // window.defineExceptionHandler(function () {
             //     promiseException('Exceção global capturada!');
             // });
+
+            document.addEventListener("offline", function(){
+                navigatorOnline = false;
+            }, false);
+
             _isApp = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
         }
 
@@ -108,7 +114,8 @@
         }
 
         function online() {
-            return isOnline && navigator.onLine;
+            // alert('isOnline: ' + isOnline + ' / navigator.onLine: ' + navigator.onLine + ' / navigatorOnline: ' + navigatorOnline);
+            return isOnline && navigatorOnline;
         }
 
         function getColor(i, transp) {

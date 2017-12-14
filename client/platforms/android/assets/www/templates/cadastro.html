@@ -1,43 +1,50 @@
-<ion-view view-title="Cadastre-se">
+<!-- view-title="Cadastre-se" -->
+<ion-view>
+    <ion-header-bar class="custom">
+        <h1 class="title">Cadastre-se</h1>
+    </ion-header-bar>
     <ion-content class="padding padrao">
         <center>
             <h4>Crie uma conta para poder usar o JARBAS onde quiser!</h4>
             <br>
             <button ng-click="vm.cadastroGoogle()" class="button icon ion-social-google"> | Cadastro com Google</button>
         </center>
-            <form name="cadastro" ng-submit="vm.cadastrar()">
-                <br>
-                <hr width="90%">
-                <span class="input-label">Nome</span>
-                <label class="item item-input">
-                    <input ng-model="vm.dados.nome" type="text" placeholder="Digite seu nome" required name="nome">
-   	            </label>
-   	            <br>
-   	            <span class="input-label">E-mail</span>
-                <label class="item item-input">
-                    <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
-   	            </label>
-   	            <br>
-   	            <span class="input-label">Senha</span>
-                <label class="item item-input">
-                    <input ng-model="vm.dados.senha" ng-change="vm.analisaSenha()" type="password" placeholder="Digite uma senha forte" required name="password">
-   	            </label>
-   	            <br>
-   	            <div class="row">
-   	  	            <div class="col col-33">Força da senha:</div>   	  	
-   	  	            <div class="col col-50">
-   	  	                <span class="styled">
-      	                   <meter value="{{vm.forcaSenha}}" min="0" max="100" low="25" high="75" optimum="100" style="-webkit-appearance: meter;"></meter>
-                        </span>
-                    </div>
-                    <div class="col"><button style="top:-9px;" class="button button-icon icon ion-help-circled"></button></div>
+        <form name="cadastro" ng-submit="vm.cadastrar(vm.dados)">
+            <br>
+            <hr width="90%">
+            <span class="input-label">Nome</span>
+            <label class="item item-input">
+                <input ng-model="vm.dados.nome" type="text" placeholder="Digite seu nome" required name="nome">
+            </label>
+            <br>
+            <span class="input-label">E-mail</span>
+            <label class="item item-input">
+                <input ng-model="vm.dados.email" type="email" placeholder="Digite um e-mail válido" required name="email">
+            </label>
+            <br>
+            <span class="input-label">Senha</span>
+            <label class="item item-input">
+                <input ng-model="vm.dados.senha" ng-change="vm.analisaSenha()" type="password" placeholder="Digite uma senha forte" required
+                    name="password">
+            </label>
+            <br>
+            <div class="row">
+                <div class="col col-33">Força da senha:</div>
+                <div class="col col-50">
+                    <span class="styled">
+                        <meter value="{{vm.forcaSenha}}" min="0" max="100" low="25" high="75" optimum="100" style="-webkit-appearance: meter;"></meter>
+                    </span>
                 </div>
-   	            <span class="input-label">Confirmação de senha</span>
-                <label class="item item-input">
-                    <input ng-model="vm.confirmaSenha" type="password" placeholder="Digite uma senha novamente" required name="password">
-   	            </label>
-   	            <br>
-   	  	        <button type="submit" class="button button-block">Cadastrar</button>
-          </form>
-  </ion-content>
+                <div class="col">
+                    <a ng-click="vm.tooltipSenha()" style="top:-9px;" class="button button-icon icon ion-help-circled"></a>
+                </div>
+            </div>
+            <span class="input-label texto-input">Confirmação de senha</span>
+            <label class="item item-input">
+                <input ng-model="vm.confirmaSenha" type="password" placeholder="Digite uma senha novamente" required name="password">
+            </label>
+            <br>
+            <button type="submit" class="button button-block">Cadastrar</button>
+        </form>
+    </ion-content>
 </ion-view>

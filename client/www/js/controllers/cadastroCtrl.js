@@ -44,16 +44,16 @@
                 vm.forcaSenha = 0;
         }
 
-        function cadastrar() {
+        function cadastrar(dados) {
             $http({
                 url: api.url() + 'usuarios',
                 method: 'POST',
-                data: vm.dados,
+                data: dados,
                 headers: { 'Content-Type': 'application/json' }
             }).success(function (data) {
-                LoginService.doLogin(vm.dados.email, vm.dados.senha)
+                LoginService.doLogin(dados.email, dados.senha)
                     .then(function () {
-                        $state.go('app.complete_cad');
+                        $state.go('complete_cad');
                     }, utilities.promiseRejection)
                     .catch(utilities.promiseException);
             }).error(utilities.apiError);
@@ -65,22 +65,28 @@
 
         function cadastroGoogle() {
             LoginService.gDialog().then(function (auth) {
-                // alert('exibiu o gdialog');
-                $http({
-                    url: api.url() + 'Usuarios/Google/',
-                    data: '"' + (utilities.isApp() ? auth.serverAuthCode : auth.code) + '"',
-                    // data: '"' + auth.idToken + '"',
-                    method: 'POST',
-                }).success(function (data) {
-                    // alert('sucesso na request de cadastro');
-                    LoginService.defineAuth(data.token, data.usuario.email).then(function () {
-                        $state.go('app.complete_cad');
-                    }, utilities.promiseRejection).catch(utilities.promiseException);
-                }).error(function (data) {
-                    // alert('erro na request de cadastro');
-                    // alert(JSON.stringify(data));
-                    utilities.apiError(data);
-                });
+                var dados = {
+                    nome: auth.displayName,
+                    email: auth.email,
+                    senha: auth.userId
+                };
+
+                cadastrar(dados);
+                // $http({
+                //     url: api.url() + 'Usuarios/Google/',
+                //     data: '"' + (utilities.isApp() ? auth.serverAuthCode : auth.code) + '"',
+                //     // data: '"' + auth.idToken + '"',
+                //     method: 'POST',
+                // }).success(function (data) {
+                //     // alert('sucesso na request de cadastro');
+                //     LoginService.defineAuth(data.token, data.usuario.email).then(function () {
+                //         $state.go('complete_cad');
+                //     }, utilities.promiseRejection).catch(utilities.promiseException);
+                // }).error(function (data) {
+                //     // alert('erro na request de cadastro');
+                //     // alert(JSON.stringify(data));
+                //     utilities.apiError(data);
+                // });
             }, utilities.promiseRejection)
             .catch(utilities.promiseException);
         }

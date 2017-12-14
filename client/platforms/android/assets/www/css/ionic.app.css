@@ -208,6 +208,14 @@ div.link {
 a.text-right {
   text-align: right; }
 
+.check {
+  border: none !important;
+  background-color: transparent !important; }
+
+.texto-input {
+  max-width: 100% !important;
+  width: 100% !important; }
+
 .popup-container .popup {
   width: 85% !important; }
 

@@ -1,86 +1,103 @@
 <ion-view view-title="{{vm.alteracao ? 'Alterar movimentação' : 'Inserir movimentação'}}">
-  <ion-content class="padding padrao">
-    <form name="cadastro" ng-submit="vm.cadastro()">
-    <span class="input-label">Tipo de movimentação</span>
-    <div class="row row-no-padding">
-        <div class="col">
-          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao" ng-value="0">Receita</ion-radio> 
-        </div>
-        <div class="col">
-          <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao" ng-value="1">Despesa</ion-radio>
-        </div>
-        <div class="col">
-            <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="2" ng-click="vm.listaContaTransf()">Transferência</ion-radio>
-        </div>
-      </div>
-      <br>
+    <ion-content class="padding padrao">
+        <form name="cadastro" ng-submit="vm.cadastro()">
+            <span class="input-label texto-input">Tipo de movimentação</span>
+            <div class="row row-no-padding">
+                <div class="col">
+                    <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao"
+                        ng-value="0">Receita</ion-radio>
+                </div>
+                <div class="col">
+                    <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao && vm.originalTransf" ng-model="vm.dados.tipoMovimentacao"
+                        ng-value="1">Despesa</ion-radio>
+                </div>
+                <div class="col">
+                    <ion-radio style="font-size: 13px; border: none;" ng-disabled="vm.alteracao" ng-model="vm.dados.tipoMovimentacao" ng-value="2"
+                        ng-click="vm.listaContaTransf()">Transferência</ion-radio>
+                </div>
+            </div>
+            <br>
 
-      <span class="input-label">Conta</span>
-      <label class="item item-input item-select">
-          <div class="input-label">Conta</div>
-          <select ng-model="vm.contaSelecionada" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contas" ng-change="vm.listaContaTransf()"></select>
-      </label>
-      <br>
-
-      <div ng-show="vm.dados.tipoMovimentacao == 2">
-        <span class="input-label">Conta destino</span>
-        <select class="ion-input-select" ng-model="vm.contaDestino" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contasTransf">
-        </select>
-      </div>
-
-
-      <span class="input-label">Grupo de movimentações</span>
-      <label class="item item-input item-select">
-          <div class="input-label">Grupo</div>
-          <select ng-model="vm.dados.grupoMovimentacoesId" ng-options="grupo.id as grupo.nome for grupo in vm.grupos"></select>
-      </label>
-      <br>
-
-      <span class="input-label">Descrição</span>
-      <label class="item item-input">
-          <input type="text" placeholder="(Opcional)" ng-model="vm.dados.descricao">
-      </label>
-      <br>
-
-      <span class="input-label">Valor</span>
-      <div class="row row-no-padding">
-          <div class="col col-33">          
-              <label class="item item-input item-select">
-              {{vm.contaSelecionada.moeda.simbolo}}
+            <span class="input-label">Conta
+                <span ng-show="vm.contaSelecionada.id">(Saldo: {{ vm.contaSelecionada.saldo | currency: vm.contaSelecionada.moeda.simbolo + ' ' }})</span>
+            </span>
+            <label class="item item-input item-select">
+                <div class="input-label">Conta</div>
+                <select ng-model="vm.contaSelecionada" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contas"
+                    ng-change="vm.listaContaTransf()"></select>
             </label>
-        </div>
-        &nbsp&nbsp
-        <div class="col">
+            <br>
+
+            <div ng-show="vm.dados.tipoMovimentacao == 2">
+                <span class="input-label">Conta destino
+                    <span ng-show="vm.contaDestino.id">(Saldo: {{ vm.contaDestino.saldo | currency: vm.contaDestino.moeda.simbolo + ' ' }})</span>
+                </span>
+                <label class="item item-input item-select">
+                    <div class="input-label">Conta destino</div>
+                    <select ng-model="vm.contaDestino" ng-disabled="vm.alteracao" ng-options="conta as conta.nome for conta in vm.contasTransf"></select>
+                </label>
+                <br>
+            </div>
+
+            <span class="input-label texto-input">Grupo de movimentações</span>
+            <label class="item item-input item-select">
+                <div class="input-label">Grupo</div>
+                <select ng-model="vm.dados.grupoMovimentacoesId" ng-options="grupo.id as grupo.nome for grupo in vm.grupos"></select>
+            </label>
+            <br>
+
+            <span class="input-label">Descrição</span>
             <label class="item item-input">
-                <input ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
+                <input type="text" placeholder="(Opcional)" ng-model="vm.dados.descricao">
             </label>
-        </div>
-    </div>
-    <br>
-    
-    <span class="input-label">Repetir movimentação</span>
-    <label class="item item-input item-select">
-        <div class="input-label">Repetir</div>
-            <select ng-model="vm.dados.agendamento.escalaTempo" ng-change="vm.personalizar()">
-                <option value="">Não repetir</option>
-                <option ng-value="vm.escalaTempo.diario">Diário</option>
-                <option ng-value="vm.escalaTempo.semanal">Semanal</option>
-                <option ng-value="vm.escalaTempo.quinzenal">Quinzenal</option>
-                <option ng-value="vm.escalaTempo.mensal">Mensal</option>
-                <option ng-value="vm.escalaTempo.anual">Anual</option>
-                <option ng-value="vm.escalaTempo.personalizado" ng-selected="vm.dados.agendamento.qtdTempo != 0 && vm.dados.agendamento.escalaTempo">Personalizado</option>
-            </select>
-    </label>
-    <br>
-      
-      <br>    
-      <div class="row">
-        <div class="col col-33"><button class="button button-block" ng-click="vm.cancelar()">Cancelar</button></div>
-        <div class="col" ng-if="vm.alteracao"><button class="button button-block" ng-click="vm.excluir()">Excluir</button></div>
-        <div class="col"><button class="button button-block" ng-click="vm.alteracao ? vm.alterar() : vm.salvar()">{{vm.alteracao ? 'Alterar' : 'Cadastrar'}}</button></div>
-      </div>
-    </form>
-    
+            <br>
 
-  </ion-content>
+            <span class="input-label">Valor</span>
+            <div class="row row-no-padding">
+                <!-- <div class="col col-33">
+                    <label class="item item-input item-select">
+                        {{vm.contaSelecionada.moeda.simbolo}}
+                    </label>
+                </div> -->
+                &nbsp&nbsp
+                <div class="col">
+                    <label class="item item-input">
+                        <span class="item-input">{{vm.contaSelecionada.moeda.simbolo}}&nbsp;</span>                            
+                        <input ng-model="vm.dados.valor" type="number" placeholder="0,00" required>
+                    </label>
+                </div>
+            </div>
+            <br>
+
+            <span class="input-label">Data</span>
+            <label class="item item-input">
+                <input type="date" ng-model="vm.dados.data">
+            </label>
+            <br>
+
+            <span class="input-label texto-input">Repetir movimentação</span>
+            <label class="item item-input item-select">
+                <div class="input-label">Repetir</div>
+                <select ng-model="vm.dados.agendamento.escalaTempo" ng-options="escala.id as escala.name for escala in vm.escalaTempo" ng-change="vm.personalizar()">
+                    <option value="">Não repetir</option>
+                </select>
+            </label>
+            <br>
+
+            <br>
+            <div class="row">
+                <div class="col col-33">
+                    <button class="button button-block" ng-click="vm.cancelar()">Cancelar</button>
+                </div>
+                <div class="col" ng-if="vm.alteracao">
+                    <button class="button button-block" ng-click="vm.excluir()">Excluir</button>
+                </div>
+                <div class="col">
+                    <button class="button button-block" ng-click="vm.alteracao ? vm.alterar() : vm.salvar()">{{vm.alteracao ? 'Alterar' : 'Cadastrar'}}</button>
+                </div>
+            </div>
+        </form>
+
+
+    </ion-content>
 </ion-view>

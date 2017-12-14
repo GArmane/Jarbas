@@ -113,58 +113,72 @@
             var receitas = [];
             var despesas = [];
 
-            var dataPesquisa;
+            // var dataPesquisa;
+            // vm.dados.forEach(function (mov) {
+            //     var data = new Date(mov.data);
+            //     data = { mes: data.getMonth() + 1, ano: data.getFullYear() };
+            //     dataPesquisa = data;
+            //     var i = labels.findIndex(temData);
+            //     if (i == -1) {
+            //         labels.push(dataPesquisa);
+            //         i = labels.length - 1;
+            //     }
+            //     if (receitas[i] == null) {
+            //         receitas[i] = 0;
+            //         despesas[i] = 0;
+            //     }
+
+            //     if (mov.tipoMovimentacao == 0)
+            //         receitas[i] += mov.valor;
+            //     else
+            //         despesas[i] += mov.valor;
+            // });
+
+            // var first = JSON.parse(JSON.stringify(labels[0])), last = labels[labels.length - 1];
+            // var lastFound = 0;
+            // while (first.mes < last.mes || first.ano < last.ano) {
+            //     dataPesquisa = first;
+            //     var index = labels.findIndex(temData);
+            //     if (index == -1) {
+            //         labels.splice(lastFound, 0, JSON.parse(JSON.stringify(first)));
+            //         receitas.splice(lastFound, 0, 0);
+            //         despesas.splice(lastFound, 0, 0);
+            //     }
+            //     lastFound++;
+            //     if (first.mes == 12) {
+            //         first.mes = 1;
+            //         first.ano++;
+            //     } else
+            //         first.mes++;
+            // }
+
+            // for (var i = 0; i < labels.length; i++) {
+            //     labels[i] = labels[i].mes + '/' + labels[i].ano;
+            // }
+
+            // function temData(data) {
+            //     return dataPesquisa.mes == data.mes && dataPesquisa.ano == data.ano;
+            // }
+
             vm.dados.forEach(function (mov) {
-                var data = new Date(mov.data);
-                data = { mes: data.getMonth() + 1, ano: data.getFullYear() };
-                dataPesquisa = data;
-                var i = labels.findIndex(temData);
-                if (i == -1) {
-                    labels.push(dataPesquisa);
-                    i = labels.length - 1;
-                }
-                if (receitas[i] == null) {
-                    receitas[i] = 0;
-                    despesas[i] = 0;
-                }
-
+                mov.data = new Date(mov.data);
                 if (mov.tipoMovimentacao == 0)
-                    receitas[i] += mov.valor;
+                    receitas.push({
+                        x: (mov.data.getMonth() + 1) + '/' + mov.data.getDate() + '/' + mov.data.getFullYear(),
+                        y: mov.valor
+                    });
                 else
-                    despesas[i] += mov.valor;
+                    despesas.push({
+                        x: (mov.data.getMonth() + 1) + '/' + mov.data.getDate() + '/' + mov.data.getFullYear(),
+                        y: mov.valor
+                    });
             });
-
-            var first = JSON.parse(JSON.stringify(labels[0])), last = labels[labels.length - 1];
-            var lastFound = 0;
-            while (first.mes < last.mes || first.ano < last.ano) {
-                dataPesquisa = first;
-                var index = labels.findIndex(temData);
-                if (index == -1) {
-                    labels.splice(lastFound, 0, JSON.parse(JSON.stringify(first)));
-                    receitas.splice(lastFound, 0, 0);
-                    despesas.splice(lastFound, 0, 0);
-                }
-                lastFound++;
-                if (first.mes == 12) {
-                    first.mes = 1;
-                    first.ano++;
-                } else
-                    first.mes++;
-            }
-
-            for (var i = 0; i < labels.length; i++) {
-                labels[i] = labels[i].mes + '/' + labels[i].ano;
-            }
-
-            function temData(data) {
-                return dataPesquisa.mes == data.mes && dataPesquisa.ano == data.ano;
-            }
 
             var ctx = document.getElementById("graficoRecVsDesp");
             grafico = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    // labels: labels,
                     datasets: [{
                         label: 'Receitas',
                         backgroundColor: utilities.getColor(0, false),
@@ -187,10 +201,20 @@
                     scales: {
                         xAxes: [{
                             display: true,
-                            // scaleLabel: {
-                            //     display: true,
-                            //     labelString: 'Month'
-                            // }
+                            type: "time",
+                            distribution: 'linear',
+                            time: {
+                                displayFormats: {
+                                    quarter: 'MM YYYY',
+                                    month: 'MMM YYYY',
+                                    day: 'DD/MM',
+                                    week: 'DD/MM'
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            }
                         }],
                         yAxes: [{
                             display: true,

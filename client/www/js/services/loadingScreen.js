@@ -41,6 +41,8 @@ window.loadingScreen = loadingScreen;
                 return response;
             },
             'responseError': function (response) {
+
+                console.log(response);
                 if (loadingScreen.ready && !loadingScreen.avoid) {
                     if (loadingScreen.counter <= 1) {
                         loadingScreen.loadingService.hide();
@@ -50,6 +52,8 @@ window.loadingScreen = loadingScreen;
                 }
                 return $q.reject(response);
             }
+
+            
         };
     }
 })();

@@ -10,6 +10,7 @@
         this.available = available;
         this.url = url;
         this.token = token;
+        this.producao = true;
 
         var webUrl = 'http://localhost:5001/api/';
         var webToken = 'http://localhost:5000/connect/token';
@@ -24,11 +25,11 @@
         }
 
         function url() {
-            return utilities.isApp() ? appUrl : webUrl;
+            return utilities.isApp() || this.producao ? appUrl : webUrl;
         }
 
         function token() {
-            return utilities.isApp() ? appToken : webToken;
+            return utilities.isApp() || this.producao ? appToken : webToken;
         }
     }
 })();

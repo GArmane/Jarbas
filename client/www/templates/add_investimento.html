@@ -14,7 +14,7 @@
             <br>
             <span class="input-label texto-input">Taxa do investimento</span>
             <label class="item item-input">
-                <input type="number" ng-model="vm.dados.tipoInvestimento.taxa" placeholder="0,00" ng-disabled="vm.visualizacao">
+                <input type="number" ng-model="vm.dados.tipoInvestimento.taxa" step="0.01" placeholder="0,00" ng-disabled="vm.visualizacao">
             </label>
             <br>
 
@@ -33,7 +33,7 @@
             <div class="row row-no-padding">
                 <div class="col col-25">
                     <label class="item item-input item-select">
-                        <select ng-model="vm.dados.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" ng-disabled="vm.visualizacao"></select>
+                        <select ng-model="vm.dados.moeda" ng-options="moeda as moeda.simbolo for moeda in vm.moedas" step="0.01" ng-disabled="vm.visualizacao"></select>
                     </label>
                 </div>
                 &nbsp&nbsp
@@ -51,7 +51,7 @@
 					<div class="col">
 						<label class="item item-input">
 							<span class="item-input">{{vm.dados.moeda.simbolo}}&nbsp;&nbsp;</span>
-							<input ng-model="vm.dados.valorAtual" type="number" placeholder="0,00" ng-disabled="vm.visualizacao">
+							<input ng-model="vm.dados.valorAtual" type="number" step="0.01" placeholder="0,00" ng-disabled="vm.visualizacao">
 						</label>
 					</div>
 				</div>

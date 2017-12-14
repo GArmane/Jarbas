@@ -139,14 +139,18 @@ function LocalEntities() {
         }
 
         function getAll(type, include) {
+            // alert('WE\'LL GET ALL')
             return new Promise(function (resolve, reject) {
-                if (!isReady)
+                // alert('WE PROMISE');
+                if (!isReady) {
+                    // alert('getAll not Ready');
                     getAllReqs.push({
                         type: type,
                         include: include,
                         resolve: resolve,
                         reject: reject
                     });
+                }
                 else
                     resolveGetAll(type, include, resolve, reject);
             });
@@ -319,13 +323,16 @@ function LocalEntities() {
         }
 
         function resolveGetAll(type, include, resolve, reject) {
+            // alert('WE\'RE RESOLVING');
             try {
                 var res = [];
                 var entity = entities[type];
+                // alert('WE\'VE THE ENTITY');
                 
                 entity.store.iterate(function(value, key, iterationNumber) {
                     res.push(value);
                 }).then(function () {
+                    // alert('WE RESOLVE');
                     resolve(res);
                 }).catch(reject);
             } catch (ex) {
