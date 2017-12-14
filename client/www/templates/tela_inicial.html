@@ -26,10 +26,10 @@
 
             <a class="item" ng-repeat="conta in vm.dados.contas.slice(0, 3) track by $index">
                 <div class="row">
-                    <div class="col col-75">
+                    <div class="col">
                         <h2>{{conta.nome}}</h2>
                     </div>
-                    <div class="col" style="color: {{conta.saldo >= 0 ? '#3366CC' : '#DC3912'}}">{{conta.saldo | currency: conta.moeda.simbolo + ' '}}</div>
+                    <div class="col col-gambiarra2" style="color: {{conta.saldo >= 0 ? '#3366CC' : '#DC3912'}}">{{conta.saldo | currency: conta.moeda.simbolo + ' '}}</div>
                 </div>
             </a>
             
@@ -44,7 +44,7 @@
             </div>
             <a class="item" ng-href="#/app/add_movimentacao/{{mov.id}}/{{mov.tipoMovimentacao == 2}}" ng-repeat="mov in vm.dados.movimentacoes.slice(0, 3) track by $index">
                 <div class="row">
-                    <div class="col col-75">
+                    <div class="col">
                         <h2>{{mov.descricao}}</h2>
                         <p>
                             {{mov.grupoMovimentacoes.nome}} - {{mov.data | date: 'dd/MM/yy'}}
@@ -52,7 +52,7 @@
                             <span ng-show="mov.tipoMovimentacao == 2">de {{mov.contaContabil.nome}} para {{mov.contaDestino.nome}}</span>
                         </p>
                     </div>
-                    <div class="col">{{mov.tipoMovimentacao == 1 ? '-' : ''}} {{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}</div>
+                    <div class="col col-gambiarra2">{{mov.tipoMovimentacao == 1 ? '-' : ''}} {{mov.valor | currency: mov.contaContabil.moeda.simbolo + ' '}}</div>
                 </div>
             </a>
             <div class="item" align="right">
