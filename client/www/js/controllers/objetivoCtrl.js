@@ -409,7 +409,8 @@
                         fill: false,
                         data: vm.dados.historicoObjetivo.map(function (hist) {
                             return hist.valorFinal;
-                        })
+                        }),
+                        pointBorderWidth: 3
                     },
                 ]
                 },

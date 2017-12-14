@@ -164,12 +164,12 @@
                 mov.data = new Date(mov.data);
                 if (mov.tipoMovimentacao == 0)
                     receitas.push({
-                        x: (mov.data.getMonth() + 1) + '/' + mov.data.getDate() + '/' + mov.data.getFullYear(),
+                        x: mov.data,
                         y: mov.valor
                     });
                 else
                     despesas.push({
-                        x: (mov.data.getMonth() + 1) + '/' + mov.data.getDate() + '/' + mov.data.getFullYear(),
+                        x: mov.data,
                         y: mov.valor
                     });
             });
@@ -184,13 +184,15 @@
                         backgroundColor: utilities.getColor(0, false),
                         borderColor: utilities.getColor(0, false),
                         fill: false,
-                        data: receitas
+                        data: receitas,
+                        pointBorderWidth: 3
                     }, {
                         label: 'Despesas',
                         backgroundColor: utilities.getColor(1, false),
                         borderColor: utilities.getColor(1, false),
                         fill: false,
-                        data: despesas
+                        data: despesas,
+                        pointBorderWidth: 3
                     }]
                 },
                 options: {
