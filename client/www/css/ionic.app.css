@@ -219,6 +219,9 @@ a.text-right {
 .popup-container .popup {
   width: 85% !important; }
 
+.col-gambiarra {
+  max-width: 60% !important; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
