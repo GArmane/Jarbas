@@ -78,20 +78,31 @@
         // status 401 Unauthorized. Esse método vai requisitar um novo token usando o refresh token
         // NA PRIMEIRA VEZ QUE FOR INVOCADO. Sempre vai retornar uma promise para continuação da
         // request. ***A primeira promise deve resolver as outras.*** Mas como?
-        // function refreshToken(httpConfig) {
-
-        //     return $q(function(resolve, reject) {
-        //         if (!requestingRefresh) {
-        //             requestingRefresh = true;
-        //             requestNewToken(auth.refresh).then(function () {
-        //                 requestingRefresh = false;
-        //                 $http(waitingRequests.shift()).success(resolve).error(reject);
-        //             });
-        //         }
-        //     });
-
-
-        // }
+        function refreshToken(httpConfig) {
+            return $q(function(resolve, reject) {
+                if (!requestingRefresh) {
+                    requestingRefresh = true;
+                    requestNewToken(auth.refresh).then(function () {
+                        requestingRefresh = false;
+                        resolve();
+                        while (waitingRequests.length) {
+                            var req = waitingRequests.shift();
+                            $http(req.config).success(req.resolve).error(req.reject);
+                        }
+                    }, function () {
+                        reject();
+                        while (waitingRequests.length)
+                            waitingRequests.shift().reject();
+                    });
+                } else {
+                    waitingRequests.push({
+                        config: httpConfig,
+                        resolve: resolve,
+                        reject: reject
+                    });
+                }
+            });
+        }
 
         function requestNewToken(token) {
             return new Promise(function (resolve, reject) {

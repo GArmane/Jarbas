@@ -5,8 +5,8 @@
         .run(run)
         .config(config);
 
-        run.$inject = ['$ionicPlatform'];
-        function run($ionicPlatform) {
+        run.$inject = ['$ionicPlatform', '$state'];
+        function run($ionicPlatform, $state) {
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -19,18 +19,15 @@
                     StatusBar.styleDefault();
                 }
 
-                // $ionicPlatform.registerBackButtonAction(function (event) {
-                //     if($state.current.name=="app.tela_inicial"){
-                //         navigator.app.exitApp(); //<-- remove this line to disable the exit
-                //     } else {
-                //         navigator.app.backHistory();
-                //     }
-                // }, 100);
+                $ionicPlatform.registerBackButtonAction(function (event) {
+                    if ($state.$current.name !== 'complete_cad') // não tem botão de voltar nessa view
+                        navigator.app.backHistory();
+                }, 100);
             });
         }
 
         config.$inject = ['$stateProvider', '$urlRouterProvider'];
-        function config($stateProvider, $urlRouterProvider, auth) {
+        function config($stateProvider, $urlRouterProvider) {
             $stateProvider
                 .state('app', {
                     url: '/app',

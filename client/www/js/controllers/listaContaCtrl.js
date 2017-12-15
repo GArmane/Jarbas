@@ -155,7 +155,7 @@
         //////////////// Private
 
         function validar(e) {
-            if (!vm.conta.nome || !vm.conta.moeda || !vm.conta.saldo) {
+            if (!vm.conta.nome || !vm.conta.moeda || (!vm.conta.saldo && vm.conta.saldo !== 0)) {
                 e.preventDefault();
                 $timeout(function () {
                     document.getElementById('hiddenSubmit').click();

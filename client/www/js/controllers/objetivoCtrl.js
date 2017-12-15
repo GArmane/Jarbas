@@ -77,10 +77,10 @@
         }
 
         function alterar() {
-            var hist = new HistoricoObjetivo();
-            hist.dataFinal = vm.dados.dataInicial;
-            hist.valorFinal = vm.dados.valor;
-            vm.dados.historicoObjetivo.push(hist);
+            // var hist = new HistoricoObjetivo();
+            // hist.dataFinal = vm.dados.dataInicial;
+            // hist.valorFinal = vm.dados.valor;
+            // vm.dados.historicoObjetivo.push(hist);
             var req = {
                 method: 'PUT',
                 url: api.url() + 'Objetivos/' + vm.dados.id,
@@ -103,6 +103,7 @@
                     title: 'Sucesso!',
                     template: 'Objetivo alterado.'
                 });
+                criarGrafico();
             }
         }
 
@@ -210,7 +211,7 @@
                     method: 'POST',
                     url: api.url() + url,
                     // params: params,
-                    data: vm.transf.valor,
+                    data: vm.valorConvertido,
                     headers: auth.header
                 };
                 if (utilities.online())
@@ -245,6 +246,7 @@
                         title: 'Sucesso!',
                         template: 'Dinheiro adicionado.'
                     });
+                    carregarDados();
                 }
             });
         }
@@ -277,7 +279,7 @@
                 var req = {
                     method: 'POST',
                     url: api.url() + 'Objetivos/TransferirToConta/' + vm.transf.conta.id + '/' + vm.dados.id,
-                    data: vm.transf.valor,
+                    data: vm.valorConvertido,
                     headers: auth.header
                 };
                 if (utilities.online())
@@ -307,6 +309,7 @@
                         title: 'Sucesso!',
                         template: 'Dinheiro removido.'
                     });
+                    carregarDados();
                 }
             });
         }
@@ -330,6 +333,12 @@
         }
 
         function carregarDados() {
+            vm.dados = {};
+            vm.dados.historicoObjetivo = [];
+            vm.moedas = [];
+            vm.contas = [];
+            vm.transf = {};
+
             if ($stateParams.id) {
                 if (utilities.online()) {
                     $http({
@@ -360,7 +369,6 @@
                 original = JSON.parse(JSON.stringify(data));
                 vm.dados.dataInicial = new Date(vm.dados.dataInicial);
                 successMoedas();
-                criarGrafico();
             }
 
             function successContas(data) {
@@ -390,6 +398,7 @@
                             }
                             successContas(data);
                         });
+                    criarGrafico();
                 }
             }
         }
