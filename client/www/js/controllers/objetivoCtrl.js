@@ -317,6 +317,8 @@
         function atualizaConvertido() {
             if (vm.transf.conta)
                 vm.valorConvertido = (vm.transf.valor * vm.dados.moeda.cotacaoComercial) / vm.transf.conta.moeda.cotacaoComercial;
+            else
+                vm.valorConvertido = vm.transf.valor;
         }
         
         //////////////// Private

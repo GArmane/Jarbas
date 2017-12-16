@@ -79,6 +79,7 @@
         // NA PRIMEIRA VEZ QUE FOR INVOCADO. Sempre vai retornar uma promise para continuação da
         // request. ***A primeira promise deve resolver as outras.*** Mas como?
         function refreshToken(httpConfig) {
+            console.warn('TÁ CHAMANDO O REFRESH TOKEN!!');
             return $q(function(resolve, reject) {
                 if (!requestingRefresh) {
                     requestingRefresh = true;
@@ -125,7 +126,7 @@
                     auth.expiration = data.expires_in;
                     auth.refresh = data.refresh_token;
                     auth.header = { 'Authorization': 'Bearer ' + auth.token };
-                    auth.id = value.id;
+                    auth.id = data.id;
                     localforage.setItem('auth', new Auth(auth));
                     auth.verify();
                     resolve();
