@@ -71,6 +71,7 @@ namespace serverTCC.Controllers
             {
                 var objetivos = context.Objetivo
                     .Include(o => o.HistoricoObjetivo)
+                    .Include(o => o.Moeda)
                     .Where(o => o.UsuarioId == userId);
 
                 return Ok(objetivos);
@@ -92,6 +93,7 @@ namespace serverTCC.Controllers
             {
                 var objetivo = await context.Objetivo
                     .Include(o => o.HistoricoObjetivo)
+                    .Include(o => o.Moeda)
                     .FirstOrDefaultAsync(o => o.Id == id);
 
                 if (objetivo != null)
@@ -235,6 +237,7 @@ namespace serverTCC.Controllers
 
                 objetivo = await context.Objetivo
                     .Include(o => o.HistoricoObjetivo)
+                    .Include(o => o.Moeda)
                     .FirstOrDefaultAsync(o => o.Id == id);
 
                 return Ok(objetivo);
@@ -295,6 +298,7 @@ namespace serverTCC.Controllers
 
                 objetivo = await context.Objetivo
                     .Include(o => o.HistoricoObjetivo)
+                    .Include(o => o.Moeda)
                     .FirstOrDefaultAsync(o => o.Id == objetivoId);
 
                 return Ok(new { objetivo, conta });
@@ -357,6 +361,7 @@ namespace serverTCC.Controllers
 
                 objetivo = await context.Objetivo
                     .Include(o => o.HistoricoObjetivo)
+                    .Include(o => o.Moeda)
                     .FirstOrDefaultAsync(o => o.Id == objetivoId);
 
                 return Ok(new { objetivo, conta });
